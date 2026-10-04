@@ -4,7 +4,7 @@ const CONFIG = {
   shopName: "Meat Market",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 56 841 1627",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycbwoC0HgS1KM0eHlFZK7bV_u7k-lOcxtbFtDNhUZeuCHWQ2KM_QZ36BXJBo6K_rBRkpZcg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  orderEndpoint: "https://script.google.com/macros/s/AKfycbxJU_gfPTYtfs0pSotl40PSwETk_LLxxb7OgG9vJ1FjkfZ7mdYuFbEzpHki_2qjWhD6BA/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
   deliveryTiers: [
@@ -15,8 +15,8 @@ const CONFIG = {
   farPerKm: 2,       // ... plus this amount for each extra km (rounded up)
   shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
   currency: { en: "SAR", ar: "ر.س" },
-  areas: ["Al Rehab", "Al aziziah", "Al Safa"],
-  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM"]
+  areas: [],
+  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", "9:00 PM – 12:00 AM"]
 };
 
 /* ============ PRODUCTS — edit here ============
@@ -280,7 +280,7 @@ function buildOrder(f){
   const loc = userLoc ? `${L("lMap")}: ${mapLink()} (${distKm().toFixed(1)} km from shop)\n` : `${L("lMap")}: not pinned - please confirm the delivery fee\n`;
   const pay = f.pay==="cod" ? L("cod") : L("onlinePending");
   const message = `*${CONFIG.shopName} — ${L("newOrder")}*\n\n${L("lOrder")}: ${no}\n${L("lName")}: ${f.name}\n${L("lMob")}: ${f.mobile}\n${L("lArea")}: ${f.area}\n${L("lAddr")}: ${[f.address.trim(), f.building.trim() && "Bldg/Villa " + f.building.trim()].filter(Boolean).join(", ") || "Not provided"}\n${loc}${L("lTime")}: ${f.time}\n\n*${L("lProd")}*\n${items}\n\n${T.en.sub}: ${m(x.s)}\n${T.en.del}: ${x.d? m(x.d): "Free"}\n*${T.en.tot}: ${m(x.t)}*\n\n${L("lPay")}: ${pay}\n${L("lNotes")}: ${f.notes.trim()||L("none")}`;
-  return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
+  return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, lang, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 
 $("#q").addEventListener("input", e => { query = e.target.value; showMain(); renderGrids(); if(query.trim()) $("#shop").scrollIntoView({behavior:"instant"}); });
