@@ -28,9 +28,22 @@
   </div>
 </section>
 
-<section class="sec"><h2 data-i="popCats"></h2><div class="cats" id="catTiles"></div></section>
+<section class="sec"><h2 data-i="cats"></h2><div class="cats" id="catTiles"></div></section>
 <section class="sec"><h2 data-i="best"></h2><div class="grid" id="bestGrid"></div></section>
-<section class="sec tint"><h2 data-i="offers"></h2><div class="grid" id="offerGrid"></div></section>
+
+<section id="shop" class="sec"><h2 data-i="nShop"></h2>
+  <input type="search" id="q" class="search" autocomplete="off">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="shopGrid"></div>
+</section>
+
+<section id="about" class="sec tint narrow"><h2 data-i="nAbout"></h2><p data-i="aboutP"></p></section>
+<section id="contact" class="sec narrow"><h2 data-i="nContact"></h2>
+  <p><span data-i="phone"></span>: <a id="phoneLink"></a></p>
+  <p><a id="waLink2" target="_blank" rel="noopener">WhatsApp</a></p>
+  <p data-i="hours"></p>
+</section>
+<section class="wa"><h2 data-i="waT"></h2><a class="btn light" id="waLink" target="_blank" rel="noopener" data-i="waB"></a></section>
 
 <section class="sec"><h2 data-i="why"></h2>
   <div class="feat">
@@ -45,19 +58,6 @@
   <ol class="steps"><li data-i="h1"></li><li data-i="h2"></li><li data-i="h3"></li><li data-i="h4"></li></ol>
 </section>
 
-<section class="wa"><h2 data-i="waT"></h2><a class="btn light" id="waLink" target="_blank" rel="noopener" data-i="waB"></a></section>
-
-<section id="shop" class="sec"><h2 data-i="nShop"></h2>
-  <div class="chips" id="chips"></div>
-  <div class="grid" id="shopGrid"></div>
-</section>
-
-<section id="about" class="sec tint narrow"><h2 data-i="nAbout"></h2><p data-i="aboutP"></p></section>
-<section id="contact" class="sec narrow"><h2 data-i="nContact"></h2>
-  <p><span data-i="phone"></span>: <a id="phoneLink"></a></p>
-  <p><a id="waLink2" target="_blank" rel="noopener">WhatsApp</a></p>
-  <p data-i="hours"></p>
-</section>
 </main>
 
 <!-- Checkout view -->
@@ -69,7 +69,7 @@
     <form id="coForm" novalidate>
       <label><span data-i="fName"></span><input name="name" required autocomplete="name"></label>
       <label><span data-i="fMobile"></span><input name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"></label>
-      <label><span data-i="fArea"></span><select name="area" id="areaSel" required></select></label>
+      <label><span data-i="fArea"></span><input name="area" list="areaList" required autocomplete="off"><datalist id="areaList"></datalist></label>
       <label><span data-i="fAddr"></span><textarea name="address" rows="2" required></textarea></label>
       <label><span data-i="fBldg"></span><input name="building" required></label>
       <label><span data-i="fTime"></span><select name="time" id="timeSel"></select></label>
