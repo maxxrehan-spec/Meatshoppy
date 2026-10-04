@@ -7,6 +7,7 @@
 <meta name="description" content="Fresh chicken, beef and mutton with home delivery.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -70,6 +71,12 @@
       <label><span data-i="fName"></span><input name="name" required autocomplete="name"></label>
       <label><span data-i="fMobile"></span><input name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"></label>
       <label><span data-i="fArea"></span><input name="area" list="areaList" required autocomplete="off"><datalist id="areaList"></datalist></label>
+      <div class="pin"><b data-i="pinT"></b>
+        <p id="locInfo" class="hint"></p>
+        <div id="map" class="map"></div>
+        <p class="err" id="mapMsg"></p>
+        <button type="button" class="chip" id="useMe" data-i="useMe"></button>
+      </div>
       <label><span data-i="fAddr"></span><textarea name="address" rows="2"></textarea></label>
       <label><span data-i="fBldg"></span><input name="building"></label>
       <label><span data-i="fTime"></span><select name="time" id="timeSel"></select></label>
@@ -101,6 +108,7 @@
 <div class="scrim" id="scrim"></div>
 
 <footer>© <span id="yr"></span> Meat Market</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

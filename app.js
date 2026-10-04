@@ -4,13 +4,19 @@ const CONFIG = {
   shopName: "Meat Market",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 56 841 1627",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycbyB24tqIT9wtH2sJqDa9kS1UhM1ss3jogiBLl7t77F5KEhNcCPosQHTP70H2BxWBImSiQ/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  orderEndpoint: "https://script.google.com/macros/s/AKfycbzrInRjKvAisOMNkXJFwe78wOcEz3BwwQ06pDSLKMcLr36XN7eRsqjEz37B_rRraj7EvQ/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
-  deliveryFee: 15,
-  freeDeliveryOver: 200,            // set to 0 to disable free delivery
+  // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
+  deliveryTiers: [
+    { upToKm: 5,  freeOver: 50,  fee: 10 },   // 0 to 5 km:  free over 50 SAR, else 10 SAR
+    { upToKm: 15, freeOver: 200, fee: 20 }    // 5 to 15 km: free over 200 SAR, else 20 SAR
+  ],
+  farBaseFee: 20,    // beyond the last tier: this base fee ...
+  farPerKm: 2,       // ... plus this amount for each extra km (rounded up)
+  shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
   currency: { en: "SAR", ar: "ر.س" },
-  areas: ["Al Rawdah", "Al Hamra", "Al Salamah", "Al Safa", "Al Nahda", "Obhur"],
-  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM"]
+  areas: ["Al Aziziah", "Al Rehab", "Al Safa"],
+  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", 9:00 PM - 12:00 AM"]
 };
 
 /* ============ PRODUCTS — edit here ============
@@ -52,14 +58,14 @@ const T = {
    how:"How it works",h1:"Choose your meat",h2:"Select the weight",h3:"Place your order",h4:"We confirm on WhatsApp and deliver",waT:"Prefer to order by chat?",waB:"Chat on WhatsApp",
    aboutP:"Meat Market is a fresh chicken and meat delivery service. We focus on quality, clean preparation and fast delivery to your home.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
    all:"All",add:"Add to Cart",added:"Added ✓",cart:"Your cart",empty:"Your cart is empty. Add something fresh.",remove:"Remove",sub:"Subtotal",del:"Delivery fee",free:"Free",tot:"Total",goCheckout:"Checkout",back:"← Back to shop",checkout:"Checkout",
-   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery",online:"Online Payment / Mada (coming soon)",payNote:"Online payment is a placeholder. No card details are collected on this site.",place:"Place order",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
+   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery",online:"Online Payment / Mada (coming soon)",payNote:"Online payment is a placeholder. No card details are collected on this site.",place:"Place order",pinT:"Delivery location",pinHelp:"Tap the map or drag the pin to your exact location.",useMe:"Use my current location",dist:"Distance from shop",inZone:"Inside our free-delivery area",outZone:"Outside the {km} km free-delivery area",mapFail:"The map could not load. Please type your full address.",freeNote:"Free delivery on orders over {amt} within {km} km of our shop.",errLoc:"Please pin your delivery location on the map.",locDenied:"Could not get your location. Tap the map instead.",kmU:"km",nTier:"{a}–{b} km: free over {amt}, otherwise {fee}",nFar:"Over {b} km: {base} + {pk} per extra km",lMap:"Location pin",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
    errFill:"Please complete all required fields.",errMobile:"Enter a valid Saudi mobile number (e.g. 05XXXXXXXX).",errCart:"Your cart is empty.",kg:"kg",g:"g",selArea:"Select area",newOrder:"New Order",lOrder:"Order Number",lName:"Customer Name",lMob:"Mobile Number",lArea:"Area",lAddr:"Address",lTime:"Delivery Time",lProd:"Products",lW:"Weight",lQ:"Qty",lP:"Price",lPay:"Payment Method",lNotes:"Customer Notes",none:"None",onlinePending:"Online Payment (to be arranged)"},
   ar:{nHome:"الرئيسية",nShop:"المتجر",nAbout:"من نحن",nContact:"تواصل معنا",heroT:"لحوم طازجة تصل إلى بابك",heroS:"دجاج ولحم بقري وغنم فاخر، يُقطع طازجاً ويُوصَّل إلى منزلك.",shopNow:"تسوق الآن",cats:"الأقسام",searchPh:"ابحث عن منتج…",noRes:"لا توجد منتجات مطابقة.",pc:"قطعة",pcs:"قطع",best:"الأكثر مبيعاً",offers:"عروض خاصة",why:"لماذا تختارنا",
    w1t:"طازج كل يوم",w1d:"نجهّز كل طلب في يوم التوصيل.",w2t:"جودة مضمونة",w2d:"دجاج ولحوم مختارة بعناية.",w3t:"أسعار واضحة",w3d:"كل سعر مرتبط بوزنه. بلا مفاجآت.",w4t:"توصيل للمنزل",w4d:"نوصّله لك مبرداً حتى الباب.",
    how:"كيف نعمل",h1:"اختر لحمتك",h2:"حدد الوزن",h3:"أرسل طلبك",h4:"نؤكد عبر واتساب ونوصّل",waT:"تفضّل الطلب بالمحادثة؟",waB:"تواصل عبر واتساب",
    aboutP:"ميت ماركت خدمة توصيل دجاج ولحوم طازجة. نهتم بالجودة والنظافة وسرعة التوصيل إلى منزلك.",phone:"الهاتف",hours:"يتم تأكيد الطلبات عبر واتساب.",
    all:"الكل",add:"أضف إلى السلة",added:"تمت الإضافة ✓",cart:"سلتك",empty:"سلتك فارغة. أضف شيئاً طازجاً.",remove:"حذف",sub:"المجموع الفرعي",del:"رسوم التوصيل",free:"مجاني",tot:"الإجمالي",goCheckout:"إتمام الطلب",back:"→ العودة للمتجر",checkout:"إتمام الطلب",
-   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل (اختياري)",fBldg:"رقم المبنى / الفيلا (اختياري)",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع عند الاستلام",online:"الدفع الإلكتروني / مدى (قريباً)",payNote:"الدفع الإلكتروني للعرض فقط. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"تأكيد الطلب",sending:"جارٍ إرسال طلبك…",doneOk:"تم استلام الطلب ✓",doneOkP:"شكراً {n}! تم استلام طلبك رقم {no}. سنؤكده معك عبر واتساب قريباً.",doneStep:"خطوة أخيرة",doneStepP:"اضغط الزر أدناه لإرسال طلبك رقم {no} إلينا عبر واتساب حتى نؤكده.",doneWa:"أرسل الطلب عبر واتساب",doneWa2:"راسلنا عبر واتساب",
+   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل (اختياري)",fBldg:"رقم المبنى / الفيلا (اختياري)",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع عند الاستلام",online:"الدفع الإلكتروني / مدى (قريباً)",payNote:"الدفع الإلكتروني للعرض فقط. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"تأكيد الطلب",pinT:"موقع التوصيل",pinHelp:"اضغط على الخريطة أو اسحب الدبوس إلى موقعك بدقة.",useMe:"استخدم موقعي الحالي",dist:"المسافة من المتجر",inZone:"داخل نطاق التوصيل المجاني",outZone:"خارج نطاق التوصيل المجاني ({km} كم)",mapFail:"تعذر تحميل الخريطة. يرجى كتابة العنوان الكامل.",freeNote:"توصيل مجاني للطلبات فوق {amt} ضمن {km} كم من المتجر.",errLoc:"يرجى تحديد موقع التوصيل على الخريطة.",locDenied:"تعذر تحديد موقعك. اضغط على الخريطة بدلاً من ذلك.",kmU:"كم",nTier:"{a}–{b} كم: مجاني للطلبات فوق {amt}، وإلا {fee}",nFar:"أكثر من {b} كم: {base} + {pk} لكل كم إضافي",sending:"جارٍ إرسال طلبك…",doneOk:"تم استلام الطلب ✓",doneOkP:"شكراً {n}! تم استلام طلبك رقم {no}. سنؤكده معك عبر واتساب قريباً.",doneStep:"خطوة أخيرة",doneStepP:"اضغط الزر أدناه لإرسال طلبك رقم {no} إلينا عبر واتساب حتى نؤكده.",doneWa:"أرسل الطلب عبر واتساب",doneWa2:"راسلنا عبر واتساب",
    errFill:"يرجى تعبئة جميع الحقول المطلوبة.",errMobile:"أدخل رقم جوال سعودي صحيح (مثال: 05XXXXXXXX).",errCart:"سلتك فارغة.",kg:"كجم",g:"جم",selArea:"اختر الحي",newOrder:"طلب جديد",lOrder:"رقم الطلب",lName:"اسم العميل",lMob:"رقم الجوال",lArea:"الحي",lAddr:"العنوان",lTime:"وقت التوصيل",lProd:"المنتجات",lW:"الوزن",lQ:"الكمية",lP:"السعر",lPay:"طريقة الدفع",lNotes:"ملاحظات العميل",none:"لا يوجد",onlinePending:"دفع إلكتروني (يُرتَّب لاحقاً)"}
 };
 
@@ -73,6 +79,7 @@ const store = {
 let lang = store.get("mm_lang", "en");
 let cart = store.get("mm_cart", []);       // [{id, w, q}]
 let filter = "all", query = "";
+let map = null, pin = null, userLoc = store.get("mm_loc", null);   // {lat,lng} chosen on the map
 const sel = {};                             // per-product selection {w,q}
 
 const t = k => T[lang][k] ?? k;
@@ -100,7 +107,7 @@ function applyLang(){
   $("#areaList").innerHTML = CONFIG.areas.map(a=>`<option value="${a}">`).join("");
   $("#q").placeholder = t("searchPh");
   $("#timeSel").innerHTML = CONFIG.deliveryTimes.map(a=>`<option>${a}</option>`).join("");
-  renderTiles(); renderChips(); renderGrids(); renderCart(); renderSummary();
+  renderTiles(); renderChips(); renderGrids(); renderCart(); renderSummary(); updLocInfo();
 }
 
 /* Catalogue */
@@ -162,7 +169,23 @@ function addToCart(id, w, q){
   saveCart(); renderCart();
 }
 const subtotal = () => cart.reduce((s,i)=> s + price(prod(i.id), i.w) * i.q, 0);
-const deliveryFee = () => (!cart.length || (CONFIG.freeDeliveryOver && subtotal() >= CONFIG.freeDeliveryOver)) ? 0 : CONFIG.deliveryFee;
+const rad = x => x * Math.PI / 180;
+function km(a, b){ const h = Math.sin(rad(b.lat-a.lat)/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(rad(b.lng-a.lng)/2)**2; return 12742 * Math.asin(Math.sqrt(h)); }
+const distKm = () => userLoc ? km(CONFIG.shopLocation, userLoc) : null;
+function feeFor(sub, d){
+  d = d === null ? 0 : d;                       // no pin yet: show the nearest-zone fee until a location is chosen
+  for(const z of CONFIG.deliveryTiers) if(d <= z.upToKm) return sub >= z.freeOver ? 0 : z.fee;
+  const last = CONFIG.deliveryTiers[CONFIG.deliveryTiers.length-1];
+  return CONFIG.farBaseFee + CONFIG.farPerKm * Math.ceil(d - last.upToKm);
+}
+const deliveryFee = () => cart.length ? feeFor(subtotal(), distKm()) : 0;
+const noteHtml = () => {
+  let prev = 0;
+  const rows = CONFIG.deliveryTiers.map(z => { const r = t("nTier").replace("{a}", prev).replace("{b}", z.upToKm).replace("{amt}", money(z.freeOver)).replace("{fee}", money(z.fee)); prev = z.upToKm; return r; });
+  rows.push(t("nFar").replace("{b}", prev).replace("{base}", money(CONFIG.farBaseFee)).replace("{pk}", money(CONFIG.farPerKm)));
+  return `<small class="note">${rows.join("<br>")}</small>`;
+};
+const mapLink = () => userLoc ? `https://www.google.com/maps?q=${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : "";
 const totals = () => { const s = subtotal(), d = deliveryFee(); return { s, d, t: s + d }; };
 
 function renderCart(){
@@ -177,7 +200,7 @@ function renderCart(){
   $("#cartFoot").innerHTML = cart.length ? `
     <div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div>
     <div class="sum"><span>${t("del")}</span><span>${x.d? money(x.d): t("free")}</span></div>
-    <div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>
+    <div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}
     <button class="btn full" id="goCo">${t("goCheckout")}</button>` : "";
   renderSummary();
 }
@@ -194,7 +217,7 @@ $("#closeCart").onclick = $("#scrim").onclick = () => openCart(false);
 $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCart(false); showCheckout(); } });
 
 /* Views */
-function showCheckout(){ $("#main").hidden = true; $("#doneView").hidden = true; $("#checkoutView").hidden = false; scrollTo(0,0); }
+function showCheckout(){ $("#main").hidden = true; $("#doneView").hidden = true; $("#checkoutView").hidden = false; scrollTo(0,0); initMap(); }
 function showMain(){ $("#main").hidden = false; $("#checkoutView").hidden = true; $("#doneView").hidden = true; }
 $("#backBtn").onclick = () => { showMain(); $("#shop").scrollIntoView(); };
 $("#nav").addEventListener("click", showMain);
@@ -202,7 +225,7 @@ $(".logo").addEventListener("click", showMain);
 function renderSummary(){
   const x = totals();
   $("#coSummary").innerHTML = cart.map(i=>{ const p=prod(i.id); return `<div class="sum"><span>${pName(p)} · ${wl(i.w,p)} × ${i.q}</span><span>${money(price(p,i.w)*i.q)}</span></div>`; }).join("")
-   + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d?money(x.d):t("free")}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>`;
+   + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d?money(x.d):t("free")}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
 }
 
 /* Checkout → WhatsApp */
@@ -213,6 +236,7 @@ $("#coForm").addEventListener("submit", async e => {
   if(!cart.length){ err.textContent = t("errCart"); return; }
   if(!f.name.trim()||!f.mobile.trim()||!f.area.trim()){ err.textContent = t("errFill"); return; }
   if(!/^(\+?966|0)?5\d{8}$/.test(f.mobile.replace(/[\s-]/g,""))){ err.textContent = t("errMobile"); return; }
+  if(!userLoc && typeof L !== "undefined"){ err.textContent = t("errLoc"); return; }
   err.textContent = "";
   const order = buildOrder(f);
   store.set("mm_last_order", order);       // latest order, browser only
@@ -253,12 +277,45 @@ function buildOrder(f){
   const w = (n,p) => p.unit==="kg" ? (n>=1000 ? `${n/1000} kg` : `${n} g`) : p.unit==="pc" ? `${n} pcs` : p.pk, m = n => `${num(n)} SAR`;
   const items = cart.map((i,ix) => { const p = prod(i.id);
     return `${ix+1}. ${p.en} (${p.ar})\n   ${L("lW")}: ${w(i.w,p)} | ${L("lQ")}: ${i.q} | ${L("lP")}: ${m(price(p,i.w))} each = ${m(price(p,i.w)*i.q)}`; }).join("\n");
+  const loc = userLoc ? `${L("lMap")}: ${mapLink()} (${distKm().toFixed(1)} km from shop)\n` : `${L("lMap")}: not pinned - please confirm the delivery fee\n`;
   const pay = f.pay==="cod" ? L("cod") : L("onlinePending");
-  const message = `*${CONFIG.shopName} — ${L("newOrder")}*\n\n${L("lOrder")}: ${no}\n${L("lName")}: ${f.name}\n${L("lMob")}: ${f.mobile}\n${L("lArea")}: ${f.area}\n${L("lAddr")}: ${[f.address.trim(), f.building.trim() && "Bldg/Villa " + f.building.trim()].filter(Boolean).join(", ") || "Not provided"}\n${L("lTime")}: ${f.time}\n\n*${L("lProd")}*\n${items}\n\n${T.en.sub}: ${m(x.s)}\n${T.en.del}: ${x.d? m(x.d): "Free"}\n*${T.en.tot}: ${m(x.t)}*\n\n${L("lPay")}: ${pay}\n${L("lNotes")}: ${f.notes.trim()||L("none")}`;
-  return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building}, deliveryTime:f.time, itemsText:items, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
+  const message = `*${CONFIG.shopName} — ${L("newOrder")}*\n\n${L("lOrder")}: ${no}\n${L("lName")}: ${f.name}\n${L("lMob")}: ${f.mobile}\n${L("lArea")}: ${f.area}\n${L("lAddr")}: ${[f.address.trim(), f.building.trim() && "Bldg/Villa " + f.building.trim()].filter(Boolean).join(", ") || "Not provided"}\n${loc}${L("lTime")}: ${f.time}\n\n*${L("lProd")}*\n${items}\n\n${T.en.sub}: ${m(x.s)}\n${T.en.del}: ${x.d? m(x.d): "Free"}\n*${T.en.tot}: ${m(x.t)}*\n\n${L("lPay")}: ${pay}\n${L("lNotes")}: ${f.notes.trim()||L("none")}`;
+  return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 
 $("#q").addEventListener("input", e => { query = e.target.value; showMain(); renderGrids(); if(query.trim()) $("#shop").scrollIntoView({behavior:"instant"}); });
+/* Map pin (Leaflet + OpenStreetMap, free) */
+function updLocInfo(){
+  const el = $("#locInfo"); if(!el) return;
+  const d = distKm();
+  el.textContent = d === null ? t("pinHelp") : `${t("dist")}: ${d.toFixed(1)} ${t("kmU")} — ${t("del")}: ${deliveryFee() ? money(deliveryFee()) : t("free")}`;
+}
+function setLoc(lat, lng, pan){
+  userLoc = { lat, lng }; store.set("mm_loc", userLoc);
+  if(map){
+    if(!pin){ pin = L.marker([lat, lng], { draggable:true }).addTo(map); pin.on("dragend", () => { const p = pin.getLatLng(); setLoc(p.lat, p.lng); }); }
+    else pin.setLatLng([lat, lng]);
+    if(pan) map.setView([lat, lng], 16);
+  }
+  updLocInfo(); renderCart();
+}
+function initMap(){
+  if(typeof L === "undefined"){ $("#map").hidden = true; $("#useMe").hidden = true; $("#mapMsg").textContent = t("mapFail"); return; }
+  if(!map){
+    const c = userLoc || CONFIG.shopLocation;
+    map = L.map("map").setView([c.lat, c.lng], userLoc ? 16 : 12);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap contributors" }).addTo(map);
+    CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7a1527", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
+    map.on("click", e => setLoc(e.latlng.lat, e.latlng.lng));
+    if(userLoc) setLoc(userLoc.lat, userLoc.lng);
+  }
+  setTimeout(() => map.invalidateSize(), 80);
+}
+$("#useMe").onclick = () => {
+  $("#mapMsg").textContent = "";
+  if(!navigator.geolocation){ $("#mapMsg").textContent = t("locDenied"); return; }
+  navigator.geolocation.getCurrentPosition(p => setLoc(p.coords.latitude, p.coords.longitude, true), () => { $("#mapMsg").textContent = t("locDenied"); }, { enableHighAccuracy:true, timeout:15000 });
+};
 $("#langBtn").onclick = () => { lang = lang==="en" ? "ar" : "en"; store.set("mm_lang", lang); applyLang(); };
 $("#yr").textContent = new Date().getFullYear();
 applyLang();

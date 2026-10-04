@@ -123,3 +123,5 @@ fieldset small{color:var(--mute)}
 }
 
 .done{text-align:center}.done .summary{font-weight:700;font-size:1.2rem}.done .btn{margin-bottom:12px}
+
+.map{height:300px;border-radius:var(--r);border:1px solid var(--line);margin:8px 0;position:relative;z-index:0;isolation:isolate}.pin{margin-bottom:16px}.hint,.note{color:var(--mute);font-size:.88rem;display:block;margin-top:6px}
