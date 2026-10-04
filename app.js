@@ -4,7 +4,7 @@ const CONFIG = {
   shopName: "Meat Market",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 56 841 1627",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycbzrInRjKvAisOMNkXJFwe78wOcEz3BwwQ06pDSLKMcLr36XN7eRsqjEz37B_rRraj7EvQ/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  orderEndpoint: "https://script.google.com/macros/s/AKfycbwoC0HgS1KM0eHlFZK7bV_u7k-lOcxtbFtDNhUZeuCHWQ2KM_QZ36BXJBo6K_rBRkpZcg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
   deliveryTiers: [
@@ -15,8 +15,8 @@ const CONFIG = {
   farPerKm: 2,       // ... plus this amount for each extra km (rounded up)
   shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
   currency: { en: "SAR", ar: "ر.س" },
-  areas: ["Al Aziziah", "Al Rehab", "Al Safa"],
-  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", 9:00 PM - 12:00 AM"]
+  areas: ["Al Rehab", "Al aziziah", "Al Safa"],
+  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM"]
 };
 
 /* ============ PRODUCTS — edit here ============
