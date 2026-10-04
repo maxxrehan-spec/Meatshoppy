@@ -229,7 +229,7 @@ function buildOrder(f){
   return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building}, deliveryTime:f.time, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 
-$("#q").addEventListener("input", e => { query = e.target.value; renderGrids(); });
+$("#q").addEventListener("input", e => { query = e.target.value; showMain(); renderGrids(); if(query.trim()) $("#shop").scrollIntoView(); });
 $("#langBtn").onclick = () => { lang = lang==="en" ? "ar" : "en"; store.set("mm_lang", lang); applyLang(); };
 $("#yr").textContent = new Date().getFullYear();
 applyLang();

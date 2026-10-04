@@ -106,4 +106,5 @@ fieldset small{color:var(--mute)}
 .summary{background:var(--cream);border-radius:var(--r);padding:14px;margin-bottom:20px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
-.search{margin-bottom:12px;padding:14px 18px;border-radius:999px;font-size:1rem}
+.bar{flex-wrap:wrap}
+.bar .search{order:5;flex:1 1 100%;margin:0;padding:10px 18px;border:0;border-radius:999px;font-size:.95rem}
