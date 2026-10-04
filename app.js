@@ -4,7 +4,8 @@ const CONFIG = {
   shopName: "Meat Market",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 56 841 1627",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycbwyVxS6T04pP-gpxiDi0AJvjjL8f-yU1oSwL3ntja5bj39j4BP-huB-2y-iFMZlQok8tg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  orderEndpoint: "https://script.google.com/macros/s/AKfycbzId9yYh9_7WCU6r7Hmm5Pci6H6cD57hZC60su0aYBO1cGYc3g2IsJTq7ZOYQtg0frEog/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=604721423&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
   deliveryTiers: [
@@ -16,7 +17,7 @@ const CONFIG = {
   shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
   currency: { en: "SAR", ar: "ر.س" },
   areas: [],
-  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", "9:00 PM – 12:00 AM"]
+  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM" "9:00 PM – 12:00 AM"]
 };
 
 /* ============ PRODUCTS — edit here ============
@@ -25,7 +26,7 @@ const CONFIG = {
           "pc"  -> price = SAR per piece, opts = piece counts (e.g. [12,24])
           "pack"-> price = SAR per pack,  pk / pka = pack label EN / AR (opts stays [1])
    img  = file in /images (replace with your own photos). PRICES BELOW ARE SAMPLES — set your real prices. */
-const PRODUCTS = [
+let PRODUCTS = [
   { id:"c1", cat:"chicken", unit:"kg", en:"Whole Chicken", ar:"دجاج كامل", d:"Fresh whole chicken, cleaned and ready to cook.", da:"دجاج كامل طازج، منظف وجاهز للطبخ.", img:"images/chicken-whole.jpg", tag:"Best Seller", price:24, opts:[900,1000,1200] },
   { id:"c2", cat:"chicken", unit:"pack", en:"Chicken, Chopped – 4 pcs", ar:"دجاج مقطع – 4 قطع", d:"Fresh chicken chopped into 4 pieces.", da:"دجاج طازج مقطع إلى 4 قطع.", img:"images/chicken-chopped.jpg", tag:"", price:28, pk:"4 pcs", pka:"4 قطع", opts:[1] },
   { id:"c3", cat:"chicken", unit:"kg", en:"Fresh Chicken Boneless", ar:"دجاج طازج بدون عظم", d:"Boneless, skinless chicken fillets.", da:"فيليه دجاج طازج بدون عظم وجلد.", img:"images/chicken-boneless.jpg", tag:"Best Seller", price:38, opts:[1000,2000] },
@@ -318,6 +319,53 @@ $("#useMe").onclick = () => {
   if(!navigator.geolocation){ $("#mapMsg").textContent = t("locDenied"); return; }
   navigator.geolocation.getCurrentPosition(p => setLoc(p.coords.latitude, p.coords.longitude, true), () => { $("#mapMsg").textContent = t("locDenied"); }, { enableHighAccuracy:true, timeout:15000 });
 };
+/* Products from a published Google Sheet (optional). Falls back to the PRODUCTS list above if the sheet can't be read. */
+function parseCSV(text){
+  const rows = []; let row = [], cell = "", q = false;
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+    if(q){ if(c === '"'){ if(text[i+1] === '"'){ cell += '"'; i++; } else q = false; } else cell += c; }
+    else if(c === '"') q = true;
+    else if(c === ","){ row.push(cell); cell = ""; }
+    else if(c === "\n" || c === "\r"){ if(c === "\r" && text[i+1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += c;
+  }
+  if(cell !== "" || row.length){ row.push(cell); rows.push(row); }
+  return rows;
+}
+function sheetToProducts(text){
+  const rows = parseCSV(text.replace(/^\uFEFF/, "")).filter(r => r.some(c => c.trim()));
+  if(rows.length < 2) return [];
+  const H = rows[0].map(h => h.trim().toLowerCase()), out = [], seen = new Set();
+  rows.slice(1).forEach((r, n) => {
+    const g = k => { const i = H.indexOf(k); return i < 0 ? "" : String(r[i] || "").replace(/[<>"`]/g, "").trim(); };
+    if(/^(no|false|0|n)$/i.test(g("available"))) return;
+    const price = parseFloat(g("price")), unit = g("unit").toLowerCase(), en = g("name_en");
+    if(!en || !(price > 0) || !["kg","pc","pack"].includes(unit)) return;
+    const opts = unit === "pack" ? [1] : g("options").split(/[,\s]+/).map(Number).filter(x => x > 0);
+    if(!opts.length) return;
+    let id = g("id").replace(/[^\w-]/g, "") || "s" + n; if(seen.has(id)) id += "_" + n; seen.add(id);
+    const img = g("image").replace(/[^\w.\- ]/g, "");
+    out.push({ id, cat:g("category").toLowerCase(), unit, en, ar:g("name_ar") || en, d:g("desc_en"), da:g("desc_ar") || g("desc_en"),
+      img:"images/" + (img || "none.jpg"), tag:g("tag"), price, pk:g("pack_en") || "1 pack", pka:g("pack_ar") || g("pack_en") || "عبوة", opts });
+  });
+  return out;
+}
+async function loadSheet(){
+  if(!CONFIG.productsSheetUrl) return;
+  try{
+    const u = CONFIG.productsSheetUrl + (CONFIG.productsSheetUrl.includes("?") ? "&" : "?") + "t=" + Date.now();
+    const r = await fetch(u); if(!r.ok) return;
+    const list = sheetToProducts(await r.text());
+    if(!list.length) return;                 // unreadable sheet: keep the current list
+    PRODUCTS = list; store.set("mm_products", list);
+    Object.keys(sel).forEach(k => delete sel[k]);
+    renderGrids(); renderCart();
+  }catch(e){}
+}
 $("#langBtn").onclick = () => { lang = lang==="en" ? "ar" : "en"; store.set("mm_lang", lang); applyLang(); };
 $("#yr").textContent = new Date().getFullYear();
+const cachedProducts = CONFIG.productsSheetUrl ? store.get("mm_products", null) : null;
+if(Array.isArray(cachedProducts) && cachedProducts.length) PRODUCTS = cachedProducts;   // last good copy of the sheet
 applyLang();
+loadSheet();
