@@ -50,14 +50,14 @@ const T = {
    how:"How it works",h1:"Choose your meat",h2:"Select the weight",h3:"Place your order",h4:"We confirm on WhatsApp and deliver",waT:"Prefer to order by chat?",waB:"Chat on WhatsApp",
    aboutP:"Meat Market is a fresh chicken and meat delivery service. We focus on quality, clean preparation and fast delivery to your home.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
    all:"All",add:"Add to Cart",added:"Added ✓",cart:"Your cart",empty:"Your cart is empty. Add something fresh.",remove:"Remove",sub:"Subtotal",del:"Delivery fee",free:"Free",tot:"Total",goCheckout:"Checkout",back:"← Back to shop",checkout:"Checkout",
-   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address",fBldg:"Building / Villa number",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery",online:"Online Payment / Mada (coming soon)",payNote:"Online payment is a placeholder. No card details are collected on this site.",place:"Place order via WhatsApp",
+   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery",online:"Online Payment / Mada (coming soon)",payNote:"Online payment is a placeholder. No card details are collected on this site.",place:"Place order via WhatsApp",
    errFill:"Please complete all required fields.",errMobile:"Enter a valid Saudi mobile number (e.g. 05XXXXXXXX).",errCart:"Your cart is empty.",kg:"kg",g:"g",selArea:"Select area",newOrder:"New Order",lOrder:"Order Number",lName:"Customer Name",lMob:"Mobile Number",lArea:"Area",lAddr:"Address",lTime:"Delivery Time",lProd:"Products",lW:"Weight",lQ:"Qty",lP:"Price",lPay:"Payment Method",lNotes:"Customer Notes",none:"None",onlinePending:"Online Payment (to be arranged)"},
   ar:{nHome:"الرئيسية",nShop:"المتجر",nAbout:"من نحن",nContact:"تواصل معنا",heroT:"لحوم طازجة تصل إلى بابك",heroS:"دجاج ولحم بقري وغنم فاخر، يُقطع طازجاً ويُوصَّل إلى منزلك.",shopNow:"تسوق الآن",cats:"الأقسام",searchPh:"ابحث عن منتج…",noRes:"لا توجد منتجات مطابقة.",pc:"قطعة",pcs:"قطع",best:"الأكثر مبيعاً",offers:"عروض خاصة",why:"لماذا تختارنا",
    w1t:"طازج كل يوم",w1d:"نجهّز كل طلب في يوم التوصيل.",w2t:"جودة مضمونة",w2d:"دجاج ولحوم مختارة بعناية.",w3t:"أسعار واضحة",w3d:"كل سعر مرتبط بوزنه. بلا مفاجآت.",w4t:"توصيل للمنزل",w4d:"نوصّله لك مبرداً حتى الباب.",
    how:"كيف نعمل",h1:"اختر لحمتك",h2:"حدد الوزن",h3:"أرسل طلبك",h4:"نؤكد عبر واتساب ونوصّل",waT:"تفضّل الطلب بالمحادثة؟",waB:"تواصل عبر واتساب",
    aboutP:"ميت ماركت خدمة توصيل دجاج ولحوم طازجة. نهتم بالجودة والنظافة وسرعة التوصيل إلى منزلك.",phone:"الهاتف",hours:"يتم تأكيد الطلبات عبر واتساب.",
    all:"الكل",add:"أضف إلى السلة",added:"تمت الإضافة ✓",cart:"سلتك",empty:"سلتك فارغة. أضف شيئاً طازجاً.",remove:"حذف",sub:"المجموع الفرعي",del:"رسوم التوصيل",free:"مجاني",tot:"الإجمالي",goCheckout:"إتمام الطلب",back:"→ العودة للمتجر",checkout:"إتمام الطلب",
-   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل",fBldg:"رقم المبنى / الفيلا",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع عند الاستلام",online:"الدفع الإلكتروني / مدى (قريباً)",payNote:"الدفع الإلكتروني للعرض فقط. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"إرسال الطلب عبر واتساب",
+   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل (اختياري)",fBldg:"رقم المبنى / الفيلا (اختياري)",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع عند الاستلام",online:"الدفع الإلكتروني / مدى (قريباً)",payNote:"الدفع الإلكتروني للعرض فقط. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"إرسال الطلب عبر واتساب",
    errFill:"يرجى تعبئة جميع الحقول المطلوبة.",errMobile:"أدخل رقم جوال سعودي صحيح (مثال: 05XXXXXXXX).",errCart:"سلتك فارغة.",kg:"كجم",g:"جم",selArea:"اختر الحي",newOrder:"طلب جديد",lOrder:"رقم الطلب",lName:"اسم العميل",lMob:"رقم الجوال",lArea:"الحي",lAddr:"العنوان",lTime:"وقت التوصيل",lProd:"المنتجات",lW:"الوزن",lQ:"الكمية",lP:"السعر",lPay:"طريقة الدفع",lNotes:"ملاحظات العميل",none:"لا يوجد",onlinePending:"دفع إلكتروني (يُرتَّب لاحقاً)"}
 };
 
@@ -208,7 +208,7 @@ $("#coForm").addEventListener("submit", e => {
   e.preventDefault();
   const f = Object.fromEntries(new FormData(e.target)), err = $("#coErr");
   if(!cart.length){ err.textContent = t("errCart"); return; }
-  if(!f.name.trim()||!f.mobile.trim()||!f.area.trim()||!f.address.trim()||!f.building.trim()){ err.textContent = t("errFill"); return; }
+  if(!f.name.trim()||!f.mobile.trim()||!f.area.trim()){ err.textContent = t("errFill"); return; }
   if(!/^(\+?966|0)?5\d{8}$/.test(f.mobile.replace(/[\s-]/g,""))){ err.textContent = t("errMobile"); return; }
   err.textContent = "";
   const order = buildOrder(f);
@@ -225,7 +225,7 @@ function buildOrder(f){
   const items = cart.map((i,ix) => { const p = prod(i.id);
     return `${ix+1}. ${p.en} (${p.ar})\n   ${L("lW")}: ${w(i.w,p)} | ${L("lQ")}: ${i.q} | ${L("lP")}: ${m(price(p,i.w))} each = ${m(price(p,i.w)*i.q)}`; }).join("\n");
   const pay = f.pay==="cod" ? L("cod") : L("onlinePending");
-  const message = `*${CONFIG.shopName} — ${L("newOrder")}*\n\n${L("lOrder")}: ${no}\n${L("lName")}: ${f.name}\n${L("lMob")}: ${f.mobile}\n${L("lArea")}: ${f.area}\n${L("lAddr")}: ${f.address}, Bldg/Villa ${f.building}\n${L("lTime")}: ${f.time}\n\n*${L("lProd")}*\n${items}\n\n${T.en.sub}: ${m(x.s)}\n${T.en.del}: ${x.d? m(x.d): "Free"}\n*${T.en.tot}: ${m(x.t)}*\n\n${L("lPay")}: ${pay}\n${L("lNotes")}: ${f.notes.trim()||L("none")}`;
+  const message = `*${CONFIG.shopName} — ${L("newOrder")}*\n\n${L("lOrder")}: ${no}\n${L("lName")}: ${f.name}\n${L("lMob")}: ${f.mobile}\n${L("lArea")}: ${f.area}\n${L("lAddr")}: ${[f.address.trim(), f.building.trim() && "Bldg/Villa " + f.building.trim()].filter(Boolean).join(", ") || "Not provided"}\n${L("lTime")}: ${f.time}\n\n*${L("lProd")}*\n${items}\n\n${T.en.sub}: ${m(x.s)}\n${T.en.del}: ${x.d? m(x.d): "Free"}\n*${T.en.tot}: ${m(x.t)}*\n\n${L("lPay")}: ${pay}\n${L("lNotes")}: ${f.notes.trim()||L("none")}`;
   return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building}, deliveryTime:f.time, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 

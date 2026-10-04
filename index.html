@@ -17,7 +17,7 @@
   </nav>
   <button class="lang" id="langBtn" aria-label="Language">العربية</button>
   <button class="cartBtn" id="cartBtn" aria-label="Cart">🛒<b id="cartCount">0</b></button>
-  <input type="search" id="q" class="search" autocomplete="off">
+  <input type="search" id="q" class="search" autocomplete="off" aria-label="Search">
 </header>
 
 <main id="main">
@@ -70,8 +70,8 @@
       <label><span data-i="fName"></span><input name="name" required autocomplete="name"></label>
       <label><span data-i="fMobile"></span><input name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"></label>
       <label><span data-i="fArea"></span><input name="area" list="areaList" required autocomplete="off"><datalist id="areaList"></datalist></label>
-      <label><span data-i="fAddr"></span><textarea name="address" rows="2" required></textarea></label>
-      <label><span data-i="fBldg"></span><input name="building" required></label>
+      <label><span data-i="fAddr"></span><textarea name="address" rows="2"></textarea></label>
+      <label><span data-i="fBldg"></span><input name="building"></label>
       <label><span data-i="fTime"></span><select name="time" id="timeSel"></select></label>
       <label><span data-i="fNotes"></span><textarea name="notes" rows="2"></textarea></label>
       <fieldset><legend data-i="pay"></legend>
