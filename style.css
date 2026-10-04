@@ -121,3 +121,5 @@ fieldset small{color:var(--mute)}
 .tag{font-size:.7rem;padding:2px 8px}
 .cat{font-size:.78rem}.cat span{font-size:1.5rem}
 }
+
+.done{text-align:center}.done .summary{font-weight:700;font-size:1.2rem}.done .btn{margin-bottom:12px}
