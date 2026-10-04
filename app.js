@@ -4,7 +4,7 @@ const CONFIG = {
   shopName: "Meat Market",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 56 841 1627",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycbxKNyZHEIvZcOhON2p-qyML2a_tMtHVQOKX3D73R6Sa_lplHdEUPvtZZU1nUvnXNZVQAQ/exec",   // 
+  orderEndpoint: "https://script.google.com/macros/s/AKfycbyB24tqIT9wtH2sJqDa9kS1UhM1ss3jogiBLl7t77F5KEhNcCPosQHTP70H2BxWBImSiQ/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   deliveryFee: 15,
   freeDeliveryOver: 200,            // set to 0 to disable free delivery
@@ -228,7 +228,9 @@ async function sendOrder(order){
   try{
     const r = await fetch(CONFIG.orderEndpoint, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
       body: JSON.stringify({ secret: CONFIG.orderSecret, order }), signal: ctl.signal });
-    return !!(await r.json()).ok;
+    const d = await r.json();
+    if(d.ok && d.orderNumber){ order.message = order.message.split(order.orderNumber).join(d.orderNumber); order.orderNumber = d.orderNumber; store.set("mm_last_order", order); }
+    return !!d.ok;
   }catch(e){ return false; }finally{ clearTimeout(tm); }
 }
 function showDone(order, ok){
@@ -247,7 +249,7 @@ $("#doneBack").onclick = () => { showMain(); scrollTo(0,0); };
 function buildOrder(f){
   const L = k => T.en[k];                 // WhatsApp message is always English so the shop can read it
   const x = totals(), d = new Date();
-  const no = "MM-" + d.getFullYear().toString().slice(2) + String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0") + "-" + Math.floor(1000+Math.random()*9000);
+  const no = "MM-" + Math.floor(1000 + Math.random()*9000);   // temporary; the Apps Script replaces it with a running number
   const w = (n,p) => p.unit==="kg" ? (n>=1000 ? `${n/1000} kg` : `${n} g`) : p.unit==="pc" ? `${n} pcs` : p.pk, m = n => `${num(n)} SAR`;
   const items = cart.map((i,ix) => { const p = prod(i.id);
     return `${ix+1}. ${p.en} (${p.ar})\n   ${L("lW")}: ${w(i.w,p)} | ${L("lQ")}: ${i.q} | ${L("lP")}: ${m(price(p,i.w))} each = ${m(price(p,i.w)*i.q)}`; }).join("\n");
