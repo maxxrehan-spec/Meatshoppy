@@ -17,7 +17,7 @@ const CONFIG = {
   shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
   currency: { en: "SAR", ar: "ر.س" },
   areas: [],
-  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM" "9:00 PM – 12:00 AM"]
+  deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", "9:00 PM – 12:00 AM"]
 };
 
 /* ============ PRODUCTS — edit here ============
