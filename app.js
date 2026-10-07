@@ -6,6 +6,7 @@ const CONFIG = {
   phone: "+966 56 841 1627",
   orderEndpoint: "https://script.google.com/macros/s/AKfycbzId9yYh9_7WCU6r7Hmm5Pci6H6cD57hZC60su0aYBO1cGYc3g2IsJTq7ZOYQtg0frEog/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=604721423&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
+  banners: ["images/hero.jpg", "images/banner2.jpg", "images/banner3.jpg"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
   deliveryTiers: [
@@ -59,14 +60,14 @@ const T = {
    how:"How it works",h1:"Choose your meat",h2:"Select the weight",h3:"Place your order",h4:"We confirm on WhatsApp and deliver",waT:"Prefer to order by chat?",waB:"Chat on WhatsApp",
    aboutP:"Meat Market is a fresh chicken and meat delivery service. We focus on quality, clean preparation and fast delivery to your home.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
    all:"All",add:"Add to Cart",added:"Added ✓",cart:"Your cart",empty:"Your cart is empty. Add something fresh.",remove:"Remove",sub:"Subtotal",del:"Delivery fee",free:"Free",tot:"Total",goCheckout:"Checkout",back:"← Back to shop",checkout:"Checkout",
-   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery",online:"Online Payment / Mada (coming soon)",payNote:"Online payment is a placeholder. No card details are collected on this site.",place:"Place order",pinT:"Delivery location",pinHelp:"Tap the map or drag the pin to your exact location.",useMe:"Use my current location",dist:"Distance from shop",inZone:"Inside our free-delivery area",outZone:"Outside the {km} km free-delivery area",mapFail:"The map could not load. Please type your full address.",freeNote:"Free delivery on orders over {amt} within {km} km of our shop.",errLoc:"Please pin your delivery location on the map.",locDenied:"Could not get your location. Tap the map instead.",kmU:"km",nTier:"{a}–{b} km: free over {amt}, otherwise {fee}",nFar:"Over {b} km: {base} + {pk} per extra km",lMap:"Location pin",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
+   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery (COD)",online:"Pay by Card upon Delivery",payNote:"You pay the delivery driver in cash or by card when your order arrives. No card details are collected on this site.",place:"Place order",pinT:"Delivery location",pinHelp:"Tap the map or drag the pin to your exact location.",useMe:"Use my current location",dist:"Distance from shop",inZone:"Inside our free-delivery area",outZone:"Outside the {km} km free-delivery area",mapFail:"The map could not load. Please type your full address.",freeNote:"Free delivery on orders over {amt} within {km} km of our shop.",errLoc:"Please pin your delivery location on the map.",locDenied:"Could not get your location. Tap the map instead.",kmU:"km",related:"You may also like",reqName:"Please enter your full name.",reqMobile:"Please enter your mobile number.",reqArea:"Please enter your area.",nTier:"{a}–{b} km: free over {amt}, otherwise {fee}",nFar:"Over {b} km: {base} + {pk} per extra km",lMap:"Location pin",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
    errFill:"Please complete all required fields.",errMobile:"Enter a valid Saudi mobile number (e.g. 05XXXXXXXX).",errCart:"Your cart is empty.",kg:"kg",g:"g",selArea:"Select area",newOrder:"New Order",lOrder:"Order Number",lName:"Customer Name",lMob:"Mobile Number",lArea:"Area",lAddr:"Address",lTime:"Delivery Time",lProd:"Products",lW:"Weight",lQ:"Qty",lP:"Price",lPay:"Payment Method",lNotes:"Customer Notes",none:"None",onlinePending:"Online Payment (to be arranged)"},
   ar:{nHome:"الرئيسية",nShop:"المتجر",nAbout:"من نحن",nContact:"تواصل معنا",heroT:"لحوم طازجة تصل إلى بابك",heroS:"دجاج ولحم بقري وغنم فاخر، يُقطع طازجاً ويُوصَّل إلى منزلك.",shopNow:"تسوق الآن",cats:"الأقسام",searchPh:"ابحث عن منتج…",noRes:"لا توجد منتجات مطابقة.",pc:"قطعة",pcs:"قطع",best:"الأكثر مبيعاً",offers:"عروض خاصة",why:"لماذا تختارنا",
    w1t:"طازج كل يوم",w1d:"نجهّز كل طلب في يوم التوصيل.",w2t:"جودة مضمونة",w2d:"دجاج ولحوم مختارة بعناية.",w3t:"أسعار واضحة",w3d:"كل سعر مرتبط بوزنه. بلا مفاجآت.",w4t:"توصيل للمنزل",w4d:"نوصّله لك مبرداً حتى الباب.",
    how:"كيف نعمل",h1:"اختر لحمتك",h2:"حدد الوزن",h3:"أرسل طلبك",h4:"نؤكد عبر واتساب ونوصّل",waT:"تفضّل الطلب بالمحادثة؟",waB:"تواصل عبر واتساب",
    aboutP:"ميت ماركت خدمة توصيل دجاج ولحوم طازجة. نهتم بالجودة والنظافة وسرعة التوصيل إلى منزلك.",phone:"الهاتف",hours:"يتم تأكيد الطلبات عبر واتساب.",
    all:"الكل",add:"أضف إلى السلة",added:"تمت الإضافة ✓",cart:"سلتك",empty:"سلتك فارغة. أضف شيئاً طازجاً.",remove:"حذف",sub:"المجموع الفرعي",del:"رسوم التوصيل",free:"مجاني",tot:"الإجمالي",goCheckout:"إتمام الطلب",back:"→ العودة للمتجر",checkout:"إتمام الطلب",
-   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل (اختياري)",fBldg:"رقم المبنى / الفيلا (اختياري)",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع عند الاستلام",online:"الدفع الإلكتروني / مدى (قريباً)",payNote:"الدفع الإلكتروني للعرض فقط. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"تأكيد الطلب",pinT:"موقع التوصيل",pinHelp:"اضغط على الخريطة أو اسحب الدبوس إلى موقعك بدقة.",useMe:"استخدم موقعي الحالي",dist:"المسافة من المتجر",inZone:"داخل نطاق التوصيل المجاني",outZone:"خارج نطاق التوصيل المجاني ({km} كم)",mapFail:"تعذر تحميل الخريطة. يرجى كتابة العنوان الكامل.",freeNote:"توصيل مجاني للطلبات فوق {amt} ضمن {km} كم من المتجر.",errLoc:"يرجى تحديد موقع التوصيل على الخريطة.",locDenied:"تعذر تحديد موقعك. اضغط على الخريطة بدلاً من ذلك.",kmU:"كم",nTier:"{a}–{b} كم: مجاني للطلبات فوق {amt}، وإلا {fee}",nFar:"أكثر من {b} كم: {base} + {pk} لكل كم إضافي",sending:"جارٍ إرسال طلبك…",doneOk:"تم استلام الطلب ✓",doneOkP:"شكراً {n}! تم استلام طلبك رقم {no}. سنؤكده معك عبر واتساب قريباً.",doneStep:"خطوة أخيرة",doneStepP:"اضغط الزر أدناه لإرسال طلبك رقم {no} إلينا عبر واتساب حتى نؤكده.",doneWa:"أرسل الطلب عبر واتساب",doneWa2:"راسلنا عبر واتساب",
+   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل (اختياري)",fBldg:"رقم المبنى / الفيلا (اختياري)",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع نقداً عند الاستلام",online:"الدفع بالبطاقة عند الاستلام",payNote:"تدفع للمندوب نقداً أو بالبطاقة عند وصول طلبك. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"تأكيد الطلب",pinT:"موقع التوصيل",pinHelp:"اضغط على الخريطة أو اسحب الدبوس إلى موقعك بدقة.",useMe:"استخدم موقعي الحالي",dist:"المسافة من المتجر",inZone:"داخل نطاق التوصيل المجاني",outZone:"خارج نطاق التوصيل المجاني ({km} كم)",mapFail:"تعذر تحميل الخريطة. يرجى كتابة العنوان الكامل.",freeNote:"توصيل مجاني للطلبات فوق {amt} ضمن {km} كم من المتجر.",errLoc:"يرجى تحديد موقع التوصيل على الخريطة.",locDenied:"تعذر تحديد موقعك. اضغط على الخريطة بدلاً من ذلك.",kmU:"كم",related:"قد يعجبك أيضاً",reqName:"يرجى إدخال الاسم الكامل.",reqMobile:"يرجى إدخال رقم الجوال.",reqArea:"يرجى إدخال الحي.",nTier:"{a}–{b} كم: مجاني للطلبات فوق {amt}، وإلا {fee}",nFar:"أكثر من {b} كم: {base} + {pk} لكل كم إضافي",sending:"جارٍ إرسال طلبك…",doneOk:"تم استلام الطلب ✓",doneOkP:"شكراً {n}! تم استلام طلبك رقم {no}. سنؤكده معك عبر واتساب قريباً.",doneStep:"خطوة أخيرة",doneStepP:"اضغط الزر أدناه لإرسال طلبك رقم {no} إلينا عبر واتساب حتى نؤكده.",doneWa:"أرسل الطلب عبر واتساب",doneWa2:"راسلنا عبر واتساب",
    errFill:"يرجى تعبئة جميع الحقول المطلوبة.",errMobile:"أدخل رقم جوال سعودي صحيح (مثال: 05XXXXXXXX).",errCart:"سلتك فارغة.",kg:"كجم",g:"جم",selArea:"اختر الحي",newOrder:"طلب جديد",lOrder:"رقم الطلب",lName:"اسم العميل",lMob:"رقم الجوال",lArea:"الحي",lAddr:"العنوان",lTime:"وقت التوصيل",lProd:"المنتجات",lW:"الوزن",lQ:"الكمية",lP:"السعر",lPay:"طريقة الدفع",lNotes:"ملاحظات العميل",none:"لا يوجد",onlinePending:"دفع إلكتروني (يُرتَّب لاحقاً)"}
 };
 
@@ -109,6 +110,7 @@ function applyLang(){
   $("#q").placeholder = t("searchPh");
   $("#timeSel").innerHTML = CONFIG.deliveryTimes.map(a=>`<option>${a}</option>`).join("");
   renderTiles(); renderChips(); renderGrids(); renderCart(); renderSummary(); updLocInfo();
+  if(!$("#productView").hidden) route();
 }
 
 /* Catalogue */
@@ -123,8 +125,8 @@ function card(p){
   const s = sel[p.id] ||= { w: p.unit==="kg" && p.opts.includes(1000) ? 1000 : p.opts[0], q: 1 };
   const tag = p.tag ? `<span class="tag">${p.tag}</span>` : "";
   return `<article class="card" data-id="${p.id}">
-    <div class="imgw">${img(p)}${tag}</div>
-    <div class="cb"><h3>${pName(p)}</h3><p>${pDesc(p)}</p>
+    <div class="imgw"><a href="#product/${p.id}">${img(p)}</a>${tag}</div>
+    <div class="cb"><h3><a class="plink" href="#product/${p.id}">${pName(p)}</a></h3><p>${pDesc(p)}</p>
       <div class="unit">${money(p.price)} / ${p.unit==="kg"?t("kg"):p.unit==="pc"?t("pc"):wl(1,p)}</div>
       <div class="tot">${money(price(p, s.w))} / ${wl(s.w,p)}</div>
       <div class="row">
@@ -218,8 +220,12 @@ $("#closeCart").onclick = $("#scrim").onclick = () => openCart(false);
 $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCart(false); showCheckout(); } });
 
 /* Views */
-function showCheckout(){ $("#main").hidden = true; $("#doneView").hidden = true; $("#checkoutView").hidden = false; scrollTo(0,0); initMap(); }
-function showMain(){ $("#main").hidden = false; $("#checkoutView").hidden = true; $("#doneView").hidden = true; }
+function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); }
+function view(id){
+  ["main","checkoutView","doneView","productView"].forEach(v => $("#" + v).hidden = v !== id);
+  if(id !== "productView" && location.hash.indexOf("#product/") === 0) history.replaceState(null, "", location.pathname + location.search);
+}
+function showMain(){ view("main"); }
 $("#backBtn").onclick = () => { showMain(); $("#shop").scrollIntoView(); };
 $("#nav").addEventListener("click", showMain);
 $(".logo").addEventListener("click", showMain);
@@ -234,10 +240,16 @@ $("#coForm").addEventListener("submit", async e => {
   e.preventDefault();
   const form = e.target, btn = $("button[type=submit]", form);
   const f = Object.fromEntries(new FormData(form)), err = $("#coErr");
+  $$("#coForm .bad").forEach(unflag);
+  let first = null;
+  const need = (el, msg) => { const b = flag(el, msg); first = first || b; };
+  if(!f.name.trim()) need(form.elements["name"], t("reqName"));
+  if(!f.mobile.trim()) need(form.elements["mobile"], t("reqMobile"));
+  else if(!/^(\+?966|0)?5\d{8}$/.test(f.mobile.replace(/[\s-]/g,""))) need(form.elements["mobile"], t("errMobile"));
+  if(!f.area.trim()) need(form.elements["area"], t("reqArea"));
+  if(!userLoc && typeof L !== "undefined") need($("#map"), t("errLoc"));
   if(!cart.length){ err.textContent = t("errCart"); return; }
-  if(!f.name.trim()||!f.mobile.trim()||!f.area.trim()){ err.textContent = t("errFill"); return; }
-  if(!/^(\+?966|0)?5\d{8}$/.test(f.mobile.replace(/[\s-]/g,""))){ err.textContent = t("errMobile"); return; }
-  if(!userLoc && typeof L !== "undefined"){ err.textContent = t("errLoc"); return; }
+  if(first){ err.textContent = t("errFill"); first.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
   err.textContent = "";
   const order = buildOrder(f);
   store.set("mm_last_order", order);       // latest order, browser only
@@ -268,7 +280,7 @@ function showDone(order, ok){
   wa.className = ok ? "btn full light" : "btn full";
   wa.style.cssText = ok ? "background:var(--cream);color:var(--red2)" : "";
   wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(order.message);
-  $("#main").hidden = true; $("#checkoutView").hidden = true; $("#doneView").hidden = false; scrollTo(0,0);
+  view("doneView"); scrollTo(0,0);
 }
 $("#doneBack").onclick = () => { showMain(); scrollTo(0,0); };
 function buildOrder(f){
@@ -281,12 +293,21 @@ function buildOrder(f){
   const wA = (n,p) => p.unit==="kg" ? (n>=1000 ? `${n/1000} كجم` : `${n} جم`) : p.unit==="pc" ? `${n} قطع` : p.pka;
   const lines = cart.map(i => { const p = prod(i.id); return { en:p.en, ar:p.ar, we:w(i.w,p), wa:wA(i.w,p), q:i.q, sub:Math.round(price(p,i.w)*i.q*100)/100 }; });
   const loc = userLoc ? `${L("lMap")}: ${mapLink()} (${distKm().toFixed(1)} km from shop)\n` : `${L("lMap")}: not pinned - please confirm the delivery fee\n`;
-  const pay = f.pay==="cod" ? L("cod") : L("onlinePending");
+  const pay = f.pay==="cod" ? L("cod") : L("online");
   const message = `*${CONFIG.shopName} — ${L("newOrder")}*\n\n${L("lOrder")}: ${no}\n${L("lName")}: ${f.name}\n${L("lMob")}: ${f.mobile}\n${L("lArea")}: ${f.area}\n${L("lAddr")}: ${[f.address.trim(), f.building.trim() && "Bldg/Villa " + f.building.trim()].filter(Boolean).join(", ") || "Not provided"}\n${loc}${L("lTime")}: ${f.time}\n\n*${L("lProd")}*\n${items}\n\n${T.en.sub}: ${m(x.s)}\n${T.en.del}: ${x.d? m(x.d): "Free"}\n*${T.en.tot}: ${m(x.t)}*\n\n${L("lPay")}: ${pay}\n${L("lNotes")}: ${f.notes.trim()||L("none")}`;
   return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, lines, lang, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 
 $("#q").addEventListener("input", e => { query = e.target.value; showMain(); renderGrids(); if(query.trim()) $("#shop").scrollIntoView({behavior:"instant"}); });
+/* Checkout field highlighting */
+function flag(el, msg){
+  const box = el.closest("label") || el.closest(".pin"); box.classList.add("bad");
+  let s = $(".fe", box); if(!s){ s = document.createElement("small"); s.className = "fe"; box.appendChild(s); }
+  s.textContent = msg; return box;
+}
+function unflag(box){ box.classList.remove("bad"); const s = $(".fe", box); if(s) s.remove(); }
+$("#coForm").addEventListener("input", e => { const b = e.target.closest("label") || e.target.closest(".pin"); if(b && b.classList.contains("bad")) unflag(b); });
+
 /* Map pin (Leaflet + OpenStreetMap, free) */
 function updLocInfo(){
   const el = $("#locInfo"); if(!el) return;
@@ -300,6 +321,7 @@ function setLoc(lat, lng, pan){
     else pin.setLatLng([lat, lng]);
     if(pan) map.setView([lat, lng], 16);
   }
+  const pb = $(".pin"); if(pb) unflag(pb);
   updLocInfo(); renderCart();
 }
 function initMap(){
@@ -319,6 +341,69 @@ $("#useMe").onclick = () => {
   if(!navigator.geolocation){ $("#mapMsg").textContent = t("locDenied"); return; }
   navigator.geolocation.getCurrentPosition(p => setLoc(p.coords.latitude, p.coords.longitude, true), () => { $("#mapMsg").textContent = t("locDenied"); }, { enableHighAccuracy:true, timeout:15000 });
 };
+/* Product pages: #product/ID */
+const baseTitle = document.title; let sheetDone = !CONFIG.productsSheetUrl;
+function renderProduct(p){
+  const s = sel[p.id] ||= { w: p.unit==="kg" && p.opts.includes(1000) ? 1000 : p.opts[0], q: 1 };
+  const imgs = [p.img, ...(p.imgs || [])];
+  const long = lang==="ar" ? (p.lda || p.da) : (p.ld || p.d);
+  const thumbs = imgs.length > 1 ? `<div class="thumbs">${imgs.map(u => `<img src="${u}" alt="" data-thumb="${u}" onerror="this.remove()">`).join("")}</div>` : "";
+  const rel = PRODUCTS.filter(x => x.cat === p.cat && x.id !== p.id).slice(0, 4);
+  $("#productBody").innerHTML = `
+    <button class="link" id="pBack">${t("back")}</button>
+    <div class="pdetail">
+      <div class="pgal"><div class="imgw"><img id="pMain" src="${p.img}" alt="${pName(p)}" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">${p.tag ? `<span class="tag">${p.tag}</span>` : ""}</div>${thumbs}</div>
+      <div class="pinfo card pcard" data-id="${p.id}">
+        <h1>${pName(p)}</h1><p class="long">${long}</p>
+        <div class="unit">${money(p.price)} / ${p.unit==="kg" ? t("kg") : p.unit==="pc" ? t("pc") : wl(1,p)}</div>
+        <div class="tot">${money(price(p, s.w))} / ${wl(s.w,p)}</div>
+        <div class="row">
+          <select class="wSel" aria-label="${t("lW")}">${p.opts.map(w => `<option value="${w}" ${w===s.w?"selected":""}>${wl(w,p)}</option>`).join("")}</select>
+          <div class="qty"><button data-act="dec" aria-label="-">−</button><span>${s.q}</span><button data-act="inc" aria-label="+">+</button></div>
+        </div>
+        <button class="add" data-act="add">${t("add")}</button>
+      </div>
+    </div>
+    ${rel.length ? `<h2>${t("related")}</h2><div class="grid">${rel.map(card).join("")}</div>` : ""}`;
+  document.title = `${pName(p)} | ${CONFIG.shopName}`;
+}
+function route(){
+  const m = location.hash.match(/^#product\/([\w-]+)$/);
+  if(!m){
+    if(!$("#productView").hidden){ showMain(); const el = document.getElementById(location.hash.slice(1)); if(el) el.scrollIntoView({ behavior:"instant" }); }
+    document.title = baseTitle; return;
+  }
+  const p = prod(m[1]);
+  if(!p){ if(sheetDone){ history.replaceState(null, "", "#shop"); showMain(); } return; }
+  view("productView"); renderProduct(p); scrollTo(0,0);
+}
+window.addEventListener("hashchange", route);
+$("#productBody").addEventListener("click", e => {
+  if(e.target.id === "pBack") location.hash = "#shop";
+  if(e.target.dataset.thumb) $("#pMain").src = e.target.dataset.thumb;
+});
+
+/* Top banner slider */
+function initSlider(){
+  const urls = CONFIG.banners || [], ok = []; let pending = urls.length; if(!pending) return;
+  const done = () => { if(--pending === 0) build(urls.filter(u => ok.includes(u))); };
+  urls.forEach(u => { const im = new Image(); im.onload = () => { ok.push(u); done(); }; im.onerror = done; im.src = u; });
+  function build(list){
+    if(!list.length) return;
+    $("#slides").innerHTML = list.map((u, i) => `<div class="slide${i ? "" : " on"}" style="background-image:url('${u}')"></div>`).join("");
+    if(list.length < 2) return;
+    $("#dots").innerHTML = list.map((_, i) => `<button aria-label="${i+1}"${i ? "" : ' class="on"'}></button>`).join("");
+    let cur = 0, timer, x0 = null;
+    const go = n => { cur = (n + list.length) % list.length; $$("#slides .slide").forEach((s, i) => s.classList.toggle("on", i === cur)); $$("#dots button").forEach((d, i) => d.classList.toggle("on", i === cur)); };
+    const play = () => { clearInterval(timer); timer = setInterval(() => go(cur + 1), 5000); };
+    $("#dots").onclick = e => { const b = e.target.closest("button"); if(b){ go([...$("#dots").children].indexOf(b)); play(); } };
+    const hero = $("#home");
+    hero.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive:true });
+    hero.addEventListener("touchend", e => { if(x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if(Math.abs(dx) > 50){ go(cur + (dx < 0 ? 1 : -1)); play(); } });
+    play();
+  }
+}
+
 /* Products from a published Google Sheet (optional). Falls back to the PRODUCTS list above if the sheet can't be read. */
 function parseCSV(text){
   const rows = []; let row = [], cell = "", q = false;
@@ -347,11 +432,13 @@ function sheetToProducts(text){
     let id = g("id").replace(/[^\w-]/g, "") || "s" + n; if(seen.has(id)) id += "_" + n; seen.add(id);
     const img = g("image").replace(/[^\w.\- ]/g, "");
     out.push({ id, cat:g("category").toLowerCase(), unit, en, ar:g("name_ar") || en, d:g("desc_en"), da:g("desc_ar") || g("desc_en"),
-      img:"images/" + (img || "none.jpg"), tag:g("tag"), price, pk:g("pack_en") || "1 pack", pka:g("pack_ar") || g("pack_en") || "عبوة", opts });
+      img:"images/" + (img || "none.jpg"), tag:g("tag"),
+      imgs:[g("image2"), g("image3")].map(x => x.replace(/[^\w.\- ]/g, "")).filter(Boolean).map(x => "images/" + x), ld:g("long_desc_en"), lda:g("long_desc_ar"), price, pk:g("pack_en") || "1 pack", pka:g("pack_ar") || g("pack_en") || "عبوة", opts });
   });
   return out;
 }
-async function loadSheet(){
+async function loadSheet(){ try{ await loadSheet2(); }finally{ sheetDone = true; route(); } }
+async function loadSheet2(){
   if(!CONFIG.productsSheetUrl) return;
   try{
     const u = CONFIG.productsSheetUrl + (CONFIG.productsSheetUrl.includes("?") ? "&" : "?") + "t=" + Date.now();
@@ -368,4 +455,6 @@ $("#yr").textContent = new Date().getFullYear();
 const cachedProducts = CONFIG.productsSheetUrl ? store.get("mm_products", null) : null;
 if(Array.isArray(cachedProducts) && cachedProducts.length) PRODUCTS = cachedProducts;   // last good copy of the sheet
 applyLang();
+initSlider();
+route();
 loadSheet();

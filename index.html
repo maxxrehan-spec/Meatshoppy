@@ -23,11 +23,13 @@
 
 <main id="main">
 <section id="home" class="hero">
+  <div class="slides" id="slides"></div>
   <div class="hero-in">
     <h1 data-i="heroT"></h1>
     <p data-i="heroS"></p>
     <a class="btn" href="#shop" data-i="shopNow"></a>
   </div>
+  <div class="dots" id="dots"></div>
 </section>
 
 <section class="sec"><h2 data-i="cats"></h2><div class="cats" id="catTiles"></div></section>
@@ -83,7 +85,7 @@
       <label><span data-i="fNotes"></span><textarea name="notes" rows="2"></textarea></label>
       <fieldset><legend data-i="pay"></legend>
         <label class="radio"><input type="radio" name="pay" value="cod" checked><span data-i="cod"></span></label>
-        <label class="radio"><input type="radio" name="pay" value="online"><span data-i="online"></span></label>
+        <label class="radio"><input type="radio" name="pay" value="card"><span data-i="online"></span></label>
         <small data-i="payNote"></small>
       </fieldset>
       <p class="err" id="coErr" role="alert"></p>
@@ -91,6 +93,8 @@
     </form>
   </section>
 </main>
+
+<main id="productView" hidden><section class="sec" id="productBody"></section></main>
 
 <main id="doneView" hidden>
   <section class="sec narrow done">

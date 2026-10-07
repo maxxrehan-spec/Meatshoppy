@@ -127,3 +127,33 @@ fieldset small{color:var(--mute)}
 .map{height:300px;border-radius:var(--r);border:1px solid var(--line);margin:8px 0;position:relative;z-index:0;isolation:isolate}.pin{margin-bottom:16px}.hint,.note{color:var(--mute);font-size:.88rem;display:block;margin-top:6px}
 
 .hero h1,.hero p{text-shadow:0 2px 12px rgba(0,0,0,.55)}
+
+/* banner slider */
+.hero,[dir=rtl] .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--red2),var(--red))}
+.slides{position:absolute;inset:0}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .8s}
+.slide.on{opacity:1}
+.slides::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(40,6,14,.7) 0%,rgba(40,6,14,.12) 75%)}
+[dir=rtl] .slides::after{background:linear-gradient(-100deg,rgba(40,6,14,.7) 0%,rgba(40,6,14,.12) 75%)}
+.hero-in{position:relative;z-index:2}
+.dots{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:8px;z-index:3}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.5);cursor:pointer}
+.dots button.on{background:#fff}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}}
+/* checkout validation */
+label.bad input,label.bad select,label.bad textarea{border-color:#c62828;background:#fff5f5}
+label.bad>span{color:#c62828}
+.pin.bad .map{border:2px solid #c62828}
+.pin.bad>b{color:#c62828}
+.fe{display:block;color:#c62828;font-weight:600;font-size:.85rem;margin-top:4px}
+label:has(input[required])>span::after,label:has(select[required])>span::after{content:" *";color:#c62828}
+/* product page */
+.plink{color:inherit;text-decoration:none}
+.pdetail{display:grid;gap:20px;margin:14px 0 36px}
+@media(min-width:760px){.pdetail{grid-template-columns:1fr 1fr;gap:36px}}
+#pMain{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--r);background:var(--cream)}
+.thumbs{display:flex;gap:8px;margin-top:8px}
+.thumbs img{width:64px;height:64px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--line)}
+.pcard{border:0;overflow:visible;gap:12px}
+.pinfo h1{font-size:clamp(1.6rem,5vw,2.2rem);color:var(--red2)}
+.long{white-space:pre-line;color:var(--mute)}
