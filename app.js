@@ -253,6 +253,7 @@ $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCa
 function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); }
 function view(id){
   ["main","checkoutView","doneView","productView"].forEach(v => $("#" + v).hidden = v !== id);
+  document.body.classList.remove("lock");
   if(id !== "productView" && location.hash.indexOf("#product/") === 0) history.replaceState(null, "", location.pathname + location.search);
 }
 function showMain(){ view("main"); }
@@ -397,21 +398,25 @@ function renderProduct(p){
     ${rel.length ? `<h2>${t("related")}</h2><div class="grid">${rel.map(card).join("")}</div>` : ""}`;
   document.title = `${pName(p)} | ${CONFIG.shopName}`;
 }
-function route(){
+let curProduct = null, deepLink = /^#product\//.test(location.hash);
+function closeProduct(){ $("#productView").hidden = true; document.body.classList.remove("lock"); document.title = baseTitle; curProduct = null; }
+function route(){                         // the product page opens as a layer on top, so the page underneath keeps its scroll position
   const m = location.hash.match(/^#product\/([\w-]+)$/);
-  if(!m){
-    if(!$("#productView").hidden){ showMain(); const el = document.getElementById(location.hash.slice(1)); if(el) el.scrollIntoView({ behavior:"instant" }); }
-    document.title = baseTitle; return;
-  }
+  if(!m){ if(!$("#productView").hidden) closeProduct(); return; }
   const p = prod(m[1]);
-  if(!p){ if(sheetDone){ history.replaceState(null, "", "#shop"); showMain(); } return; }
-  view("productView"); renderProduct(p); scrollTo(0,0);
+  if(!p){ if(sheetDone){ history.replaceState(null, "", location.pathname + location.search); closeProduct(); } return; }
+  const pv = $("#productView"), fresh = pv.hidden || curProduct !== p.id;
+  $("#main").hidden = false; $("#checkoutView").hidden = true; $("#doneView").hidden = true;
+  pv.style.paddingTop = $(".bar").offsetHeight + "px"; pv.hidden = false; document.body.classList.add("lock");
+  renderProduct(p); curProduct = p.id; if(fresh) pv.scrollTop = 0;
 }
 window.addEventListener("hashchange", route);
 $("#productBody").addEventListener("click", e => {
-  if(e.target.id === "pBack") location.hash = "#shop";
+  if(e.target.id === "pBack"){ if(deepLink){ deepLink = false; history.replaceState(null, "", location.pathname + location.search); closeProduct(); } else history.back(); }
   if(e.target.dataset.thumb) $("#pMain").src = e.target.dataset.thumb;
 });
+
+document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("#productView").hidden){ const b = $("#pBack"); if(b) b.click(); } });
 
 /* Top banner slider */
 function initSlider(){

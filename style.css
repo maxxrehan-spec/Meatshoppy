@@ -157,3 +157,6 @@ label:has(input[required])>span::after,label:has(select[required])>span::after{c
 .pcard{border:0;overflow:visible;gap:12px}
 .pinfo h1{font-size:clamp(1.6rem,5vw,2.2rem);color:var(--red2)}
 .long{white-space:pre-line;color:var(--mute)}
+
+#productView{position:fixed;inset:0;z-index:15;background:#fff;overflow-y:auto;overscroll-behavior:contain}
+body.lock{overflow:hidden}
