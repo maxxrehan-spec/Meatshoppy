@@ -4,30 +4,27 @@ const CONFIG = {
   shopName: "Meat Market",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 56 841 1627",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycbzId9yYh9_7WCU6r7Hmm5Pci6H6cD57hZC60su0aYBO1cGYc3g2IsJTq7ZOYQtg0frEog/exec",   // paste your Google Apps Script web app URL here (see setup steps)
-  productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
-  banners: ["images/hero.jpg", "images/banner2.jpg", "images/banner3.jpg"],   // top slider pictures (images that do not exist are skipped)
-  orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
-  // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
-  deliveryTiers: [
-    { upToKm: 5,  freeOver: 50,  fee: 10 },   // 0 to 5 km:  free over 50 SAR, else 10 SAR
-    { upToKm: 15, freeOver: 200, fee: 20 }    // 5 to 15 km: free over 200 SAR, else 20 SAR
+  orderEndpoint: "",   // paste your Google Apps Script web app URL here
+  productsSheetUrl: "",   // optional: published Google Sheet CSV link
+  banners: [
+    "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=1800&q=85", // Prime Tomahawk with Rosemary
+    "https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=1800&q=85", // Raw Ribeye on Dark Slate
+    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1800&q=85"  // Artisan Butcher Cut
   ],
-  farBaseFee: 20,    // beyond the last tier: this base fee ...
-  farPerKm: 2,       // ... plus this amount for each extra km (rounded up)
-  shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
+  orderSecret: "change-me",
+  deliveryTiers: [
+    { upToKm: 5,  freeOver: 50,  fee: 10 },
+    { upToKm: 15, freeOver: 200, fee: 20 }
+  ],
+  farBaseFee: 20,
+  farPerKm: 2,
+  shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },
   currency: { en: "SAR", ar: "ر.س" },
   areas: [],
   deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", "9:00 PM – 12:00 AM"]
 };
 
-/* ============ PRODUCTS (backup list) — edit here ============
-   Your live list comes from the Google Sheet (productsSheetUrl above); this list is the backup.
-   cat    = chicken | mutton | beef | eggs
-   unit   = "kg"   -> price = SAR per 1 kg, opts = weights in grams
-            "pack" -> price = SAR per pack, pk / pka = pack label EN / AR, opts = [1]
-   prices = optional fixed price per size, same order as opts (e.g. opts [1000,1200], prices [18,20])
-   cuts   = optional choices (e.g. ["4 pcs","8 pcs"]), cutsAr = their Arabic labels */
+/* ============ PRODUCTS (backup list) ============ */
 let PRODUCTS = [
   {"id": "c1", "cat": "chicken", "unit": "kg", "en": "Whole Chicken", "ar": "دجاج كامل", "d": "Fresh whole chicken, cleaned and ready to cook.", "da": "دجاج كامل طازج، منظف وجاهز للطبخ.", "img": "images/whole-chicken.jpg", "tag": "Best Seller", "price": 18, "prices": [18, 20], "opts": [1000, 1200]},
   {"id": "c2", "cat": "chicken", "unit": "kg", "en": "Chopped Chicken", "ar": "دجاج مقطع", "d": "Fresh chicken cut into 4 or 8 pieces.", "da": "دجاج طازج مقطع إلى 4 أو 8 قطع.", "img": "images/chopped-chicken.jpg", "tag": "Best Seller", "price": 18, "prices": [18, 20], "opts": [1000, 1200], "cuts": ["4 pcs", "8 pcs"], "cutsAr": ["4 قطع", "8 قطع"]},
@@ -72,8 +69,12 @@ let PRODUCTS = [
   {"id": "e2", "cat": "eggs", "unit": "pack", "en": "Desi Egg Crate – 30 Eggs", "ar": "كرتون بيض بلدي – 30 بيضة", "d": "Desi eggs, crate of 30.", "da": "بيض بلدي، كرتون 30 بيضة.", "img": "images/desi-egg-crate-30-eggs.jpg", "tag": "", "price": 25, "opts": [1], "pk": "30 eggs", "pka": "30 بيضة"}
 ];
 
+/* Minimal Vector Silhouette Icons (No Cartoon Emojis) */
 const CATS = [
-  ["chicken","🍗","Chicken","دجاج"],["mutton","🐑","Mutton","غنم"],["beef","🥩","Beef","لحم بقري"],["eggs","🥚","Eggs","بيض"]
+  ["chicken", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4c-3.3 0-6 2.7-6 6 0 2.2 1.2 4.1 3 5.2V20h6v-4.8c1.8-1.1 3-3 3-5.2 0-3.3-2.7-6-6-6z"/><path d="M9 10h6"/></svg>`, "Poultry", "دواجن"],
+  ["mutton", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 14c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3v6h-4v-4c0-2.2-1.8-4-4-4s-4 1.8-4 4v4H2"/><circle cx="8" cy="7" r="3"/></svg>`, "Mutton", "لحم غنم"],
+  ["beef", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 14.9C4 18.8 7.1 22 11 22c3.5 0 6.4-2.6 6.9-6h2.6c1.4 0 2.5-1.1 2.5-2.5 0-.8-.4-1.5-1-1.9L16 6.5C15 5.5 13.5 5 12 5H9.5C6.5 5 4 7.5 4 10.5v4.4z"/><circle cx="10" cy="11" r="1.5"/></svg>`, "Prime Beef", "لحم بقري"],
+  ["eggs", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8 2 5 7 5 13a7 7 0 0 0 14 0c0-6-3-11-7-11z"/></svg>`, "Farm Eggs", "بيض طازج"]
 ];
 
 const T = {
@@ -93,7 +94,7 @@ const T = {
    errFill:"يرجى تعبئة جميع الحقول المطلوبة.",errMobile:"أدخل رقم جوال سعودي صحيح (مثال: 05XXXXXXXX).",errCart:"سلتك فارغة.",kg:"كجم",g:"جم",selArea:"اختر الحي",newOrder:"طلب جديد",lOrder:"رقم الطلب",lName:"اسم العميل",lMob:"رقم الجوال",lArea:"الحي",lAddr:"العنوان",lTime:"وقت التوصيل",lProd:"المنتجات",lW:"الوزن",lQ:"الكمية",lP:"السعر",lPay:"طريقة الدفع",lNotes:"ملاحظات العميل",none:"لا يوجد",onlinePending:"دفع إلكتروني (يُرتَّب لاحقاً)"}
 };
 
-/* ============ App ============ */
+/* ============ App Core ============ */
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const store = {
@@ -101,10 +102,10 @@ const store = {
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 };
 let lang = store.get("mm_lang", "en");
-let cart = store.get("mm_cart", []);       // [{id, w, q}]
+let cart = store.get("mm_cart", []);
 let filter = "all", query = "";
-let map = null, pin = null, userLoc = store.get("mm_loc", null);   // {lat,lng} chosen on the map
-const sel = {};                             // per-product selection {w,q}
+let map = null, pin = null, userLoc = store.get("mm_loc", null);
+const sel = {};
 
 const t = k => T[lang][k] ?? k;
 const cur = () => CONFIG.currency[lang];
@@ -121,8 +122,12 @@ const cutEn = (p, c) => p.cuts && p.cuts.length ? ` (${cutName(p, c, "en")})` : 
 const cutAr = (p, c) => p.cuts && p.cuts.length ? ` (${cutName(p, c, "ar")})` : "";
 const cutSel = (p, s) => p.cuts && p.cuts.length ? `<select class="cSel" aria-label="${t("cut")}">${p.cuts.map((c, i) => `<option value="${i}" ${i===s.c?"selected":""}>${t("cut")}: ${cutName(p, i, lang)}</option>`).join("")}</select>` : "";
 const prod = id => PRODUCTS.find(p => p.id === id);
-const ph = p => { const e = ({chicken:"🍗",beef:"🥩",mutton:"🐑",eggs:"🥚"})[p.cat]||"🥩";
-  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'><rect width='400' height='300' fill='#7a1527'/><text x='200' y='180' font-size='110' text-anchor='middle'>${e}</text></svg>`); };
+
+/* Luxury Monogram Crest Fallback (No Emojis) */
+const ph = p => {
+  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'><rect width='400' height='300' fill='#141312'/><rect x='20' y='20' width='360' height='260' fill='none' stroke='#c5a059' stroke-width='1.5' stroke-dasharray='6,4'/><text x='200' y='145' font-family='serif' font-size='24' font-weight='bold' fill='#dfc184' text-anchor='middle'>MEAT MARKET</text><text x='200' y='175' font-family='sans-serif' font-size='12' letter-spacing='3' fill='#9f7d37' text-anchor='middle'>ARTISAN BUTCHER</text></svg>`);
+};
+
 const img = p => `<img src="${p.img}" alt="${pName(p)}" loading="lazy" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">`;
 const saveCart = () => store.set("mm_cart", cart);
 
@@ -141,9 +146,9 @@ function applyLang(){
   if(!$("#productView").hidden) route();
 }
 
-/* Catalogue */
+/* Catalogue Rendering */
 function renderTiles(){
-  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><span>${c[1]}</span>${lang==="ar"?c[3]:c[2]}</button>`).join("");
+  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><span class="cat-icon">${c[1]}</span>${lang==="ar"?c[3]:c[2]}</button>`).join("");
 }
 function renderChips(){
   $("#chips").innerHTML = [["all",t("all")], ...CATS.map(c=>[c[0], lang==="ar"?c[3]:c[2]])]
@@ -187,7 +192,7 @@ document.addEventListener("change", e => {
   if(cls.contains("wSel")) sel[id].w = +el.value; else sel[id].c = +el.value;
   syncCards(id);
 });
-function syncCards(id){            // keep same product in every grid in sync, without re-rendering
+function syncCards(id){
   const p = prod(id), s = sel[id];
   $$(`.card[data-id="${id}"]`).forEach(c => {
     $(".tot", c).textContent = `${money(price(p, s.w))} / ${wl(s.w,p)}`;
@@ -195,7 +200,7 @@ function syncCards(id){            // keep same product in every grid in sync, w
   });
 }
 
-/* Cart */
+/* Cart Management */
 function addToCart(id, w, q, c = 0){
   const it = cart.find(i => i.id===id && i.w===w && (i.c || 0)===c);
   it ? it.q = Math.min(50, it.q+q) : cart.push({id, w, q, c});
@@ -206,7 +211,7 @@ const rad = x => x * Math.PI / 180;
 function km(a, b){ const h = Math.sin(rad(b.lat-a.lat)/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(rad(b.lng-a.lng)/2)**2; return 12742 * Math.asin(Math.sqrt(h)); }
 const distKm = () => userLoc ? km(CONFIG.shopLocation, userLoc) : null;
 function feeFor(sub, d){
-  d = d === null ? 0 : d;                       // no pin yet: show the nearest-zone fee until a location is chosen
+  d = d === null ? 0 : d;
   for(const z of CONFIG.deliveryTiers) if(d <= z.upToKm) return sub >= z.freeOver ? 0 : z.fee;
   const last = CONFIG.deliveryTiers[CONFIG.deliveryTiers.length-1];
   return CONFIG.farBaseFee + CONFIG.farPerKm * Math.ceil(d - last.upToKm);
@@ -249,7 +254,7 @@ $("#cartBtn").onclick = () => openCart(true);
 $("#closeCart").onclick = $("#scrim").onclick = () => openCart(false);
 $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCart(false); showCheckout(); } });
 
-/* Views */
+/* Navigation & Views */
 function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); }
 function view(id){
   ["main","checkoutView","doneView","productView"].forEach(v => $("#" + v).hidden = v !== id);
@@ -266,7 +271,7 @@ function renderSummary(){
    + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d?money(x.d):t("free")}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
 }
 
-/* Checkout → WhatsApp */
+/* Checkout → WhatsApp Submission */
 $("#coForm").addEventListener("submit", async e => {
   e.preventDefault();
   const form = e.target, btn = $("button[type=submit]", form);
@@ -283,9 +288,9 @@ $("#coForm").addEventListener("submit", async e => {
   if(first){ err.textContent = t("errFill"); first.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
   err.textContent = "";
   const order = buildOrder(f);
-  store.set("mm_last_order", order);       // latest order, browser only
+  store.set("mm_last_order", order);
   btn.disabled = true; btn.textContent = t("sending");
-  const ok = await sendOrder(order);       // true = saved, false = failed, null = not configured
+  const ok = await sendOrder(order);
   btn.disabled = false; btn.textContent = t("place");
   cart = []; saveCart(); renderCart(); form.reset();
   showDone(order, ok);
@@ -309,15 +314,15 @@ function showDone(order, ok){
   const wa = $("#doneWa");
   wa.textContent = ok ? t("doneWa2") : t("doneWa");
   wa.className = ok ? "btn full light" : "btn full";
-  wa.style.cssText = ok ? "background:var(--cream);color:var(--red2)" : "";
+  wa.style.cssText = ok ? "background:var(--bg-tint);color:var(--burgundy-800)" : "";
   wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(order.message);
   view("doneView"); scrollTo(0,0);
 }
 $("#doneBack").onclick = () => { showMain(); scrollTo(0,0); };
 function buildOrder(f){
-  const L = k => T.en[k];                 // WhatsApp message is always English so the shop can read it
+  const L = k => T.en[k];
   const x = totals(), d = new Date();
-  const no = "MM-" + Math.floor(1000 + Math.random()*9000);   // temporary; the Apps Script replaces it with a running number
+  const no = "MM-" + Math.floor(1000 + Math.random()*9000);
   const w = (n,p) => p.unit==="kg" ? (n>=1000 ? `${n/1000} kg` : `${n} g`) : p.unit==="pc" ? `${n} pcs` : p.pk, m = n => `${num(n)} SAR`;
   const items = cart.map((i,ix) => { const p = prod(i.id);
     return `${ix+1}. ${p.en}\n   ${L("lW")}: ${w(i.w,p)}${cutEn(p,i.c)} | ${L("lQ")}: ${i.q} | ${L("lP")}: ${m(price(p,i.w))} each = ${m(price(p,i.w)*i.q)}`; }).join("\n");
@@ -330,7 +335,6 @@ function buildOrder(f){
 }
 
 $("#q").addEventListener("input", e => { query = e.target.value; showMain(); renderGrids(); if(query.trim()) $("#shop").scrollIntoView({behavior:"instant"}); });
-/* Checkout field highlighting */
 function flag(el, msg){
   const box = el.closest("label") || el.closest(".pin"); box.classList.add("bad");
   let s = $(".fe", box); if(!s){ s = document.createElement("small"); s.className = "fe"; box.appendChild(s); }
@@ -339,7 +343,7 @@ function flag(el, msg){
 function unflag(box){ box.classList.remove("bad"); const s = $(".fe", box); if(s) s.remove(); }
 $("#coForm").addEventListener("input", e => { const b = e.target.closest("label") || e.target.closest(".pin"); if(b && b.classList.contains("bad")) unflag(b); });
 
-/* Map pin (Leaflet + OpenStreetMap, free) */
+/* Map Pin Leaflet */
 function updLocInfo(){
   const el = $("#locInfo"); if(!el) return;
   const d = distKm();
@@ -361,7 +365,7 @@ function initMap(){
     const c = userLoc || CONFIG.shopLocation;
     map = L.map("map").setView([c.lat, c.lng], userLoc ? 16 : 12);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap contributors" }).addTo(map);
-    CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7a1527", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
+    CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7e1625", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
     map.on("click", e => setLoc(e.latlng.lat, e.latlng.lng));
     if(userLoc) setLoc(userLoc.lat, userLoc.lng);
   }
@@ -372,7 +376,8 @@ $("#useMe").onclick = () => {
   if(!navigator.geolocation){ $("#mapMsg").textContent = t("locDenied"); return; }
   navigator.geolocation.getCurrentPosition(p => setLoc(p.coords.latitude, p.coords.longitude, true), () => { $("#mapMsg").textContent = t("locDenied"); }, { enableHighAccuracy:true, timeout:15000 });
 };
-/* Product pages: #product/ID */
+
+/* Product Detail Modal View */
 const baseTitle = document.title; let sheetDone = !CONFIG.productsSheetUrl;
 function renderProduct(p){
   const s = sel[p.id] ||= { w: p.unit==="kg" && p.opts.includes(1000) ? 1000 : p.opts[0], q: 1, c: 0 };
@@ -381,7 +386,7 @@ function renderProduct(p){
   const thumbs = imgs.length > 1 ? `<div class="thumbs">${imgs.map(u => `<img src="${u}" alt="" data-thumb="${u}" onerror="this.remove()">`).join("")}</div>` : "";
   const rel = PRODUCTS.filter(x => x.cat === p.cat && x.id !== p.id).slice(0, 4);
   $("#productBody").innerHTML = `
-    <button class="link" id="pBack">${t("back")}</button>
+    <button class="link back-nav" id="pBack">${t("back")}</button>
     <div class="pdetail">
       <div class="pgal"><div class="imgw"><img id="pMain" src="${p.img}" alt="${pName(p)}" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">${p.tag ? `<span class="tag">${p.tag}</span>` : ""}</div>${thumbs}</div>
       <div class="pinfo card pcard" data-id="${p.id}">
@@ -400,7 +405,7 @@ function renderProduct(p){
 }
 let curProduct = null, deepLink = /^#product\//.test(location.hash);
 function closeProduct(){ $("#productView").hidden = true; document.body.classList.remove("lock"); document.title = baseTitle; curProduct = null; }
-function route(){                         // the product page opens as a layer on top, so the page underneath keeps its scroll position
+function route(){
   const m = location.hash.match(/^#product\/([\w-]+)$/);
   if(!m){ if(!$("#productView").hidden) closeProduct(); return; }
   const p = prod(m[1]);
@@ -415,10 +420,9 @@ $("#productBody").addEventListener("click", e => {
   if(e.target.id === "pBack"){ if(deepLink){ deepLink = false; history.replaceState(null, "", location.pathname + location.search); closeProduct(); } else history.back(); }
   if(e.target.dataset.thumb) $("#pMain").src = e.target.dataset.thumb;
 });
-
 document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("#productView").hidden){ const b = $("#pBack"); if(b) b.click(); } });
 
-/* Top banner slider */
+/* Slider */
 function initSlider(){
   const urls = CONFIG.banners || [], ok = []; let pending = urls.length; if(!pending) return;
   const done = () => { if(--pending === 0) build(urls.filter(u => ok.includes(u))); };
@@ -430,7 +434,7 @@ function initSlider(){
     $("#dots").innerHTML = list.map((_, i) => `<button aria-label="${i+1}"${i ? "" : ' class="on"'}></button>`).join("");
     let cur = 0, timer, x0 = null;
     const go = n => { cur = (n + list.length) % list.length; $$("#slides .slide").forEach((s, i) => s.classList.toggle("on", i === cur)); $$("#dots button").forEach((d, i) => d.classList.toggle("on", i === cur)); };
-    const play = () => { clearInterval(timer); timer = setInterval(() => go(cur + 1), 5000); };
+    const play = () => { clearInterval(timer); timer = setInterval(() => go(cur + 1), 5500); };
     $("#dots").onclick = e => { const b = e.target.closest("button"); if(b){ go([...$("#dots").children].indexOf(b)); play(); } };
     const hero = $("#home");
     hero.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive:true });
@@ -439,7 +443,7 @@ function initSlider(){
   }
 }
 
-/* Products from a published Google Sheet (optional). Falls back to the PRODUCTS list above if the sheet can't be read. */
+/* Google Sheets CSV Product Parser */
 function parseCSV(text){
   const rows = []; let row = [], cell = "", q = false;
   for(let i = 0; i < text.length; i++){
@@ -480,7 +484,7 @@ async function loadSheet2(){
     const u = CONFIG.productsSheetUrl + (CONFIG.productsSheetUrl.includes("?") ? "&" : "?") + "t=" + Date.now();
     const r = await fetch(u); if(!r.ok) return;
     const list = sheetToProducts(await r.text());
-    if(!list.length) return;                 // unreadable sheet: keep the current list
+    if(!list.length) return;
     PRODUCTS = list; store.set("mm_products", list);
     Object.keys(sel).forEach(k => delete sel[k]);
     renderGrids(); renderCart();
@@ -489,7 +493,7 @@ async function loadSheet2(){
 $("#langBtn").onclick = () => { lang = lang==="en" ? "ar" : "en"; store.set("mm_lang", lang); applyLang(); };
 $("#yr").textContent = new Date().getFullYear();
 const cachedProducts = CONFIG.productsSheetUrl ? store.get("mm_products", null) : null;
-if(Array.isArray(cachedProducts) && cachedProducts.length) PRODUCTS = cachedProducts;   // last good copy of the sheet
+if(Array.isArray(cachedProducts) && cachedProducts.length) PRODUCTS = cachedProducts;
 applyLang();
 initSlider();
 route();

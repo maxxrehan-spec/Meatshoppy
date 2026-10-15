@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Meat Market | Fresh Meat Delivered to Your Door</title>
-<meta name="description" content="Artisan cuts, fresh chicken, beef and mutton delivered fresh to your door.">
+<title>Meat Market | Artisan Cuts & Fresh Meats</title>
+<meta name="description" content="Artisan cuts, farm-fresh poultry and prime meat delivered to your door.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,15 +13,23 @@
 </head>
 <body>
 
-<!-- Announcement Bar -->
+<!-- Announcement Ribbon -->
 <div class="top-announcement">
-  <span>✨ Premium Artisan Cuts • Farm-Fresh Daily • 100% Halal Certified</span>
+  <span>HAND-SELECTED ARTISAN CUTS &bull; PREPARED DAILY &bull; TEMPERATURE CONTROLLED DELIVERY</span>
 </div>
 
+<!-- Header -->
 <header class="bar">
   <div class="bar-inner">
     <a class="logo" href="#home">
-      <span class="logo-mark">MM</span>
+      <div class="logo-crest">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z"/>
+          <path d="M12 22V12"/>
+          <path d="M12 12L4 7"/>
+          <path d="M12 12l8-5"/>
+        </svg>
+      </div>
       <span class="logo-text">Meat Market</span>
     </a>
     
@@ -35,11 +43,11 @@
     <div class="bar-actions">
       <div class="search-box">
         <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-        <input type="search" id="q" class="search" autocomplete="off" aria-label="Search" placeholder="Search cuts…">
+        <input type="search" id="q" class="search" autocomplete="off" aria-label="Search">
       </div>
       <button class="lang" id="langBtn" aria-label="Language">العربية</button>
       <button class="cartBtn" id="cartBtn" aria-label="Cart">
-        <svg class="cart-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
         <b id="cartCount">0</b>
       </button>
     </div>
@@ -47,25 +55,57 @@
 </header>
 
 <main id="main">
+
+<!-- Cinematic Hero -->
 <section id="home" class="hero">
   <div class="slides" id="slides"></div>
   <div class="hero-in">
-    <div class="hero-badge">Prime Cuts • Delivered Fresh</div>
-    <h1 data-i="heroT"></h1>
-    <p data-i="heroS"></p>
-    <div class="hero-btns">
+    <div class="hero-badge-wrap">
+      <span class="hero-badge">Prime Quality Assurance</span>
+    </div>
+    <h1 data-i="heroT">Fresh Meat Delivered to Your Door</h1>
+    <p data-i="heroS">Premium chicken, beef and mutton, cut fresh and delivered to your home with unmatched care.</p>
+    <div class="hero-actions">
       <a class="btn hero-cta" href="#shop" data-i="shopNow"></a>
-      <a class="btn btn-outline" href="#about" data-i="nAbout"></a>
+      <a class="btn btn-glass" href="#menu-prompt">What's on your menu? &darr;</a>
     </div>
   </div>
   <div class="dots" id="dots"></div>
 </section>
 
-<!-- Category Showcase -->
+<!-- "What's on your menu today?" Interactive Section -->
+<section id="menu-prompt" class="menu-curation">
+  <div class="menu-curation-in">
+    <span class="sub-head">Curated For Your Table</span>
+    <h2 class="menu-heading">What’s on your menu today?</h2>
+    <p class="menu-lead">Choose your dish or craving, and let our butchers prepare the exact cut for your recipe.</p>
+    
+    <div class="menu-moods">
+      <a href="#shop" class="mood-pill" data-cat="beef">
+        <span class="mood-title">The Steakhouse Grill</span>
+        <span class="mood-sub">Striploin, Ribeye & Undercut</span>
+      </a>
+      <a href="#shop" class="mood-pill" data-cat="mutton">
+        <span class="mood-title">Slow-Cooked Stews</span>
+        <span class="mood-sub">Fresh Chops, Kunna & Mutton Legs</span>
+      </a>
+      <a href="#shop" class="mood-pill" data-cat="chicken">
+        <span class="mood-title">Farm-Fresh Poultry</span>
+        <span class="mood-sub">Cleaned Whole, Fillets & Cuts</span>
+      </a>
+      <a href="#shop" class="mood-pill" data-cat="beef">
+        <span class="mood-title">Rich Broths & Nehari</span>
+        <span class="mood-sub">Bone-in Nehari Cuts & Paya</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
 <section class="sec">
   <div class="sec-header">
     <span class="sub-head">Artisan Selections</span>
-    <h2 data-i="cats"></h2>
+    <h2 data-i="cats">Categories</h2>
   </div>
   <div class="cats" id="catTiles"></div>
 </section>
@@ -73,27 +113,27 @@
 <!-- Best Sellers -->
 <section class="sec tint">
   <div class="sec-header">
-    <span class="sub-head">Hand-Picked Specialties</span>
-    <h2 data-i="best"></h2>
+    <span class="sub-head">Customer Favorites</span>
+    <h2 data-i="best">Best Sellers</h2>
   </div>
   <div class="grid" id="bestGrid"></div>
 </section>
 
-<!-- Shop / Full Catalog -->
+<!-- Full Catalog -->
 <section id="shop" class="sec">
   <div class="sec-header">
-    <span class="sub-head">Explore The Market</span>
-    <h2 data-i="nShop"></h2>
+    <span class="sub-head">Our Complete Butcher Display</span>
+    <h2 data-i="nShop">Shop</h2>
   </div>
   <div class="chips" id="chips"></div>
   <div class="grid" id="shopGrid"></div>
 </section>
 
-<!-- Why Us -->
+<!-- Why Choose Us -->
 <section class="sec tint">
   <div class="sec-header">
-    <span class="sub-head">The Gold Standard</span>
-    <h2 data-i="why"></h2>
+    <span class="sub-head">Our Commitment</span>
+    <h2 data-i="why">Why Choose Us</h2>
   </div>
   <div class="feat">
     <div><b data-i="w1t"></b><p data-i="w1d"></p></div>
@@ -103,11 +143,11 @@
   </div>
 </section>
 
-<!-- How It Works -->
+<!-- How it Works -->
 <section class="sec">
   <div class="sec-header">
-    <span class="sub-head">Effortless Gourmet</span>
-    <h2 data-i="how"></h2>
+    <span class="sub-head">From Block to Box</span>
+    <h2 data-i="how">How It Works</h2>
   </div>
   <ol class="steps">
     <li data-i="h1"></li>
@@ -120,26 +160,26 @@
 <!-- About Section -->
 <section id="about" class="sec tint narrow">
   <div class="sec-header">
-    <span class="sub-head">Our Story</span>
-    <h2 data-i="nAbout"></h2>
+    <span class="sub-head">Artisan Heritage</span>
+    <h2 data-i="nAbout">About Us</h2>
   </div>
   <p class="about-lead" data-i="aboutP"></p>
 </section>
 
-<!-- WhatsApp Direct Banner -->
+<!-- WhatsApp Direct Concierge -->
 <section class="wa">
   <div class="wa-content">
-    <span class="gold-pill">Direct Service</span>
-    <h2 data-i="waT"></h2>
-    <a class="btn light wa-action" id="waLink" target="_blank" rel="noopener" data-i="waB"></a>
+    <span class="gold-pill">Personal Butcher Concierge</span>
+    <h2 data-i="waT">Prefer to order by chat?</h2>
+    <a class="btn light wa-action" id="waLink" target="_blank" rel="noopener" data-i="waB">Chat on WhatsApp</a>
   </div>
 </section>
 
 <!-- Contact Section -->
 <section id="contact" class="sec narrow">
   <div class="sec-header">
-    <span class="sub-head">Customer Concierge</span>
-    <h2 data-i="nContact"></h2>
+    <span class="sub-head">Get In Touch</span>
+    <h2 data-i="nContact">Contact</h2>
   </div>
   <div class="contact-box">
     <p><span data-i="phone"></span>: <a id="phoneLink" class="phone-link"></a></p>
@@ -147,6 +187,7 @@
     <p class="hours-note" data-i="hours"></p>
   </div>
 </section>
+
 </main>
 
 <!-- Checkout View -->
@@ -161,7 +202,6 @@
         <label><span data-i="fMobile"></span><input name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"></label>
       </div>
       <label><span data-i="fArea"></span><input name="area" list="areaList" required autocomplete="off"><datalist id="areaList"></datalist></label>
-      
       <div class="pin">
         <b data-i="pinT"></b>
         <p id="locInfo" class="hint"></p>
@@ -169,33 +209,30 @@
         <p class="err" id="mapMsg"></p>
         <button type="button" class="chip map-pin-btn" id="useMe" data-i="useMe"></button>
       </div>
-
       <label><span data-i="fAddr"></span><textarea name="address" rows="2"></textarea></label>
       <label><span data-i="fBldg"></span><input name="building"></label>
       <label><span data-i="fTime"></span><select name="time" id="timeSel"></select></label>
       <label><span data-i="fNotes"></span><textarea name="notes" rows="2"></textarea></label>
-      
       <fieldset class="payment-fieldset"><legend data-i="pay"></legend>
         <label class="radio"><input type="radio" name="pay" value="cod" checked><span data-i="cod"></span></label>
         <label class="radio"><input type="radio" name="pay" value="card"><span data-i="online"></span></label>
         <small data-i="payNote"></small>
       </fieldset>
-      
       <p class="err" id="coErr" role="alert"></p>
       <button class="btn full place-order-btn" type="submit" data-i="place"></button>
     </form>
   </section>
 </main>
 
-<!-- Single Product Modal View -->
+<!-- Single Product View -->
 <main id="productView" hidden>
   <section class="sec" id="productBody"></section>
 </main>
 
-<!-- Order Success View -->
+<!-- Done Order View -->
 <main id="doneView" hidden>
   <section class="sec narrow done">
-    <div class="done-icon">✓</div>
+    <div class="done-icon">&check;</div>
     <h2 id="doneT"></h2>
     <p id="doneP"></p>
     <div class="summary order-id-pill" id="doneNo"></div>
@@ -204,11 +241,11 @@
   </section>
 </main>
 
-<!-- Shopping Cart Drawer -->
+<!-- Cart Drawer -->
 <aside class="drawer" id="drawer" aria-hidden="true">
   <div class="drawer-head">
-    <h3 data-i="cart"></h3>
-    <button class="x" id="closeCart" aria-label="Close">✕</button>
+    <h3 data-i="cart">Your Cart</h3>
+    <button class="x" id="closeCart" aria-label="Close">&times;</button>
   </div>
   <div class="drawer-body" id="cartItems"></div>
   <div class="drawer-foot" id="cartFoot"></div>
@@ -220,7 +257,7 @@
   <div class="footer-inner">
     <div class="footer-logo">Meat Market</div>
     <p class="footer-sub">Premium Artisanal Meats & Prime Poultry</p>
-    <p class="footer-copy">© <span id="yr"></span> Meat Market. All rights reserved.</p>
+    <p class="footer-copy">&copy; <span id="yr"></span> Meat Market. All rights reserved.</p>
   </div>
 </footer>
 
