@@ -34,3 +34,4 @@ The product images are expected at the paths in `PRODUCTS` (for example `images/
 - In `app.js`, the submit handler calls `buildOrder()`, which returns a structured `order` object (order number, customer, items, totals, payment, notes). Send that object to your API there (marked with a comment) to get permanent order storage, a customer database, admin dashboard, sales reports, inventory and order status.
 - Replace the `PRODUCTS` array with a fetch from your API for inventory.
 - Add a payment provider that supports Mada, cards and Apple Pay (e.g. Moyasar, HyperPay, Tap) on the server side.
+

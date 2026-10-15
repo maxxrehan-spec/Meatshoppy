@@ -4,27 +4,30 @@ const CONFIG = {
   shopName: "Meat Market",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 56 841 1627",
-  orderEndpoint: "",   // paste your Google Apps Script web app URL here
-  productsSheetUrl: "",   // optional: published Google Sheet CSV link
-  banners: [
-    "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=1800&q=85", // Prime Tomahawk with Rosemary
-    "https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=1800&q=85", // Raw Ribeye on Dark Slate
-    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1800&q=85"  // Artisan Butcher Cut
-  ],
-  orderSecret: "change-me",
+  orderEndpoint: "https://script.google.com/macros/s/AKfycbzId9yYh9_7WCU6r7Hmm5Pci6H6cD57hZC60su0aYBO1cGYc3g2IsJTq7ZOYQtg0frEog/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
+  banners: ["images/hero.jpg", "images/banner2.jpg", "images/banner3.jpg"],   // top slider pictures (images that do not exist are skipped)
+  orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
+  // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
   deliveryTiers: [
-    { upToKm: 5,  freeOver: 50,  fee: 10 },
-    { upToKm: 15, freeOver: 200, fee: 20 }
+    { upToKm: 5,  freeOver: 50,  fee: 10 },   // 0 to 5 km:  free over 50 SAR, else 10 SAR
+    { upToKm: 15, freeOver: 200, fee: 20 }    // 5 to 15 km: free over 200 SAR, else 20 SAR
   ],
-  farBaseFee: 20,
-  farPerKm: 2,
-  shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },
+  farBaseFee: 20,    // beyond the last tier: this base fee ...
+  farPerKm: 2,       // ... plus this amount for each extra km (rounded up)
+  shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
   currency: { en: "SAR", ar: "ر.س" },
   areas: [],
   deliveryTimes: ["As soon as possible", "9:00 AM – 12:00 PM", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", "9:00 PM – 12:00 AM"]
 };
 
-/* ============ PRODUCTS (backup list) ============ */
+/* ============ PRODUCTS (backup list) — edit here ============
+   Your live list comes from the Google Sheet (productsSheetUrl above); this list is the backup.
+   cat    = chicken | mutton | beef | eggs
+   unit   = "kg"   -> price = SAR per 1 kg, opts = weights in grams
+            "pack" -> price = SAR per pack, pk / pka = pack label EN / AR, opts = [1]
+   prices = optional fixed price per size, same order as opts (e.g. opts [1000,1200], prices [18,20])
+   cuts   = optional choices (e.g. ["4 pcs","8 pcs"]), cutsAr = their Arabic labels */
 let PRODUCTS = [
   {"id": "c1", "cat": "chicken", "unit": "kg", "en": "Whole Chicken", "ar": "دجاج كامل", "d": "Fresh whole chicken, cleaned and ready to cook.", "da": "دجاج كامل طازج، منظف وجاهز للطبخ.", "img": "images/whole-chicken.jpg", "tag": "Best Seller", "price": 18, "prices": [18, 20], "opts": [1000, 1200]},
   {"id": "c2", "cat": "chicken", "unit": "kg", "en": "Chopped Chicken", "ar": "دجاج مقطع", "d": "Fresh chicken cut into 4 or 8 pieces.", "da": "دجاج طازج مقطع إلى 4 أو 8 قطع.", "img": "images/chopped-chicken.jpg", "tag": "Best Seller", "price": 18, "prices": [18, 20], "opts": [1000, 1200], "cuts": ["4 pcs", "8 pcs"], "cutsAr": ["4 قطع", "8 قطع"]},
@@ -69,32 +72,54 @@ let PRODUCTS = [
   {"id": "e2", "cat": "eggs", "unit": "pack", "en": "Desi Egg Crate – 30 Eggs", "ar": "كرتون بيض بلدي – 30 بيضة", "d": "Desi eggs, crate of 30.", "da": "بيض بلدي، كرتون 30 بيضة.", "img": "images/desi-egg-crate-30-eggs.jpg", "tag": "", "price": 25, "opts": [1], "pk": "30 eggs", "pka": "30 بيضة"}
 ];
 
-/* Minimal Vector Silhouette Icons (No Cartoon Emojis) */
+PRODUCTS = withVegetables(PRODUCTS);
+
 const CATS = [
-  ["chicken", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4c-3.3 0-6 2.7-6 6 0 2.2 1.2 4.1 3 5.2V20h6v-4.8c1.8-1.1 3-3 3-5.2 0-3.3-2.7-6-6-6z"/><path d="M9 10h6"/></svg>`, "Poultry", "دواجن"],
-  ["mutton", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 14c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3v6h-4v-4c0-2.2-1.8-4-4-4s-4 1.8-4 4v4H2"/><circle cx="8" cy="7" r="3"/></svg>`, "Mutton", "لحم غنم"],
-  ["beef", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 14.9C4 18.8 7.1 22 11 22c3.5 0 6.4-2.6 6.9-6h2.6c1.4 0 2.5-1.1 2.5-2.5 0-.8-.4-1.5-1-1.9L16 6.5C15 5.5 13.5 5 12 5H9.5C6.5 5 4 7.5 4 10.5v4.4z"/><circle cx="10" cy="11" r="1.5"/></svg>`, "Prime Beef", "لحم بقري"],
-  ["eggs", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8 2 5 7 5 13a7 7 0 0 0 14 0c0-6-3-11-7-11z"/></svg>`, "Farm Eggs", "بيض طازج"]
+  ["chicken","🍗","Chicken","دجاج"],["mutton","🐑","Mutton","غنم"],["beef","🥩","Beef","لحم بقري"],["eggs","🥚","Eggs","بيض"],["vegetables","🥬","Vegetables","خضروات"]
 ];
 
 const T = {
-  en:{nHome:"Home",nShop:"Shop",nAbout:"About Us",nContact:"Contact",heroT:"Fresh Meat Delivered to Your Door",heroS:"Premium chicken, beef and mutton, cut fresh and delivered to your home.",shopNow:"Shop Now",cats:"Categories",searchPh:"Search products…",noRes:"No products found.",pc:"pc",pcs:"pcs",best:"Best sellers",offers:"Special offers",why:"Why choose us",
-   w1t:"Cut fresh daily",w1d:"Every order is prepared on the day of delivery.",w2t:"Quality sourced",w2d:"Carefully selected chicken and meat.",w3t:"Clear pricing",w3d:"Every price shows its weight. No surprises.",w4t:"Home delivery",w4d:"Chilled and delivered to your door.",
-   how:"How it works",h1:"Choose your meat",h2:"Select the weight",h3:"Place your order",h4:"We confirm on WhatsApp and deliver",waT:"Prefer to order by chat?",waB:"Chat on WhatsApp",
-   aboutP:"Meat Market is a fresh chicken and meat delivery service. We focus on quality, clean preparation and fast delivery to your home.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
+  en:{nHome:"Home",nShop:"Shop",nAbout:"About Us",nContact:"Contact",heroT:"Fresh Meat Delivered to Your Door",heroS:"Fresh chicken, beef, mutton and vegetables, delivered to your home.",shopNow:"Shop Now",cats:"Categories",searchPh:"Search products…",noRes:"No products found.",pc:"pc",pcs:"pcs",best:"Best sellers",offers:"Special offers",why:"Why choose us",
+   w1t:"Choose your cut",w1d:"Select from the available cuts and weights before adding to your cart.",w2t:"For your kitchen",w2d:"Browse chicken, mutton, beef, eggs and vegetables in one place.",w3t:"Clear pricing",w3d:"Every price shows its weight. No surprises.",w4t:"Home delivery",w4d:"Delivery charges are shown in your cart and calculated from your location.",
+   how:"How it works",h1:"Choose your products",h2:"Select the weight",h3:"Place your order",h4:"We confirm on WhatsApp and deliver",waT:"Prefer to order by chat?",waB:"Chat on WhatsApp",
+   aboutP:"Shop chicken, mutton, beef, eggs and vegetables from Meat Market. Choose your products and available cuts, review your total, and place your order. We confirm orders on WhatsApp.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
    all:"All",add:"Add to Cart",added:"Added ✓",cart:"Your cart",empty:"Your cart is empty. Add something fresh.",remove:"Remove",sub:"Subtotal",del:"Delivery fee",free:"Free",tot:"Total",goCheckout:"Checkout",back:"← Back to shop",checkout:"Checkout",
-   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery (COD)",online:"Pay by Card upon Delivery",payNote:"You pay the delivery driver in cash or by card when your order arrives. No card details are collected on this site.",place:"Place order",pinT:"Delivery location",pinHelp:"Tap the map or drag the pin to your exact location.",useMe:"Use my current location",dist:"Distance from shop",inZone:"Inside our free-delivery area",outZone:"Outside the {km} km free-delivery area",mapFail:"The map could not load. Please type your full address.",freeNote:"Free delivery on orders over {amt} within {km} km of our shop.",errLoc:"Please pin your delivery location on the map.",locDenied:"Could not get your location. Tap the map instead.",kmU:"km",related:"You may also like",cut:"Cut",from:"From",reqName:"Please enter your full name.",reqMobile:"Please enter your mobile number.",reqArea:"Please enter your area.",nTier:"{a}–{b} km: free over {amt}, otherwise {fee}",nFar:"Over {b} km: {base} + {pk} per extra km",lMap:"Location pin",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
+   fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery (COD)",online:"Pay by Card upon Delivery",payNote:"You pay the delivery driver in cash or by card when your order arrives. No card details are collected on this site.",place:"Place order",pinT:"Delivery location",pinHelp:"Tap the map or drag the pin to your exact location.",useMe:"Use my current location",dist:"Distance from shop",inZone:"Inside our free-delivery area",outZone:"Outside the {km} km free-delivery area",mapFail:"The map could not load. Please type your full address.",freeNote:"Free delivery on orders over {amt} within {km} km of our shop.",errLoc:"Please pin your delivery location on the map.",locDenied:"Could not get your location. Tap the map instead.",kmU:"km",related:"You may also like",cut:"Cut",from:"From",reqName:"Please enter your full name.",reqMobile:"Please enter your mobile number.",reqArea:"Please enter your area.",nTier:"{a}–{b} km: free from {amt}, otherwise {fee}",nFar:"Over {b} km: {base} + {pk} per extra km",lMap:"Location pin",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
    errFill:"Please complete all required fields.",errMobile:"Enter a valid Saudi mobile number (e.g. 05XXXXXXXX).",errCart:"Your cart is empty.",kg:"kg",g:"g",selArea:"Select area",newOrder:"New Order",lOrder:"Order Number",lName:"Customer Name",lMob:"Mobile Number",lArea:"Area",lAddr:"Address",lTime:"Delivery Time",lProd:"Products",lW:"Weight",lQ:"Qty",lP:"Price",lPay:"Payment Method",lNotes:"Customer Notes",none:"None",onlinePending:"Online Payment (to be arranged)"},
-  ar:{nHome:"الرئيسية",nShop:"المتجر",nAbout:"من نحن",nContact:"تواصل معنا",heroT:"لحوم طازجة تصل إلى بابك",heroS:"دجاج ولحم بقري وغنم فاخر، يُقطع طازجاً ويُوصَّل إلى منزلك.",shopNow:"تسوق الآن",cats:"الأقسام",searchPh:"ابحث عن منتج…",noRes:"لا توجد منتجات مطابقة.",pc:"قطعة",pcs:"قطع",best:"الأكثر مبيعاً",offers:"عروض خاصة",why:"لماذا تختارنا",
-   w1t:"طازج كل يوم",w1d:"نجهّز كل طلب في يوم التوصيل.",w2t:"جودة مضمونة",w2d:"دجاج ولحوم مختارة بعناية.",w3t:"أسعار واضحة",w3d:"كل سعر مرتبط بوزنه. بلا مفاجآت.",w4t:"توصيل للمنزل",w4d:"نوصّله لك مبرداً حتى الباب.",
-   how:"كيف نعمل",h1:"اختر لحمتك",h2:"حدد الوزن",h3:"أرسل طلبك",h4:"نؤكد عبر واتساب ونوصّل",waT:"تفضّل الطلب بالمحادثة؟",waB:"تواصل عبر واتساب",
-   aboutP:"ميت ماركت خدمة توصيل دجاج ولحوم طازجة. نهتم بالجودة والنظافة وسرعة التوصيل إلى منزلك.",phone:"الهاتف",hours:"يتم تأكيد الطلبات عبر واتساب.",
+  ar:{nHome:"الرئيسية",nShop:"المتجر",nAbout:"من نحن",nContact:"تواصل معنا",heroT:"لحوم طازجة تصل إلى بابك",heroS:"دجاج ولحوم وخضروات طازجة تصل إلى منزلك.",shopNow:"تسوق الآن",cats:"الأقسام",searchPh:"ابحث عن منتج…",noRes:"لا توجد منتجات مطابقة.",pc:"قطعة",pcs:"قطع",best:"الأكثر مبيعاً",offers:"عروض خاصة",why:"لماذا تختارنا",
+   w1t:"اختر التقطيع",w1d:"اختر من الأوزان والتقطيعات المتاحة قبل الإضافة إلى السلة.",w2t:"لمطبخك",w2d:"تسوق الدجاج والغنم واللحم البقري والبيض والخضروات من مكان واحد.",w3t:"أسعار واضحة",w3d:"كل سعر مرتبط بوزنه. بلا مفاجآت.",w4t:"توصيل للمنزل",w4d:"تظهر رسوم التوصيل في السلة وتُحسب حسب موقعك.",
+   how:"كيف نعمل",h1:"اختر منتجاتك",h2:"حدد الوزن",h3:"أرسل طلبك",h4:"نؤكد عبر واتساب ونوصّل",waT:"تفضّل الطلب بالمحادثة؟",waB:"تواصل عبر واتساب",
+   aboutP:"تسوق الدجاج والغنم واللحم البقري والبيض والخضروات من ميت ماركت. اختر منتجاتك والتقطيعات المتاحة، وراجع الإجمالي، ثم أرسل طلبك. نؤكد الطلبات عبر واتساب.",phone:"الهاتف",hours:"يتم تأكيد الطلبات عبر واتساب.",
    all:"الكل",add:"أضف إلى السلة",added:"تمت الإضافة ✓",cart:"سلتك",empty:"سلتك فارغة. أضف شيئاً طازجاً.",remove:"حذف",sub:"المجموع الفرعي",del:"رسوم التوصيل",free:"مجاني",tot:"الإجمالي",goCheckout:"إتمام الطلب",back:"→ العودة للمتجر",checkout:"إتمام الطلب",
-   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل (اختياري)",fBldg:"رقم المبنى / الفيلا (اختياري)",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع نقداً عند الاستلام",online:"الدفع بالبطاقة عند الاستلام",payNote:"تدفع للمندوب نقداً أو بالبطاقة عند وصول طلبك. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"تأكيد الطلب",pinT:"موقع التوصيل",pinHelp:"اضغط على الخريطة أو اسحب الدبوس إلى موقعك بدقة.",useMe:"استخدم موقعي الحالي",dist:"المسافة من المتجر",inZone:"داخل نطاق التوصيل المجاني",outZone:"خارج نطاق التوصيل المجاني ({km} كم)",mapFail:"تعذر تحميل الخريطة. يرجى كتابة العنوان الكامل.",freeNote:"توصيل مجاني للطلبات فوق {amt} ضمن {km} كم من المتجر.",errLoc:"يرجى تحديد موقع التوصيل على الخريطة.",locDenied:"تعذر تحديد موقعك. اضغط على الخريطة بدلاً من ذلك.",kmU:"كم",related:"قد يعجبك أيضاً",cut:"التقطيع",from:"من",reqName:"يرجى إدخال الاسم الكامل.",reqMobile:"يرجى إدخال رقم الجوال.",reqArea:"يرجى إدخال الحي.",nTier:"{a}–{b} كم: مجاني للطلبات فوق {amt}، وإلا {fee}",nFar:"أكثر من {b} كم: {base} + {pk} لكل كم إضافي",sending:"جارٍ إرسال طلبك…",doneOk:"تم استلام الطلب ✓",doneOkP:"شكراً {n}! تم استلام طلبك رقم {no}. سنؤكده معك عبر واتساب قريباً.",doneStep:"خطوة أخيرة",doneStepP:"اضغط الزر أدناه لإرسال طلبك رقم {no} إلينا عبر واتساب حتى نؤكده.",doneWa:"أرسل الطلب عبر واتساب",doneWa2:"راسلنا عبر واتساب",
+   fName:"الاسم الكامل",fMobile:"رقم الجوال",fArea:"الحي",fAddr:"العنوان الكامل (اختياري)",fBldg:"رقم المبنى / الفيلا (اختياري)",fTime:"وقت التوصيل المفضل",fNotes:"ملاحظات التوصيل (اختياري)",pay:"طريقة الدفع",cod:"الدفع نقداً عند الاستلام",online:"الدفع بالبطاقة عند الاستلام",payNote:"تدفع للمندوب نقداً أو بالبطاقة عند وصول طلبك. لا يتم جمع بيانات بطاقات في هذا الموقع.",place:"تأكيد الطلب",pinT:"موقع التوصيل",pinHelp:"اضغط على الخريطة أو اسحب الدبوس إلى موقعك بدقة.",useMe:"استخدم موقعي الحالي",dist:"المسافة من المتجر",inZone:"داخل نطاق التوصيل المجاني",outZone:"خارج نطاق التوصيل المجاني ({km} كم)",mapFail:"تعذر تحميل الخريطة. يرجى كتابة العنوان الكامل.",freeNote:"توصيل مجاني للطلبات فوق {amt} ضمن {km} كم من المتجر.",errLoc:"يرجى تحديد موقع التوصيل على الخريطة.",locDenied:"تعذر تحديد موقعك. اضغط على الخريطة بدلاً من ذلك.",kmU:"كم",related:"قد يعجبك أيضاً",cut:"التقطيع",from:"من",reqName:"يرجى إدخال الاسم الكامل.",reqMobile:"يرجى إدخال رقم الجوال.",reqArea:"يرجى إدخال الحي.",nTier:"{a}–{b} كم: مجاني للطلبات بقيمة {amt} فأكثر، وإلا {fee}",nFar:"أكثر من {b} كم: {base} + {pk} لكل كم إضافي",sending:"جارٍ إرسال طلبك…",doneOk:"تم استلام الطلب ✓",doneOkP:"شكراً {n}! تم استلام طلبك رقم {no}. سنؤكده معك عبر واتساب قريباً.",doneStep:"خطوة أخيرة",doneStepP:"اضغط الزر أدناه لإرسال طلبك رقم {no} إلينا عبر واتساب حتى نؤكده.",doneWa:"أرسل الطلب عبر واتساب",doneWa2:"راسلنا عبر واتساب",
    errFill:"يرجى تعبئة جميع الحقول المطلوبة.",errMobile:"أدخل رقم جوال سعودي صحيح (مثال: 05XXXXXXXX).",errCart:"سلتك فارغة.",kg:"كجم",g:"جم",selArea:"اختر الحي",newOrder:"طلب جديد",lOrder:"رقم الطلب",lName:"اسم العميل",lMob:"رقم الجوال",lArea:"الحي",lAddr:"العنوان",lTime:"وقت التوصيل",lProd:"المنتجات",lW:"الوزن",lQ:"الكمية",lP:"السعر",lPay:"طريقة الدفع",lNotes:"ملاحظات العميل",none:"لا يوجد",onlinePending:"دفع إلكتروني (يُرتَّب لاحقاً)"}
 };
 
-/* ============ App Core ============ */
+
+Object.assign(T.en, {
+  skip:"Skip to content", announcement:"Fresh meat, chicken and everyday essentials.", brandSub:"YOUR EVERYDAY BUTCHER",
+  heroEyebrow:"THE GOOD FOOD STARTS HERE", heroT:"Fresh meat. Premium quality. Convenient delivery.", heroNote:"Cut your way. Prepared for your table.",
+  categoryEyebrow:"FROM OUR COUNTER", cats:"What’s on your menu?", categoryIntro:"Everyday favourites. Something for every recipe.",
+  bestEyebrow:"CUSTOMER FAVOURITES", viewAll:"Shop all products", storyCaption:"GOOD FOOD. SHARED TOGETHER.", storyEyebrow:"YOUR LOCAL MEAT MARKET",
+  storyTitle:"Good meals begin with good ingredients.", shopEyebrow:"FIND YOUR NEXT FAVOURITE", shopTitle:"Fresh for your table",
+  promiseEyebrow:"A LITTLE CARE IN EVERY CUT", howEyebrow:"FROM OUR COUNTER TO YOUR KITCHEN", waEyebrow:"LET’S TALK GOOD FOOD",
+  footerLine:"Fresh ingredients for the meals that matter.", footerExplore:"Explore", footerLocation:"Made for your everyday table.",
+  productsCount:"{n} products", productCount:"1 product", clearSearch:"Clear filters", menu:"Menu", close:"Close", decrease:"Decrease quantity", increase:"Increase quantity",
+  cartAdded:"{name} added to your cart", bestTag:"Best seller"
+});
+Object.assign(T.ar, {
+  skip:"انتقل إلى المحتوى", announcement:"لحوم ودجاج ومستلزمات يومية طازجة.", brandSub:"لحوم طازجة لمائدتك كل يوم",
+  heroEyebrow:"هنا تبدأ الوجبات الشهية", heroT:"لحوم طازجة. جودة مميزة. توصيل مريح.", heroNote:"تقطيع على ذوقك. جاهز لمائدتك.",
+  categoryEyebrow:"من أقسام متجرنا", cats:"ماذا ستطبخ اليوم؟", categoryIntro:"خياراتك اليومية المفضلة. لكل وصفة اختيار.",
+  bestEyebrow:"اختيارات عملائنا", viewAll:"تصفح جميع المنتجات", storyCaption:"طعام شهي يجمعنا", storyEyebrow:"متجر اللحوم القريب منك",
+  storyTitle:"الوجبات الشهية تبدأ بمكونات جيدة.", shopEyebrow:"اختر ما يناسب مائدتك", shopTitle:"منتجات طازجة لمائدتك",
+  promiseEyebrow:"عناية في كل قطعة", howEyebrow:"من متجرنا إلى مطبخك", waEyebrow:"نتحدث عن الطعام الشهي",
+  footerLine:"مكونات طازجة للوجبات التي تجمعكم.", footerExplore:"تصفح", footerLocation:"لمائدتك كل يوم.",
+  productsCount:"{n} منتج", productCount:"منتج واحد", clearSearch:"مسح الفلاتر", menu:"القائمة", close:"إغلاق", decrease:"تقليل الكمية", increase:"زيادة الكمية",
+  cartAdded:"تمت إضافة {name} إلى سلتك", bestTag:"الأكثر مبيعاً"
+});
+
+/* ============ App ============ */
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const store = {
@@ -102,10 +127,11 @@ const store = {
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 };
 let lang = store.get("mm_lang", "en");
-let cart = store.get("mm_cart", []);
+if(!["en", "ar"].includes(lang)) lang = "en";
+let cart = store.get("mm_cart", []);       // [{id, w, q}]
 let filter = "all", query = "";
-let map = null, pin = null, userLoc = store.get("mm_loc", null);
-const sel = {};
+let map = null, pin = null, userLoc = store.get("mm_loc", null);   // {lat,lng} chosen on the map
+const sel = {};                             // per-product selection {w,q}
 
 const t = k => T[lang][k] ?? k;
 const cur = () => CONFIG.currency[lang];
@@ -122,13 +148,21 @@ const cutEn = (p, c) => p.cuts && p.cuts.length ? ` (${cutName(p, c, "en")})` : 
 const cutAr = (p, c) => p.cuts && p.cuts.length ? ` (${cutName(p, c, "ar")})` : "";
 const cutSel = (p, s) => p.cuts && p.cuts.length ? `<select class="cSel" aria-label="${t("cut")}">${p.cuts.map((c, i) => `<option value="${i}" ${i===s.c?"selected":""}>${t("cut")}: ${cutName(p, i, lang)}</option>`).join("")}</select>` : "";
 const prod = id => PRODUCTS.find(p => p.id === id);
-
-/* Luxury Monogram Crest Fallback (No Emojis) */
 const ph = p => {
-  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'><rect width='400' height='300' fill='#141312'/><rect x='20' y='20' width='360' height='260' fill='none' stroke='#c5a059' stroke-width='1.5' stroke-dasharray='6,4'/><text x='200' y='145' font-family='serif' font-size='24' font-weight='bold' fill='#dfc184' text-anchor='middle'>MEAT MARKET</text><text x='200' y='175' font-family='sans-serif' font-size='12' letter-spacing='3' fill='#9f7d37' text-anchor='middle'>ARTISAN BUTCHER</text></svg>`);
+  const label = lang === "ar" ? "الصورة قريباً" : "Photo coming soon";
+  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="350" viewBox="0 0 400 350"><rect width="400" height="350" fill="#f5efe5"/><circle cx="200" cy="145" r="42" fill="none" stroke="#bb9153"/><text x="200" y="158" text-anchor="middle" font-family="Georgia,serif" font-size="38" fill="#681c2b">M</text><text x="200" y="225" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#746e63">${label}</text></svg>`);
 };
-
-const img = p => `<img src="${p.img}" alt="${pName(p)}" loading="lazy" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">`;
+// Resolve known catalog filename mismatches for both backup and live Sheet products.
+const imageAliases = {
+  "images/chicken-boneless-strips.jpg":"images/chicken-boneless-striploin.jpg",
+  "images/beef-with-bone-nehari.jpg":"images/beef-with-bone-nehari.jpg.jpg",
+  "images/egg-crate-30-eggs.jpg":"images/egg-crate-30-eggs.jpg.jpg"
+};
+const imageDimensions = {"images/beef-boneless-nehari.jpg": [1000, 1000], "images/beef-boneless.jpg": [600, 600], "images/beef-manchurian.jpg": [600, 600], "images/beef-minced.jpg": [612, 408], "images/beef-paya.jpg": [1000, 1000], "images/beef-simple-bone.jpg": [600, 600], "images/beef-steaks.jpg": [600, 600], "images/beef-striploin.jpg": [600, 600], "images/beef-t-bone-steak.jpg": [447, 447], "images/beef-undercut.jpg": [1000, 1000], "images/beef-with-bone-nehari.jpg.jpg": [1000, 1000], "images/beef-with-bone.jpg": [1000, 1000], "images/chicken-boneless-cubes.jpg": [600, 600], "images/chicken-boneless-manchurian.jpg": [600, 600], "images/chicken-boneless-steak.jpg": [1000, 1000], "images/chicken-boneless-striploin.jpg": [600, 600], "images/chicken-boneless.jpg": [600, 600], "images/chicken-drumsticks.jpg": [1000, 1000], "images/chicken-full-legs.jpg": [1024, 1024], "images/chicken-gizzard.jpg": [800, 800], "images/chicken-heart.jpg": [600, 600], "images/chicken-liver.jpg": [2500, 2500], "images/chopped-chicken.jpg": [600, 600], "images/desi-egg-crate-30-eggs.jpg": [500, 351], "images/egg-crate-30-eggs.jpg.jpg": [500, 500], "images/fakieh-chicken.jpg": [351, 437], "images/hero.jpg": [612, 408], "images/mutton-boneless.jpg": [600, 600], "images/mutton-brain.jpg": [1000, 1000], "images/mutton-chops-champ.jpg": [447, 447], "images/mutton-fish-joints.jpg": [1000, 1000], "images/mutton-fry-chops.jpg": [600, 600], "images/mutton-kidney.jpg": [1000, 1000], "images/mutton-kunna-cut.jpg": [1000, 1000], "images/mutton-leg.jpg": [1000, 1000], "images/mutton-liver.jpg": [600, 600], "images/mutton-minced.jpg": [1000, 1000], "images/mutton-paya.jpg": [1000, 1000], "images/mutton-shoulder.jpg": [1000, 1000], "images/pakistani-mutton-whole.jpg": [1080, 1080], "images/veg-beetroot.jpg": [280, 220], "images/veg-bitter-gourd.jpg": [170, 105], "images/veg-bottle-gourd.jpg": [245, 205], "images/veg-carrot.jpg": [140, 75], "images/veg-cauliflower.jpg": [205, 205], "images/veg-coriander.jpg": [125, 120], "images/veg-cucumber.jpg": [240, 250], "images/veg-garlic.jpg": [230, 190], "images/veg-ginger.jpg": [150, 140], "images/veg-green-beans.jpg": [165, 140], "images/veg-green-cabbage.jpg": [215, 230], "images/veg-green-chilli.jpg": [150, 95], "images/veg-green-eggplant.jpg": [258, 140], "images/veg-green-pepper.jpg": [165, 110], "images/veg-lemon.jpg": [135, 140], "images/veg-mint.jpg": [235, 205], "images/veg-okra.jpg": [280, 290], "images/veg-onion.jpg": [380, 400], "images/veg-parwal.jpg": [170, 115], "images/veg-potato.jpg": [340, 180], "images/veg-purple-eggplant.jpg": [283, 240], "images/veg-red-cabbage.jpg": [250, 130], "images/veg-red-pepper.jpg": [50, 90], "images/veg-sweet-potato.jpg": [178, 100], "images/veg-taro.jpg": [230, 150], "images/veg-tinda.jpg": [295, 190], "images/veg-tomato.jpg": [210, 85], "images/veg-turnip.jpg": [343, 275], "images/veg-yellow-pepper.jpg": [75, 60], "images/vegetables-category.jpg": [478, 660], "images/whole-chicken.jpg": [600, 600]};
+const imageSize = u => { const [w,h] = imageDimensions[imageUrl(u)] || [600,600]; return `width="${w}" height="${h}" decoding="async"`; };
+const imageUrl = u => imageAliases[u] || u;
+const productTag = p => p.tag === "Best Seller" ? t("bestTag") : p.tag;
+const img = p => `<img src="${imageUrl(p.img)}" alt="${pName(p)}" ${imageSize(p.img)} loading="lazy" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">`;
 const saveCart = () => store.set("mm_cart", cart);
 
 /* i18n */
@@ -141,22 +175,31 @@ function applyLang(){
   $("#waLink").href = $("#waLink2").href = "https://wa.me/" + CONFIG.whatsapp;
   $("#areaList").innerHTML = CONFIG.areas.map(a=>`<option value="${a}">`).join("");
   $("#q").placeholder = t("searchPh");
-  $("#timeSel").innerHTML = CONFIG.deliveryTimes.map(a=>`<option>${a}</option>`).join("");
-  renderTiles(); renderChips(); renderGrids(); renderCart(); renderSummary(); updLocInfo();
+  $("#q").setAttribute("aria-label", t("searchPh"));
+  $("#cartBtn").setAttribute("aria-label", t("cart"));
+  $("#menuBtn").setAttribute("aria-label", t("menu"));
+  $("#closeCart").setAttribute("aria-label", t("close"));
+  $("#nav").setAttribute("aria-label", t("menu"));
+  const currentTime = $("#timeSel").value;
+  const timeAr = {"As soon as possible":"في أقرب وقت ممكن", "9:00 AM – 12:00 PM":"٩ صباحاً – ١٢ ظهراً", "12:00 PM – 3:00 PM":"١٢ ظهراً – ٣ عصراً", "3:00 PM – 6:00 PM":"٣ عصراً – ٦ مساءً", "6:00 PM – 9:00 PM":"٦ مساءً – ٩ مساءً", "9:00 PM – 12:00 AM":"٩ مساءً – ١٢ منتصف الليل"};
+  $("#timeSel").innerHTML = CONFIG.deliveryTimes.map(a=>`<option value="${a}">${lang === "ar" ? (timeAr[a] || a) : a}</option>`).join("");
+  if(CONFIG.deliveryTimes.includes(currentTime)) $("#timeSel").value = currentTime;
+  $("#bestGrid").innerHTML = ""; renderTiles(); renderChips(); renderGrids(); renderCart(); renderSummary(); updLocInfo();
   if(!$("#productView").hidden) route();
 }
 
-/* Catalogue Rendering */
+/* Catalogue */
 function renderTiles(){
-  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><span class="cat-icon">${c[1]}</span>${lang==="ar"?c[3]:c[2]}</button>`).join("");
+  const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-category.jpg"};
+  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><img src="${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy"><span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
 }
 function renderChips(){
   $("#chips").innerHTML = [["all",t("all")], ...CATS.map(c=>[c[0], lang==="ar"?c[3]:c[2]])]
-    .map(([k,l]) => `<button class="chip ${k===filter?"on":""}" data-cat="${k}">${l}</button>`).join("");
+    .map(([k,l]) => `<button class="chip ${k===filter?"on":""}" aria-pressed="${k===filter}" data-cat="${k}">${l}</button>`).join("");
 }
 function card(p){
   const s = sel[p.id] ||= { w: p.unit==="kg" && p.opts.includes(1000) ? 1000 : p.opts[0], q: 1, c: 0 };
-  const tag = p.tag ? `<span class="tag">${p.tag}</span>` : "";
+  const tag = p.tag ? `<span class="tag">${productTag(p)}</span>` : "";
   return `<article class="card" data-id="${p.id}">
     <div class="imgw"><a href="#product/${p.id}">${img(p)}</a>${tag}</div>
     <div class="cb"><h3><a class="plink" href="#product/${p.id}">${pName(p)}</a></h3><p>${pDesc(p)}</p>
@@ -164,16 +207,18 @@ function card(p){
       <div class="tot">${money(price(p, s.w))} / ${wl(s.w,p)}</div>${cutSel(p, s)}
       <div class="row">
         <select class="wSel" aria-label="${t("lW")}">${p.opts.map(w=>`<option value="${w}" ${w===s.w?"selected":""}>${wl(w,p)}</option>`).join("")}</select>
-        <div class="qty"><button data-act="dec" aria-label="-">−</button><span>${s.q}</span><button data-act="inc" aria-label="+">+</button></div>
+        <div class="qty"><button data-act="dec" aria-label="${t("decrease")}">−</button><span>${s.q}</span><button data-act="inc" aria-label="${t("increase")}">+</button></div>
       </div>
       <button class="add" data-act="add">${t("add")}</button>
     </div></article>`;
 }
 function renderGrids(){
-  $("#bestGrid").innerHTML = PRODUCTS.filter(p=>p.tag==="Best Seller").slice(0,6).map(card).join("");
+  $("#bestGrid").innerHTML = PRODUCTS.filter(p=>p.tag==="Best Seller").slice(0,5).map(card).join("");
   const q = query.trim().toLowerCase();
   const list = PRODUCTS.filter(p => (filter==="all"||p.cat===filter) && (!q || (p.en+" "+p.ar+" "+p.d+" "+p.da).toLowerCase().includes(q)));
-  $("#shopGrid").innerHTML = list.length ? list.map(card).join("") : `<p class="empty">${t("noRes")}</p>`;
+  $("#shopGrid").innerHTML = list.length ? list.map(card).join("") : `<div class="empty"><p>${t("noRes")}</p><button class="link text-link" data-cat="all">${t("clearSearch")}</button></div>`;
+  $("#resultCount").textContent = list.length === 1 ? t("productCount") : t("productsCount").replace("{n}", list.length);
+  revealContent();
 }
 document.addEventListener("click", e => {
   const cat = e.target.closest("[data-cat]");
@@ -183,7 +228,7 @@ document.addEventListener("click", e => {
   const p = prod(c.dataset.id), s = sel[p.id];
   if(b.dataset.act==="inc") s.q = Math.min(20, s.q+1);
   if(b.dataset.act==="dec") s.q = Math.max(1, s.q-1);
-  if(b.dataset.act==="add"){ addToCart(p.id, s.w, s.q, s.c || 0); b.textContent = t("added"); setTimeout(()=>b.textContent=t("add"), 900); }
+  if(b.dataset.act==="add"){ addToCart(p.id, s.w, s.q, s.c || 0); b.textContent = t("added"); b.classList.add("added"); setTimeout(()=>{b.textContent=t("add");b.classList.remove("added");}, 1200); }
   syncCards(p.id);
 });
 document.addEventListener("change", e => {
@@ -192,26 +237,29 @@ document.addEventListener("change", e => {
   if(cls.contains("wSel")) sel[id].w = +el.value; else sel[id].c = +el.value;
   syncCards(id);
 });
-function syncCards(id){
+function syncCards(id){            // keep same product in every grid in sync, without re-rendering
   const p = prod(id), s = sel[id];
+  if(!$("#productView").hidden) updateProductMetadata(p, s.w);
   $$(`.card[data-id="${id}"]`).forEach(c => {
     $(".tot", c).textContent = `${money(price(p, s.w))} / ${wl(s.w,p)}`;
     $(".qty span", c).textContent = s.q; $(".wSel", c).value = s.w; const cs = $(".cSel", c); if(cs) cs.value = s.c || 0;
   });
 }
 
-/* Cart Management */
+/* Cart */
 function addToCart(id, w, q, c = 0){
   const it = cart.find(i => i.id===id && i.w===w && (i.c || 0)===c);
   it ? it.q = Math.min(50, it.q+q) : cart.push({id, w, q, c});
   saveCart(); renderCart();
+  showToast(t("cartAdded").replace("{name}", pName(prod(id))));
+  const badge = $("#cartBtn"); badge.classList.remove("pulse"); void badge.offsetWidth; badge.classList.add("pulse");
 }
 const subtotal = () => cart.reduce((s,i)=> s + price(prod(i.id), i.w) * i.q, 0);
 const rad = x => x * Math.PI / 180;
 function km(a, b){ const h = Math.sin(rad(b.lat-a.lat)/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(rad(b.lng-a.lng)/2)**2; return 12742 * Math.asin(Math.sqrt(h)); }
 const distKm = () => userLoc ? km(CONFIG.shopLocation, userLoc) : null;
 function feeFor(sub, d){
-  d = d === null ? 0 : d;
+  d = d === null ? 0 : d;                       // no pin yet: show the nearest-zone fee until a location is chosen
   for(const z of CONFIG.deliveryTiers) if(d <= z.upToKm) return sub >= z.freeOver ? 0 : z.fee;
   const last = CONFIG.deliveryTiers[CONFIG.deliveryTiers.length-1];
   return CONFIG.farBaseFee + CONFIG.farPerKm * Math.ceil(d - last.upToKm);
@@ -231,7 +279,7 @@ function renderCart(){
   $("#cartCount").textContent = cart.reduce((n,i)=>n+i.q,0);
   $("#cartItems").innerHTML = cart.length ? cart.map((i,ix) => { const p = prod(i.id); return `
     <div class="li">${img(p)}<div class="m"><b>${pName(p)}</b><small>${wl(i.w,p)}${cutLbl(p,i.c)} · ${money(price(p,i.w))}</small>
-      <div class="qty"><button data-ci="${ix}" data-d="-1">−</button><span>${i.q}</span><button data-ci="${ix}" data-d="1">+</button></div></div>
+      <div class="qty"><button data-ci="${ix}" data-d="-1" aria-label="${t("decrease")}">−</button><span>${i.q}</span><button data-ci="${ix}" data-d="1" aria-label="${t("increase")}">+</button></div></div>
       <div><b>${money(price(p,i.w)*i.q)}</b><br><button class="rm" data-rm="${ix}">${t("remove")}</button></div></div>`; }).join("")
     : `<p class="empty">${t("empty")}</p>`;
   const x = totals();
@@ -244,26 +292,48 @@ function renderCart(){
 }
 $("#cartItems").addEventListener("click", e => {
   const b = e.target;
-  if(b.dataset.ci!==undefined){ const i = cart[+b.dataset.ci]; i.q += +b.dataset.d; if(i.q<1) cart.splice(+b.dataset.ci,1); }
+  if(b.dataset.ci!==undefined){ const i = cart[+b.dataset.ci]; i.q = Math.min(50, i.q + +b.dataset.d); if(i.q<1) cart.splice(+b.dataset.ci,1); }
   else if(b.dataset.rm!==undefined) cart.splice(+b.dataset.rm,1);
   else return;
   saveCart(); renderCart();
 });
-const openCart = o => { $("#drawer").classList.toggle("open", o); $("#scrim").classList.toggle("on", o); $("#drawer").setAttribute("aria-hidden", !o); };
+let cartReturnFocus = null;
+const openCart = o => {
+  const drawer = $("#drawer");
+  if(o) cartReturnFocus = document.activeElement;
+  drawer.classList.toggle("open", o); drawer.inert = !o;
+  $("#scrim").classList.toggle("on", o); drawer.setAttribute("aria-hidden", String(!o));
+  $("#cartBtn").setAttribute("aria-expanded", String(o));
+  document.body.classList.toggle("cart-open", o);
+  [".bar", "#main", "#checkoutView", "#doneView", "#productView", "footer"].forEach(s => $(s).inert = o);
+  if(!o && !$("#productView").hidden) $("#main").inert=true;
+  if(o) $("#closeCart").focus(); else if(cartReturnFocus?.isConnected) cartReturnFocus.focus();
+};
+document.addEventListener("keydown", e => {
+  if(!$("#drawer").classList.contains("open")) return;
+  if(e.key === "Escape"){ e.preventDefault(); openCart(false); return; }
+  if(e.key !== "Tab") return;
+  const els = $$("button, a[href], input, select, textarea, [tabindex='0']", $("#drawer")).filter(el => !el.disabled && el.getClientRects().length);
+  const first = els[0], last = els[els.length-1];
+  if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+});
 $("#cartBtn").onclick = () => openCart(true);
 $("#closeCart").onclick = $("#scrim").onclick = () => openCart(false);
 $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCart(false); showCheckout(); } });
 
-/* Navigation & Views */
+/* Views */
 function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); }
 function view(id){
+  if(id !== "productView") closeProduct();
   ["main","checkoutView","doneView","productView"].forEach(v => $("#" + v).hidden = v !== id);
   document.body.classList.remove("lock");
   if(id !== "productView" && location.hash.indexOf("#product/") === 0) history.replaceState(null, "", location.pathname + location.search);
 }
 function showMain(){ view("main"); }
 $("#backBtn").onclick = () => { showMain(); $("#shop").scrollIntoView(); };
-$("#nav").addEventListener("click", showMain);
+$("#nav").addEventListener("click", () => { showMain(); closeMenu(); });
+$("footer").addEventListener("click", e => { if(e.target.closest('a[href^="#"]')) showMain(); });
 $(".logo").addEventListener("click", showMain);
 function renderSummary(){
   const x = totals();
@@ -271,7 +341,7 @@ function renderSummary(){
    + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d?money(x.d):t("free")}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
 }
 
-/* Checkout → WhatsApp Submission */
+/* Checkout → WhatsApp */
 $("#coForm").addEventListener("submit", async e => {
   e.preventDefault();
   const form = e.target, btn = $("button[type=submit]", form);
@@ -285,12 +355,12 @@ $("#coForm").addEventListener("submit", async e => {
   if(!f.area.trim()) need(form.elements["area"], t("reqArea"));
   if(!userLoc && typeof L !== "undefined") need($("#map"), t("errLoc"));
   if(!cart.length){ err.textContent = t("errCart"); return; }
-  if(first){ err.textContent = t("errFill"); first.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
+  if(first){ err.textContent = t("errFill"); first.scrollIntoView({ behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block:"center" }); (first.querySelector("input,select,textarea,button") || first).focus({preventScroll:true}); return; }
   err.textContent = "";
   const order = buildOrder(f);
-  store.set("mm_last_order", order);
+  store.set("mm_last_order", order);       // latest order, browser only
   btn.disabled = true; btn.textContent = t("sending");
-  const ok = await sendOrder(order);
+  const ok = await sendOrder(order);       // true = saved, false = failed, null = not configured
   btn.disabled = false; btn.textContent = t("place");
   cart = []; saveCart(); renderCart(); form.reset();
   showDone(order, ok);
@@ -314,15 +384,15 @@ function showDone(order, ok){
   const wa = $("#doneWa");
   wa.textContent = ok ? t("doneWa2") : t("doneWa");
   wa.className = ok ? "btn full light" : "btn full";
-  wa.style.cssText = ok ? "background:var(--bg-tint);color:var(--burgundy-800)" : "";
+  wa.style.cssText = ok ? "background:var(--cream);color:var(--red2)" : "";
   wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(order.message);
   view("doneView"); scrollTo(0,0);
 }
 $("#doneBack").onclick = () => { showMain(); scrollTo(0,0); };
 function buildOrder(f){
-  const L = k => T.en[k];
+  const L = k => T.en[k];                 // WhatsApp message is always English so the shop can read it
   const x = totals(), d = new Date();
-  const no = "MM-" + Math.floor(1000 + Math.random()*9000);
+  const no = "MM-" + Math.floor(1000 + Math.random()*9000);   // temporary; the Apps Script replaces it with a running number
   const w = (n,p) => p.unit==="kg" ? (n>=1000 ? `${n/1000} kg` : `${n} g`) : p.unit==="pc" ? `${n} pcs` : p.pk, m = n => `${num(n)} SAR`;
   const items = cart.map((i,ix) => { const p = prod(i.id);
     return `${ix+1}. ${p.en}\n   ${L("lW")}: ${w(i.w,p)}${cutEn(p,i.c)} | ${L("lQ")}: ${i.q} | ${L("lP")}: ${m(price(p,i.w))} each = ${m(price(p,i.w)*i.q)}`; }).join("\n");
@@ -334,16 +404,17 @@ function buildOrder(f){
   return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, lines, lang, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 
-$("#q").addEventListener("input", e => { query = e.target.value; showMain(); renderGrids(); if(query.trim()) $("#shop").scrollIntoView({behavior:"instant"}); });
+$("#q").addEventListener("input", e => { query = e.target.value; renderGrids(); });
+/* Checkout field highlighting */
 function flag(el, msg){
   const box = el.closest("label") || el.closest(".pin"); box.classList.add("bad");
   let s = $(".fe", box); if(!s){ s = document.createElement("small"); s.className = "fe"; box.appendChild(s); }
-  s.textContent = msg; return box;
+  s.textContent = msg; s.id ||= "error-" + (el.name || el.id); el.setAttribute("aria-invalid", "true"); el.setAttribute("aria-describedby", s.id); return box;
 }
-function unflag(box){ box.classList.remove("bad"); const s = $(".fe", box); if(s) s.remove(); }
+function unflag(box){ box.classList.remove("bad"); box.querySelectorAll("[aria-invalid]").forEach(el => {el.removeAttribute("aria-invalid");el.removeAttribute("aria-describedby");}); const s = $(".fe", box); if(s) s.remove(); }
 $("#coForm").addEventListener("input", e => { const b = e.target.closest("label") || e.target.closest(".pin"); if(b && b.classList.contains("bad")) unflag(b); });
 
-/* Map Pin Leaflet */
+/* Map pin (Leaflet + OpenStreetMap, free) */
 function updLocInfo(){
   const el = $("#locInfo"); if(!el) return;
   const d = distKm();
@@ -365,7 +436,7 @@ function initMap(){
     const c = userLoc || CONFIG.shopLocation;
     map = L.map("map").setView([c.lat, c.lng], userLoc ? 16 : 12);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap contributors" }).addTo(map);
-    CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7e1625", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
+    CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7a1527", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
     map.on("click", e => setLoc(e.latlng.lat, e.latlng.lng));
     if(userLoc) setLoc(userLoc.lat, userLoc.lng);
   }
@@ -377,52 +448,65 @@ $("#useMe").onclick = () => {
   navigator.geolocation.getCurrentPosition(p => setLoc(p.coords.latitude, p.coords.longitude, true), () => { $("#mapMsg").textContent = t("locDenied"); }, { enableHighAccuracy:true, timeout:15000 });
 };
 
-/* Product Detail Modal View */
+/* Product metadata follows the visible selected pack; no invented ratings or stock claims. */
+function updateProductMetadata(p, weight){
+  let el = document.getElementById("product-schema");
+  if(!el){ el=document.createElement("script"); el.id="product-schema"; el.type="application/ld+json"; document.head.appendChild(el); }
+  document.querySelector('meta[name="description"]').content = pDesc(p) || pName(p);
+  const url = new URL(location.href); url.hash = "product/" + p.id;
+  el.textContent = JSON.stringify({"@context":"https://schema.org","@type":"Product",name:pName(p),sku:p.id,description:pDesc(p),image:new URL(imageUrl(p.img),location.href).href,
+    offers:{"@type":"Offer",url:url.href,priceCurrency:"SAR",price:price(p,weight),description:wl(weight,p)}});
+}
+
+/* Product pages: #product/ID */
+const baseDescription = document.querySelector('meta[name="description"]').content;
 const baseTitle = document.title; let sheetDone = !CONFIG.productsSheetUrl;
 function renderProduct(p){
   const s = sel[p.id] ||= { w: p.unit==="kg" && p.opts.includes(1000) ? 1000 : p.opts[0], q: 1, c: 0 };
-  const imgs = [p.img, ...(p.imgs || [])];
+  const imgs = [p.img, ...(p.imgs || [])].map(imageUrl);
   const long = lang==="ar" ? (p.lda || p.da) : (p.ld || p.d);
-  const thumbs = imgs.length > 1 ? `<div class="thumbs">${imgs.map(u => `<img src="${u}" alt="" data-thumb="${u}" onerror="this.remove()">`).join("")}</div>` : "";
+  const thumbs = imgs.length > 1 ? `<div class="thumbs">${imgs.map(u => `<button type="button" class="thumb" aria-pressed="${imgs.indexOf(u) === 0}" data-thumb="${u}" aria-label="${pName(p)} — ${imgs.indexOf(u)+1}"><img src="${u}" alt="" ${imageSize(u)} loading="lazy" onerror="this.closest('button').remove()"></button>`).join("")}</div>` : "";
   const rel = PRODUCTS.filter(x => x.cat === p.cat && x.id !== p.id).slice(0, 4);
   $("#productBody").innerHTML = `
-    <button class="link back-nav" id="pBack">${t("back")}</button>
+    <button class="link" id="pBack">${t("back")}</button>
     <div class="pdetail">
-      <div class="pgal"><div class="imgw"><img id="pMain" src="${p.img}" alt="${pName(p)}" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">${p.tag ? `<span class="tag">${p.tag}</span>` : ""}</div>${thumbs}</div>
+      <div class="pgal"><div class="imgw"><img id="pMain" src="${imageUrl(p.img)}" alt="${pName(p)}" ${imageSize(p.img)} fetchpriority="high" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">${p.tag ? `<span class="tag">${productTag(p)}</span>` : ""}</div>${thumbs}</div>
       <div class="pinfo card pcard" data-id="${p.id}">
         <h1>${pName(p)}</h1><p class="long">${long}</p>
         <div class="unit">${unitLine(p)}</div>
         <div class="tot">${money(price(p, s.w))} / ${wl(s.w,p)}</div>${cutSel(p, s)}
         <div class="row">
           <select class="wSel" aria-label="${t("lW")}">${p.opts.map(w => `<option value="${w}" ${w===s.w?"selected":""}>${wl(w,p)}</option>`).join("")}</select>
-          <div class="qty"><button data-act="dec" aria-label="-">−</button><span>${s.q}</span><button data-act="inc" aria-label="+">+</button></div>
+          <div class="qty"><button data-act="dec" aria-label="${t("decrease")}">−</button><span>${s.q}</span><button data-act="inc" aria-label="${t("increase")}">+</button></div>
         </div>
         <button class="add" data-act="add">${t("add")}</button>
       </div>
     </div>
     ${rel.length ? `<h2>${t("related")}</h2><div class="grid">${rel.map(card).join("")}</div>` : ""}`;
   document.title = `${pName(p)} | ${CONFIG.shopName}`;
+  updateProductMetadata(p, s.w);
 }
 let curProduct = null, deepLink = /^#product\//.test(location.hash);
-function closeProduct(){ $("#productView").hidden = true; document.body.classList.remove("lock"); document.title = baseTitle; curProduct = null; }
-function route(){
+function closeProduct(){ $("#main").inert=false; $("#main").removeAttribute("aria-hidden"); document.getElementById("product-schema")?.remove(); document.querySelector('meta[name="description"]').content = baseDescription; $("#productView").hidden = true; document.body.classList.remove("lock"); document.title = baseTitle; curProduct = null; }
+function route(){                         // the product page opens as a layer on top, so the page underneath keeps its scroll position
   const m = location.hash.match(/^#product\/([\w-]+)$/);
   if(!m){ if(!$("#productView").hidden) closeProduct(); return; }
   const p = prod(m[1]);
   if(!p){ if(sheetDone){ history.replaceState(null, "", location.pathname + location.search); closeProduct(); } return; }
   const pv = $("#productView"), fresh = pv.hidden || curProduct !== p.id;
   $("#main").hidden = false; $("#checkoutView").hidden = true; $("#doneView").hidden = true;
-  pv.style.paddingTop = $(".bar").offsetHeight + "px"; pv.hidden = false; document.body.classList.add("lock");
-  renderProduct(p); curProduct = p.id; if(fresh) pv.scrollTop = 0;
+  pv.style.paddingTop = $(".bar").offsetHeight + "px"; pv.hidden = false; $("#main").inert=true; $("#main").setAttribute("aria-hidden","true"); document.body.classList.add("lock");
+  renderProduct(p); curProduct = p.id; if(fresh){ pv.scrollTop = 0; $("#pBack").focus({preventScroll:true}); }
 }
 window.addEventListener("hashchange", route);
 $("#productBody").addEventListener("click", e => {
   if(e.target.id === "pBack"){ if(deepLink){ deepLink = false; history.replaceState(null, "", location.pathname + location.search); closeProduct(); } else history.back(); }
-  if(e.target.dataset.thumb) $("#pMain").src = e.target.dataset.thumb;
+  const thumb = e.target.closest("[data-thumb]"); if(thumb){ $("#pMain").src = thumb.dataset.thumb; $$(".thumb", $("#productBody")).forEach(b => b.setAttribute("aria-pressed", String(b === thumb))); }
 });
+
 document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("#productView").hidden){ const b = $("#pBack"); if(b) b.click(); } });
 
-/* Slider */
+/* Top banner slider */
 function initSlider(){
   const urls = CONFIG.banners || [], ok = []; let pending = urls.length; if(!pending) return;
   const done = () => { if(--pending === 0) build(urls.filter(u => ok.includes(u))); };
@@ -434,7 +518,8 @@ function initSlider(){
     $("#dots").innerHTML = list.map((_, i) => `<button aria-label="${i+1}"${i ? "" : ' class="on"'}></button>`).join("");
     let cur = 0, timer, x0 = null;
     const go = n => { cur = (n + list.length) % list.length; $$("#slides .slide").forEach((s, i) => s.classList.toggle("on", i === cur)); $$("#dots button").forEach((d, i) => d.classList.toggle("on", i === cur)); };
-    const play = () => { clearInterval(timer); timer = setInterval(() => go(cur + 1), 5500); };
+    // Manual-only slides keep the headline still and respect reduced motion.
+    const play = () => { clearInterval(timer); };
     $("#dots").onclick = e => { const b = e.target.closest("button"); if(b){ go([...$("#dots").children].indexOf(b)); play(); } };
     const hero = $("#home");
     hero.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive:true });
@@ -443,7 +528,7 @@ function initSlider(){
   }
 }
 
-/* Google Sheets CSV Product Parser */
+/* Products from a published Google Sheet (optional). Falls back to the PRODUCTS list above if the sheet can't be read. */
 function parseCSV(text){
   const rows = []; let row = [], cell = "", q = false;
   for(let i = 0; i < text.length; i++){
@@ -483,18 +568,41 @@ async function loadSheet2(){
   try{
     const u = CONFIG.productsSheetUrl + (CONFIG.productsSheetUrl.includes("?") ? "&" : "?") + "t=" + Date.now();
     const r = await fetch(u); if(!r.ok) return;
-    const list = sheetToProducts(await r.text());
-    if(!list.length) return;
-    PRODUCTS = list; store.set("mm_products", list);
-    Object.keys(sel).forEach(k => delete sel[k]);
+    const text = await r.text();
+    const list = sheetToProducts(text);
+    const managed = sheetManagesVegetables(text);
+    if(!list.length) return;                 // unreadable sheet: keep the current list
+    PRODUCTS = withVegetables(list, managed); store.set("mm_products", list);
+    store.set("mm_vegetables_managed", managed);
+    Object.keys(sel).forEach(k => {
+      const p = prod(k), choice = sel[k];
+      if(!p){ delete sel[k]; return; }
+      if(!p.opts.includes(choice.w)) choice.w = p.unit === "kg" && p.opts.includes(1000) ? 1000 : p.opts[0];
+      if(!p.cuts || choice.c >= p.cuts.length) choice.c = 0;
+    });
     renderGrids(); renderCart();
   }catch(e){}
 }
+
+/* Progressive enhancement: content remains visible if motion APIs are unavailable. */
+let toastTimer;
+function showToast(message){
+  const el = $("#toast"); clearTimeout(toastTimer); el.textContent = message; el.classList.add("on");
+  toastTimer = setTimeout(() => el.classList.remove("on"), 2600);
+}
+// Content stays immediately visible; motion is reserved for user feedback.
+function revealContent(){}
+function closeMenu(){ $("#nav").classList.remove("open"); $("#menuBtn").setAttribute("aria-expanded", "false"); }
+$("#menuBtn").onclick = () => { const open = $("#nav").classList.toggle("open"); $("#menuBtn").setAttribute("aria-expanded", String(open)); };
+document.addEventListener("keydown", e => { if(e.key === "Escape" && $("#nav").classList.contains("open")){closeMenu();$("#menuBtn").focus();} });
+document.addEventListener("click", e => { if(!e.target.closest(".bar")) closeMenu(); });
+
 $("#langBtn").onclick = () => { lang = lang==="en" ? "ar" : "en"; store.set("mm_lang", lang); applyLang(); };
 $("#yr").textContent = new Date().getFullYear();
 const cachedProducts = CONFIG.productsSheetUrl ? store.get("mm_products", null) : null;
-if(Array.isArray(cachedProducts) && cachedProducts.length) PRODUCTS = cachedProducts;
+if(Array.isArray(cachedProducts) && cachedProducts.length) PRODUCTS = withVegetables(cachedProducts, store.get("mm_vegetables_managed", false));   // last good copy of the sheet
 applyLang();
 initSlider();
 route();
 loadSheet();
+
