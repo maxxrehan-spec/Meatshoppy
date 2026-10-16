@@ -1,0 +1,33 @@
+/* Medium motion treatment: progressively enhanced, no hidden content fallback. */
+.featured-controls{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:20px}
+.featured-controls[hidden]{display:none}
+.featured-controls button{display:grid;place-items:center;width:46px;height:46px;border:1px solid var(--line);border-radius:50%;color:var(--red);background:var(--white);cursor:pointer;transition:background .18s,border-color .18s}
+.featured-controls button:hover:not(:disabled){background:var(--cream);border-color:var(--red)}
+.featured-controls button:disabled{opacity:.35;cursor:default}
+.featured-controls svg{width:20px;height:20px}
+[dir=rtl] .featured-controls svg{transform:rotate(180deg)}
+.featured-position{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums;min-width:68px;text-align:center}
+#bestGrid.featured-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-inline:contain;scrollbar-width:thin;scrollbar-color:#c4b3a4 transparent;padding:5px 4px 16px;margin-inline:-4px;scroll-padding-inline:4px}
+#bestGrid.featured-track>.card{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start;scroll-snap-stop:normal;min-width:0}
+#bestGrid.featured-track .cb{padding:20px}
+#bestGrid.featured-track .cb h3{font-size:18px}
+#bestGrid.featured-track .imgw{aspect-ratio:4/3}
+#bestGrid.featured-track .imgw img{width:100%;height:100%;object-fit:contain;background:#fff}
+.hero-in{position:relative}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+ .hero .btn,.add,.cartBtn{transition:background .2s ease,box-shadow .2s ease,transform .2s ease}
+ .hero .btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px #0002}
+ .add:active,.cartBtn:active{transform:scale(.97)}
+ .text-link{transition:border-color .2s ease,color .2s ease}
+}
+@media(max-width:999px){#bestGrid.featured-track>.card{flex-basis:calc((100% - 20px)/2)}}
+@media(max-width:599px){
+ #bestGrid.featured-track{gap:14px}
+ #bestGrid.featured-track>.card{flex-basis:84%}
+ #bestGrid.featured-track .cb{padding:18px}
+ .featured-controls{margin-top:12px;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ #bestGrid.featured-track{scroll-behavior:auto}
+ .featured-controls button{transition:none}
+}
