@@ -4,7 +4,7 @@ const CONFIG = {
   shopName: "Tariq Meat Center",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 59 668 4625",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycby1hUJ4GW3Bw36PFameb1ej9bvUyc4SUtCnryudO6LFYAz3wSrmc83mIrV0bQLkYUQgaA/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  orderEndpoint: "https://script.google.com/macros/s/AKfycbysyn-7FP122iRQA3cTW17B48pinTiyGs6Y7DnN08zjmlWYnCyRmrsz752Zqk6h2CnsFg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
   banners: ["images/optimized/hero.jpg.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
