@@ -10,7 +10,7 @@ const CONFIG = {
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
   previewOnly: location.protocol !== "https:" || location.hostname !== "maxxrehan-spec.github.io",
-  turnstileSiteKey: "0x4AAAAAAFX26n0fiv1yJXYE", // Public site key; never put the secret key here.
+  turnstileSiteKey: "", // Public site key; never put the secret key here.
   // Owner-confirmed rules supersede the original strict thresholds.
   deliveryTiers: [{ upToKm: 5, freeOver: 50, fee: 10 }, { upToKm: 10, freeOver: 200, fee: 15 }],
   farBaseFee: 15,
@@ -406,7 +406,7 @@ $("#coForm").addEventListener("submit", async e => {
   if(!catalogReady){ err.textContent=t("catalogUnavailable"); return; }
   if(deliveryFee() === null){ err.textContent=t("deliveryUnconfirmed"); return; }
   if(CONFIG.previewOnly){ err.textContent=t("previewMessage"); return; }
-  if(!verificationToken){ err.textContent=lang==='ar'?'يرجى إكمال التحقق الأمني قبل إرسال الطلب.':'Please complete the security verification before placing your order.'; initVerification(); return; }
+  if(CONFIG.turnstileSiteKey && !verificationToken){ err.textContent=lang==='ar'?'يرجى إكمال التحقق الأمني قبل إرسال الطلب.':'Please complete the security verification before placing your order.'; initVerification(); return; }
   delete f['cf-turnstile-response'];
   err.textContent = "";
   const fingerprint=JSON.stringify({f,cart,userLoc,totals:totals()});
