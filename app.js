@@ -693,4 +693,3 @@ function initVerification(){
   script.onerror=()=>{verificationLoading=false;script.remove();document.getElementById('coErr').textContent=lang==='ar'?'تعذر تحميل التحقق الأمني. يرجى إعادة المحاولة.':'Security verification could not load. Please try again.';};
   document.head.appendChild(script);
 }
-
