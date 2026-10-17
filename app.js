@@ -4,7 +4,7 @@ const CONFIG = {
   shopName: "Tariq Meat Center",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 59 668 4625",
-  orderEndpoint: "https://script.google.com/macros/s/AKfycbzId9yYh9_7WCU6r7Hmm5Pci6H6cD57hZC60su0aYBO1cGYc3g2IsJTq7ZOYQtg0frEog/exec",   // paste your Google Apps Script web app URL here (see setup steps)
+  orderEndpoint: "https://script.google.com/macros/s/AKfycby1hUJ4GW3Bw36PFameb1ej9bvUyc4SUtCnryudO6LFYAz3wSrmc83mIrV0bQLkYUQgaA/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
   banners: ["images/optimized/hero.jpg.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
@@ -693,3 +693,4 @@ function initVerification(){
   script.onerror=()=>{verificationLoading=false;script.remove();document.getElementById('coErr').textContent=lang==='ar'?'تعذر تحميل التحقق الأمني. يرجى إعادة المحاولة.':'Security verification could not load. Please try again.';};
   document.head.appendChild(script);
 }
+
