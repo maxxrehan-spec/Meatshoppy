@@ -1,24 +1,26 @@
 /* ============ CONFIG — edit here ============ */
-const WHATSAPP_NUMBER = "966568411627"; // international format, no + or spaces
+const WHATSAPP_NUMBER = "966596684625"; // international format, no + or spaces
 const CONFIG = {
-  shopName: "Meat Market",
+  shopName: "Tariq Meat Center",
   whatsapp: WHATSAPP_NUMBER,
-  phone: "+966 56 841 1627",
+  phone: "+966 59 668 4625",
   orderEndpoint: "https://script.google.com/macros/s/AKfycbzId9yYh9_7WCU6r7Hmm5Pci6H6cD57hZC60su0aYBO1cGYc3g2IsJTq7ZOYQtg0frEog/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
-  banners: ["images/hero.jpg", "images/banner2.jpg", "images/banner3.jpg"],   // top slider pictures (images that do not exist are skipped)
+  banners: ["images/optimized/hero.jpg.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
-  // Delivery fee tiers by straight-line distance from the shop. Free when the order reaches "freeOver", otherwise "fee".
-  deliveryTiers: [
-    { upToKm: 5,  freeOver: 50,  fee: 10 },   // 0 to 5 km:  free over 50 SAR, else 10 SAR
-    { upToKm: 15, freeOver: 200, fee: 20 }    // 5 to 15 km: free over 200 SAR, else 20 SAR
-  ],
-  farBaseFee: 20,    // beyond the last tier: this base fee ...
-  farPerKm: 2,       // ... plus this amount for each extra km (rounded up)
-  shopLocation: { lat: 21.559008718707744, lng: 39.208730924752984 },   // your shop/kitchen coordinates
+  // Preview stays read-only until reviewed; do not enable before business details are verified.
+  previewOnly: true,
+  // Owner-confirmed rules supersede the original strict thresholds.
+  deliveryTiers: [{ upToKm: 5, freeOver: 50, fee: 10 }, { upToKm: 10, freeOver: 200, fee: 15 }],
+  farBaseFee: 15,
+  farPerKm: 2,
+  shopLocation: { lat: 21.5590012, lng: 39.2087398 },
+  shopAddress: "Al Udaba Street, Al Aziziyah, Jeddah 23342",
+  shopAddressAr: "الأدباء، العزيزية، جدة 23342",
+  shopMapsUrl: "https://maps.app.goo.gl/Y3mNmNyiFn54K2gt9",
   currency: { en: "SAR", ar: "ر.س" },
   areas: [],
-  deliveryTimes: ["As soon as possible", "12:00 PM – 3:00 PM", "3:00 PM – 6:00 PM", "6:00 PM – 9:00 PM", "9:00 PM – 12:00 AM"]
+  deliveryTimes: []
 };
 
 /* ============ PRODUCTS (backup list) — edit here ============
@@ -82,7 +84,7 @@ const T = {
   en:{nHome:"Home",nShop:"Shop",nAbout:"About Us",nContact:"Contact",heroT:"Fresh Meat Delivered to Your Door",heroS:"Fresh chicken, beef, mutton and vegetables, delivered to your home.",shopNow:"Shop Now",cats:"Categories",searchPh:"Search products…",noRes:"No products found.",pc:"pc",pcs:"pcs",best:"Best sellers",offers:"Special offers",why:"Why choose us",
    w1t:"Choose your cut",w1d:"Select from the available cuts and weights before adding to your cart.",w2t:"For your kitchen",w2d:"Browse chicken, mutton, beef, eggs and vegetables in one place.",w3t:"Clear pricing",w3d:"Every price shows its weight. No surprises.",w4t:"Home delivery",w4d:"Delivery charges are shown in your cart and calculated from your location.",
    how:"How it works",h1:"Choose your products",h2:"Select the weight",h3:"Place your order",h4:"We confirm on WhatsApp and deliver",waT:"Prefer to order by chat?",waB:"Chat on WhatsApp",
-   aboutP:"Shop chicken, mutton, beef, eggs and vegetables from Meat Market. Choose your products and available cuts, review your total, and place your order. We confirm orders on WhatsApp.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
+   aboutP:"Shop chicken, mutton, beef, eggs and vegetables from Tariq Meat Center. Choose your products and available cuts, review your total, and place your order. We confirm orders on WhatsApp.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
    all:"All",add:"Add to Cart",added:"Added ✓",cart:"Your cart",empty:"Your cart is empty. Add something fresh.",remove:"Remove",sub:"Subtotal",del:"Delivery fee",free:"Free",tot:"Total",goCheckout:"Checkout",back:"← Back to shop",checkout:"Checkout",
    fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery (COD)",online:"Pay by Card upon Delivery",payNote:"You pay the delivery driver in cash or by card when your order arrives. No card details are collected on this site.",place:"Place order",pinT:"Delivery location",pinHelp:"Tap the map or drag the pin to your exact location.",useMe:"Use my current location",dist:"Distance from shop",inZone:"Inside our free-delivery area",outZone:"Outside the {km} km free-delivery area",mapFail:"The map could not load. Please type your full address.",freeNote:"Free delivery on orders over {amt} within {km} km of our shop.",errLoc:"Please pin your delivery location on the map.",locDenied:"Could not get your location. Tap the map instead.",kmU:"km",related:"You may also like",cut:"Cut",from:"From",reqName:"Please enter your full name.",reqMobile:"Please enter your mobile number.",reqArea:"Please enter your area.",nTier:"{a}–{b} km: free from {amt}, otherwise {fee}",nFar:"Over {b} km: {base} + {pk} per extra km",lMap:"Location pin",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
    errFill:"Please complete all required fields.",errMobile:"Enter a valid Saudi mobile number (e.g. 05XXXXXXXX).",errCart:"Your cart is empty.",kg:"kg",g:"g",selArea:"Select area",newOrder:"New Order",lOrder:"Order Number",lName:"Customer Name",lMob:"Mobile Number",lArea:"Area",lAddr:"Address",lTime:"Delivery Time",lProd:"Products",lW:"Weight",lQ:"Qty",lP:"Price",lPay:"Payment Method",lNotes:"Customer Notes",none:"None",onlinePending:"Online Payment (to be arranged)"},
@@ -119,6 +121,32 @@ Object.assign(T.ar, {
   cartAdded:"تمت إضافة {name} إلى سلتك", bestTag:"الأكثر مبيعاً"
 });
 
+
+Object.assign(T.en, {best:"Featured",bestTag:"Featured",pendingFee:"Needs confirmation",privacy:"Privacy policy",refunds:"Refunds & cancellations",coverage:"Up to 1 km: free above SAR 50; SAR 50 or less needs fee confirmation. Over 1 km to 2 km: free above SAR 200, otherwise SAR 15. Beyond 2 km: coverage and fee need confirmation. Based on merchandise subtotal after discounts, excluding delivery. Distances are straight-line, not driving routes.",deliveryUnconfirmed:"Delivery cannot be priced yet. The shop location or applicable fee needs confirmation. Please contact the shop.",previewMessage:"Review preview: live order submission is disabled.",catalogUnavailable:"Product availability is being verified. Ordering is disabled until the live catalogue loads. Please refresh or contact us if this continues.",submitFailed:"Receipt could not be confirmed. Your cart and details are kept. Please contact the shop before retrying if the connection was interrupted.",noRes:"No matching products. Try an English or Arabic product name, or clear your search.",locationPending:"Shop address and Google Maps link awaiting verification.",fArea:"Area (optional)",fAddr:"Delivery address, building / villa & directions",fNotes:"Delivery or preparation instructions (optional)"});
+Object.assign(T.ar, {best:"منتجات مختارة",bestTag:"مختار",pendingFee:"بانتظار التأكيد",privacy:"سياسة الخصوصية",refunds:"الاسترجاع والإلغاء",coverage:"حتى 1 كم: توصيل مجاني للطلبات الأعلى من 50 ر.س؛ رسوم الطلبات بقيمة 50 ر.س أو أقل تحتاج تأكيداً. أكثر من 1 وحتى 2 كم: مجاني للطلبات الأعلى من 200 ر.س وإلا فالرسوم 15 ر.س. أبعد من 2 كم: التغطية والرسوم تحتاج تأكيداً. يعتمد الحساب على قيمة المنتجات بعد الخصم دون التوصيل، والمسافة بخط مستقيم وليست مسافة الطريق.",deliveryUnconfirmed:"لا يمكن حساب التوصيل بعد. موقع المتجر أو الرسوم يحتاج تأكيداً. يرجى التواصل مع المتجر.",previewMessage:"نسخة للمراجعة: إرسال الطلبات الفعلية معطل.",catalogUnavailable:"جارٍ التحقق من توفر المنتجات. الطلب معطل حتى تحميل القائمة المباشرة. يرجى تحديث الصفحة أو التواصل معنا إذا استمرت المشكلة.",submitFailed:"تعذر تأكيد استلام الطلب. تم الاحتفاظ بالسلة والبيانات. يرجى التواصل مع المتجر قبل إعادة المحاولة إذا انقطع الاتصال.",noRes:"لا توجد منتجات مطابقة. جرّب اسم المنتج بالعربية أو الإنجليزية أو امسح البحث.",locationPending:"عنوان المتجر ورابط خرائط Google بانتظار التحقق.",fArea:"الحي (اختياري)",fAddr:"عنوان التوصيل ورقم المبنى / الفيلا وإرشادات الوصول",fNotes:"تعليمات التوصيل أو التحضير (اختياري)"});
+
+
+Object.assign(T.en, {
+  coverage:"Within 2 km: SAR 15 delivery, free on merchandise subtotals of SAR 50 or more. Beyond 2 km: SAR 15 + SAR 2 for each additional kilometer, rounding up only the distance beyond 2 km; free on subtotals of SAR 200 or more. Calculated after discounts, excluding delivery. Distance is straight-line, not driving distance. Delivery availability is confirmed with your order on WhatsApp.",
+  serviceHours:"Delivery hours: 12 noon–12 midnight. Expected delivery: within one hour.",
+  hours:"Delivery hours: 12 noon–12 midnight. Expected delivery within one hour.",
+  aboutP:"Order online directly from Tariq Meat Center, our physical shop in Al Aziziyah, Jeddah. Choose meat, poultry, eggs and vegetables, select your weights and cuts, and place your order here. We confirm your order and delivery availability on WhatsApp.",
+  storyTitle:"Your Tariq Meat Center, online.",
+  weightNotice:"Fresh meat and chicken may vary slightly in final weight after preparation. Your displayed total uses the selected weight. The final price is based on the actual weight supplied; any additional charge requires your approval. Price differences will be adjusted accordingly.",
+  reviewsLink:"View our Google listing & reviews"
+});
+Object.assign(T.ar, {
+  coverage:"حتى 2 كم: رسوم التوصيل 15 ر.س، ومجاني عند وصول قيمة المنتجات إلى 50 ر.س أو أكثر. أبعد من 2 كم: 15 ر.س + 2 ر.س لكل كيلومتر إضافي، مع تقريب المسافة الزائدة عن أول 2 كم فقط إلى الكيلومتر التالي؛ ومجاني للطلبات بقيمة 200 ر.س أو أكثر. الحساب بعد الخصم ودون رسوم التوصيل. المسافة بخط مستقيم وليست مسافة الطريق. نؤكد توفر التوصيل مع طلبك عبر واتساب.",
+  serviceHours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
+  hours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
+  aboutP:"اطلب مباشرة عبر الإنترنت من مركز طارق للحوم، متجرنا في العزيزية بجدة. اختر اللحوم والدواجن والبيض والخضروات والأوزان والتقطيع، ثم أرسل طلبك هنا. نؤكد الطلب وتوفر التوصيل عبر واتساب.",
+  storyTitle:"مركز طارق للحوم، الآن عبر الإنترنت.",
+  weightNotice:"قد يختلف الوزن النهائي للحوم والدجاج قليلاً بعد التقطيع والتحضير. المجموع المعروض يعتمد على الوزن المختار، والسعر النهائي حسب الوزن الفعلي المسلم. تتطلب أي زيادة في السعر موافقتك، ويتم تسوية فرق السعر وفقاً لذلك.",
+  reviewsLink:"المتجر والتقييمات على خرائط Google"
+});
+
+Object.assign(T.en,{deliveryPolicy:"Delivery policy",chooseLocation:"Select your delivery location at checkout to see your delivery fee."});
+Object.assign(T.ar,{deliveryPolicy:"سياسة التوصيل",chooseLocation:"اختر موقع التوصيل عند إتمام الطلب لعرض رسوم التوصيل."});
 /* ============ App ============ */
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -130,18 +158,29 @@ let lang = store.get("mm_lang", "en");
 if(!["en", "ar"].includes(lang)) lang = "en";
 let cart = store.get("mm_cart", []);       // [{id, w, q}]
 let filter = "all", query = "";
+let catalogReady = !CONFIG.productsSheetUrl;
 let map = null, pin = null, userLoc = store.get("mm_loc", null);   // {lat,lng} chosen on the map
 const sel = {};                             // per-product selection {w,q}
 
 const t = k => T[lang][k] ?? k;
 const cur = () => CONFIG.currency[lang];
-const num = n => (Math.round(n*100)/100).toString();
+const roundMoney = n => Math.round((n + Number.EPSILON) * 100) / 100;
+const num = n => roundMoney(n).toFixed(2);
 const wl = (w,p) => p.unit==="kg" ? (w >= 1000 ? `${w/1000} ${t("kg")}` : `${w} ${t("g")}`) : p.unit==="pc" ? `${w} ${t("pcs")}` : (lang==="ar" ? p.pka : p.pk);
-const money = n => `${num(n)} ${cur()}`;
+const money = n => n === null ? t("pendingFee") : `${num(n)} ${cur()}`;
 const pName = p => lang==="ar" ? p.ar : p.en;
 const pDesc = p => lang==="ar" ? p.da : p.d;
-const price = (p, w) => p.prices ? p.prices[Math.max(0, p.opts.indexOf(w))] : p.unit==="kg" ? p.price*w/1000 : p.unit==="pc" ? p.price*w : p.price;
-const unitLine = p => p.prices ? `${t("from")} ${money(Math.min(...p.prices))}` : `${money(p.price)} / ${p.unit==="kg" ? t("kg") : p.unit==="pc" ? t("pc") : wl(1,p)}`;
+const price = (p, w) => roundMoney(p.prices ? p.prices[Math.max(0, p.opts.indexOf(w))] : p.unit==="kg" ? p.price*w/1000 : p.unit==="pc" ? p.price*w : p.price);
+const oldPrice = (p,w) => {
+  // Legacy multi-size price lists are fixed size totals, not per-kg rates.
+  if(!Number.isFinite(p.old_price) || p.old_price <= p.price) return null;
+  const previous = roundMoney(p.old_price * (p.unit === "kg" ? w/1000 : p.unit === "pc" ? w : 1));
+  return previous > price(p,w) ? previous : null;
+};
+const weightControl = (p,s) => p.opts.length === 1 ? '<span class="pack-size">'+wl(s.w,p)+'</span>' : '<select class="wSel" aria-label="'+t("lW")+'">'+p.opts.map(w=>'<option value="'+w+'" '+(w===s.w?'selected':'')+'>'+wl(w,p)+'</option>').join('')+'</select>';
+const selectedPrice = (p,s) => (oldPrice(p,s.w) !== null ? '<del>'+money(roundMoney(oldPrice(p,s.w)*s.q))+'</del> ' : '') + money(roundMoney(price(p,s.w)*s.q)) + ' · '+wl(s.w,p)+(s.q > 1 ? ' × '+s.q : '');
+const escapeHtml = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const unitLine = p => p.unit === "pack" ? wl(1,p) : p.prices ? "" : `${oldPrice(p, p.unit === "kg" ? 1000 : 1) !== null ? `<del>${money(p.old_price)}</del> ` : ""}${money(p.price)} / ${p.unit==="kg" ? t("kg") : p.unit==="pc" ? t("pc") : wl(1,p)}`;
 const cutName = (p, c, l) => { c = c || 0; return l==="ar" ? ((p.cutsAr && p.cutsAr[c]) || p.cuts[c]) : p.cuts[c]; };
 const cutLbl = (p, c) => p.cuts && p.cuts.length ? " · " + cutName(p, c, lang) : "";
 const cutEn = (p, c) => p.cuts && p.cuts.length ? ` (${cutName(p, c, "en")})` : "";
@@ -150,7 +189,7 @@ const cutSel = (p, s) => p.cuts && p.cuts.length ? `<select class="cSel" aria-la
 const prod = id => PRODUCTS.find(p => p.id === id);
 const ph = p => {
   const label = lang === "ar" ? "الصورة قريباً" : "Photo coming soon";
-  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="350" viewBox="0 0 400 350"><rect width="400" height="350" fill="#f5efe5"/><circle cx="200" cy="145" r="42" fill="none" stroke="#bb9153"/><text x="200" y="158" text-anchor="middle" font-family="Georgia,serif" font-size="38" fill="#681c2b">M</text><text x="200" y="225" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#746e63">${label}</text></svg>`);
+  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="350" viewBox="0 0 400 350"><rect width="400" height="350" fill="#f5efe5"/><circle cx="200" cy="145" r="42" fill="none" stroke="#bb9153"/><text x="200" y="158" text-anchor="middle" font-family="Georgia,serif" font-size="38" fill="#681c2b">T</text><text x="200" y="225" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#746e63">${label}</text></svg>`);
 };
 // Resolve known catalog filename mismatches for both backup and live Sheet products.
 const imageAliases = {
@@ -159,8 +198,9 @@ const imageAliases = {
   "images/egg-crate-30-eggs.jpg":"images/egg-crate-30-eggs.jpg.jpg"
 };
 const imageDimensions = {"images/beef-boneless-nehari.jpg": [1000, 1000], "images/beef-boneless.jpg": [600, 600], "images/beef-manchurian.jpg": [600, 600], "images/beef-minced.jpg": [612, 408], "images/beef-paya.jpg": [1000, 1000], "images/beef-simple-bone.jpg": [600, 600], "images/beef-steaks.jpg": [600, 600], "images/beef-striploin.jpg": [600, 600], "images/beef-t-bone-steak.jpg": [447, 447], "images/beef-undercut.jpg": [1000, 1000], "images/beef-with-bone-nehari.jpg.jpg": [1000, 1000], "images/beef-with-bone.jpg": [1000, 1000], "images/chicken-boneless-cubes.jpg": [600, 600], "images/chicken-boneless-manchurian.jpg": [600, 600], "images/chicken-boneless-steak.jpg": [1000, 1000], "images/chicken-boneless-striploin.jpg": [600, 600], "images/chicken-boneless.jpg": [600, 600], "images/chicken-drumsticks.jpg": [1000, 1000], "images/chicken-full-legs.jpg": [1024, 1024], "images/chicken-gizzard.jpg": [800, 800], "images/chicken-heart.jpg": [600, 600], "images/chicken-liver.jpg": [2500, 2500], "images/chopped-chicken.jpg": [600, 600], "images/desi-egg-crate-30-eggs.jpg": [500, 351], "images/egg-crate-30-eggs.jpg.jpg": [500, 500], "images/fakieh-chicken.jpg": [351, 437], "images/hero.jpg": [612, 408], "images/mutton-boneless.jpg": [600, 600], "images/mutton-brain.jpg": [1000, 1000], "images/mutton-chops-champ.jpg": [447, 447], "images/mutton-fish-joints.jpg": [1000, 1000], "images/mutton-fry-chops.jpg": [600, 600], "images/mutton-kidney.jpg": [1000, 1000], "images/mutton-kunna-cut.jpg": [1000, 1000], "images/mutton-leg.jpg": [1000, 1000], "images/mutton-liver.jpg": [600, 600], "images/mutton-minced.jpg": [1000, 1000], "images/mutton-paya.jpg": [1000, 1000], "images/mutton-shoulder.jpg": [1000, 1000], "images/pakistani-mutton-whole.jpg": [1080, 1080], "images/veg-beetroot.jpg": [280, 220], "images/veg-bitter-gourd.jpg": [170, 105], "images/veg-bottle-gourd.jpg": [245, 205], "images/veg-carrot.jpg": [140, 75], "images/veg-cauliflower.jpg": [205, 205], "images/veg-coriander.jpg": [125, 120], "images/veg-cucumber.jpg": [240, 250], "images/veg-garlic.jpg": [230, 190], "images/veg-ginger.jpg": [150, 140], "images/veg-green-beans.jpg": [165, 140], "images/veg-green-cabbage.jpg": [215, 230], "images/veg-green-chilli.jpg": [150, 95], "images/veg-green-eggplant.jpg": [258, 140], "images/veg-green-pepper.jpg": [165, 110], "images/veg-lemon.jpg": [135, 140], "images/veg-mint.jpg": [235, 205], "images/veg-okra.jpg": [280, 290], "images/veg-onion.jpg": [380, 400], "images/veg-parwal.jpg": [170, 115], "images/veg-potato.jpg": [340, 180], "images/veg-purple-eggplant.jpg": [283, 240], "images/veg-red-cabbage.jpg": [250, 130], "images/veg-red-pepper.jpg": [50, 90], "images/veg-sweet-potato.jpg": [178, 100], "images/veg-taro.jpg": [230, 150], "images/veg-tinda.jpg": [295, 190], "images/veg-tomato.jpg": [210, 85], "images/veg-turnip.jpg": [343, 275], "images/veg-yellow-pepper.jpg": [75, 60], "images/vegetables-category.jpg": [478, 660], "images/whole-chicken.jpg": [600, 600]};
-const imageSize = u => { const [w,h] = imageDimensions[imageUrl(u)] || [600,600]; return `width="${w}" height="${h}" decoding="async"`; };
-const imageUrl = u => imageAliases[u] || u;
+const imageSize = u => { const [w,h] = imageDimensions[imageAliases[u] || u] || [600,600]; return `width="${w}" height="${h}" decoding="async"`; };
+const optimizedImages = {"images/beef-boneless-nehari.jpg":"images/optimized/beef-boneless-nehari.jpg.webp","images/beef-boneless.jpg":"images/optimized/beef-boneless.jpg.webp","images/beef-manchurian.jpg":"images/optimized/beef-manchurian.jpg.webp","images/beef-minced.jpg":"images/optimized/beef-minced.jpg.webp","images/beef-paya.jpg":"images/optimized/beef-paya.jpg.webp","images/beef-simple-bone.jpg":"images/optimized/beef-simple-bone.jpg.webp","images/beef-steaks.jpg":"images/optimized/beef-steaks.jpg.webp","images/beef-striploin.jpg":"images/optimized/beef-striploin.jpg.webp","images/beef-t-bone-steak.jpg":"images/optimized/beef-t-bone-steak.jpg.webp","images/beef-undercut.jpg":"images/optimized/beef-undercut.jpg.webp","images/beef-with-bone-nehari.jpg.jpg":"images/optimized/beef-with-bone-nehari.jpg.jpg.webp","images/beef-with-bone.jpg":"images/optimized/beef-with-bone.jpg.webp","images/chicken-boneless-cubes.jpg":"images/optimized/chicken-boneless-cubes.jpg.webp","images/chicken-boneless-manchurian.jpg":"images/optimized/chicken-boneless-manchurian.jpg.webp","images/chicken-boneless-steak.jpg":"images/optimized/chicken-boneless-steak.jpg.webp","images/chicken-boneless-striploin.jpg":"images/optimized/chicken-boneless-striploin.jpg.webp","images/chicken-boneless.jpg":"images/optimized/chicken-boneless.jpg.webp","images/chicken-drumsticks.jpg":"images/optimized/chicken-drumsticks.jpg.webp","images/chicken-full-legs.jpg":"images/optimized/chicken-full-legs.jpg.webp","images/chicken-gizzard.jpg":"images/optimized/chicken-gizzard.jpg.webp","images/chicken-heart.jpg":"images/optimized/chicken-heart.jpg.webp","images/chicken-liver.jpg":"images/optimized/chicken-liver.jpg.webp","images/chopped-chicken.jpg":"images/optimized/chopped-chicken.jpg.webp","images/desi-egg-crate-30-eggs.jpg":"images/optimized/desi-egg-crate-30-eggs.jpg.webp","images/egg-crate-30-eggs.jpg.jpg":"images/optimized/egg-crate-30-eggs.jpg.jpg.webp","images/Eggplant.jpg":"images/optimized/Eggplant.jpg.webp","images/fakieh-chicken.jpg":"images/optimized/fakieh-chicken.jpg.webp","images/hero.jpg":"images/optimized/hero.jpg.webp","images/mutton-boneless.jpg":"images/optimized/mutton-boneless.jpg.webp","images/mutton-brain.jpg":"images/optimized/mutton-brain.jpg.webp","images/mutton-chops-champ.jpg":"images/optimized/mutton-chops-champ.jpg.webp","images/mutton-fish-joints.jpg":"images/optimized/mutton-fish-joints.jpg.webp","images/mutton-fry-chops.jpg":"images/optimized/mutton-fry-chops.jpg.webp","images/mutton-kidney.jpg":"images/optimized/mutton-kidney.jpg.webp","images/mutton-kunna-cut.jpg":"images/optimized/mutton-kunna-cut.jpg.webp","images/mutton-leg.jpg":"images/optimized/mutton-leg.jpg.webp","images/mutton-liver.jpg":"images/optimized/mutton-liver.jpg.webp","images/mutton-minced.jpg":"images/optimized/mutton-minced.jpg.webp","images/mutton-paya.jpg":"images/optimized/mutton-paya.jpg.webp","images/mutton-shoulder.jpg":"images/optimized/mutton-shoulder.jpg.webp","images/pakistani-mutton-whole.jpg":"images/optimized/pakistani-mutton-whole.jpg.webp","images/veg-beetroot.jpg":"images/optimized/veg-beetroot.jpg.webp","images/veg-bitter-gourd.jpg":"images/optimized/veg-bitter-gourd.jpg.webp","images/veg-bottle-gourd.jpg":"images/optimized/veg-bottle-gourd.jpg.webp","images/veg-carrot.jpg":"images/optimized/veg-carrot.jpg.webp","images/veg-cauliflower.jpg":"images/optimized/veg-cauliflower.jpg.webp","images/veg-coriander.jpg":"images/optimized/veg-coriander.jpg.webp","images/veg-cucumber.jpg":"images/optimized/veg-cucumber.jpg.webp","images/veg-garlic.jpg":"images/optimized/veg-garlic.jpg.webp","images/veg-ginger.jpg":"images/optimized/veg-ginger.jpg.webp","images/veg-green-beans.jpg":"images/optimized/veg-green-beans.jpg.webp","images/veg-green-cabbage.jpg":"images/optimized/veg-green-cabbage.jpg.webp","images/veg-green-chilli.jpg":"images/optimized/veg-green-chilli.jpg.webp","images/veg-green-eggplant.jpg":"images/optimized/veg-green-eggplant.jpg.webp","images/veg-green-pepper.jpg":"images/optimized/veg-green-pepper.jpg.webp","images/veg-lemon.jpg":"images/optimized/veg-lemon.jpg.webp","images/veg-mint.jpg":"images/optimized/veg-mint.jpg.webp","images/veg-okra.jpg":"images/optimized/veg-okra.jpg.webp","images/veg-onion.jpg":"images/optimized/veg-onion.jpg.webp","images/veg-parwal.jpg":"images/optimized/veg-parwal.jpg.webp","images/veg-potato.jpg":"images/optimized/veg-potato.jpg.webp","images/veg-purple-eggplant.jpg":"images/optimized/veg-purple-eggplant.jpg.webp","images/veg-red-cabbage.jpg":"images/optimized/veg-red-cabbage.jpg.webp","images/veg-red-pepper.jpg":"images/optimized/veg-red-pepper.jpg.webp","images/veg-sweet-potato.jpg":"images/optimized/veg-sweet-potato.jpg.webp","images/veg-taro.jpg":"images/optimized/veg-taro.jpg.webp","images/veg-tinda.jpg":"images/optimized/veg-tinda.jpg.webp","images/veg-tomato.jpg":"images/optimized/veg-tomato.jpg.webp","images/veg-turnip.jpg":"images/optimized/veg-turnip.jpg.webp","images/veg-yellow-pepper.jpg":"images/optimized/veg-yellow-pepper.jpg.webp","images/vegetables-category.jpg":"images/optimized/vegetables-category.jpg.webp","images/whole-chicken.jpg":"images/optimized/whole-chicken.jpg.webp"};
+const imageUrl = u => optimizedImages[imageAliases[u] || u] || imageAliases[u] || u;
 const productTag = p => p.tag === "Best Seller" ? t("bestTag") : p.tag;
 const img = p => `<img src="${imageUrl(p.img)}" alt="${pName(p)}" ${imageSize(p.img)} loading="lazy" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">`;
 const saveCart = () => store.set("mm_cart", cart);
@@ -180,6 +220,10 @@ function applyLang(){
   $("#menuBtn").setAttribute("aria-label", t("menu"));
   $("#closeCart").setAttribute("aria-label", t("close"));
   $("#nav").setAttribute("aria-label", t("menu"));
+  $("#serviceHours").textContent=t("serviceHours");
+
+  $("#shopLocation").textContent=(lang==="ar" ? CONFIG.shopAddressAr : CONFIG.shopAddress) || t("locationPending");
+  if(CONFIG.shopMapsUrl && CONFIG.shopAddress){ const link=document.createElement("a"); link.href=CONFIG.shopMapsUrl; link.textContent=lang==="ar" ? CONFIG.shopAddressAr : CONFIG.shopAddress; link.target="_blank"; link.rel="noopener"; $("#shopLocation").replaceChildren(link); }
   const currentTime = $("#timeSel").value;
   const timeAr = {"As soon as possible":"في أقرب وقت ممكن", "9:00 AM – 12:00 PM":"٩ صباحاً – ١٢ ظهراً", "12:00 PM – 3:00 PM":"١٢ ظهراً – ٣ عصراً", "3:00 PM – 6:00 PM":"٣ عصراً – ٦ مساءً", "6:00 PM – 9:00 PM":"٦ مساءً – ٩ مساءً", "9:00 PM – 12:00 AM":"٩ مساءً – ١٢ منتصف الليل"};
   $("#timeSel").innerHTML = CONFIG.deliveryTimes.map(a=>`<option value="${a}">${lang === "ar" ? (timeAr[a] || a) : a}</option>`).join("");
@@ -203,13 +247,13 @@ function card(p){
   return `<article class="card" data-id="${p.id}">
     <div class="imgw"><a href="#product/${p.id}">${img(p)}</a>${tag}</div>
     <div class="cb"><h3><a class="plink" href="#product/${p.id}">${pName(p)}</a></h3><p>${pDesc(p)}</p>
-      <div class="unit">${unitLine(p)}</div>
-      <div class="tot">${money(price(p, s.w))} / ${wl(s.w,p)}</div>${cutSel(p, s)}
+
+      <div class="tot">${selectedPrice(p,s)}</div>${cutSel(p, s)}
       <div class="row">
-        <select class="wSel" aria-label="${t("lW")}">${p.opts.map(w=>`<option value="${w}" ${w===s.w?"selected":""}>${wl(w,p)}</option>`).join("")}</select>
+        ${weightControl(p,s)}
         <div class="qty"><button data-act="dec" aria-label="${t("decrease")}">−</button><span>${s.q}</span><button data-act="inc" aria-label="${t("increase")}">+</button></div>
       </div>
-      <button class="add" data-act="add">${t("add")}</button>
+      <button class="add" data-act="add" ${!catalogReady ? "disabled" : ""}>${t("add")}</button>
     </div></article>`;
 }
 function renderGrids(){
@@ -218,6 +262,7 @@ function renderGrids(){
   const list = PRODUCTS.filter(p => (filter==="all"||p.cat===filter) && (!q || (p.en+" "+p.ar+" "+p.d+" "+p.da).toLowerCase().includes(q)));
   $("#shopGrid").innerHTML = list.length ? list.map(card).join("") : `<div class="empty"><p>${t("noRes")}</p><button class="link text-link" data-cat="all">${t("clearSearch")}</button></div>`;
   $("#resultCount").textContent = list.length === 1 ? t("productCount") : t("productsCount").replace("{n}", list.length);
+  $("#catalogStatus").textContent = catalogReady ? "" : t("catalogUnavailable");
   revealContent();
 }
 document.addEventListener("click", e => {
@@ -241,41 +286,39 @@ function syncCards(id){            // keep same product in every grid in sync, w
   const p = prod(id), s = sel[id];
   if(!$("#productView").hidden) updateProductMetadata(p, s.w);
   $$(`.card[data-id="${id}"]`).forEach(c => {
-    $(".tot", c).textContent = `${money(price(p, s.w))} / ${wl(s.w,p)}`;
-    $(".qty span", c).textContent = s.q; $(".wSel", c).value = s.w; const cs = $(".cSel", c); if(cs) cs.value = s.c || 0;
+    $(".tot", c).innerHTML = selectedPrice(p,s);
+    $(".qty span", c).textContent = s.q; if($(".wSel", c)) $(".wSel", c).value = s.w; const cs = $(".cSel", c); if(cs) cs.value = s.c || 0;
   });
 }
 
 /* Cart */
 function addToCart(id, w, q, c = 0){
+  if(!prod(id) || !catalogReady || !prod(id).opts.includes(w)) return;
   const it = cart.find(i => i.id===id && i.w===w && (i.c || 0)===c);
   it ? it.q = Math.min(50, it.q+q) : cart.push({id, w, q, c});
   saveCart(); renderCart();
   showToast(t("cartAdded").replace("{name}", pName(prod(id))));
   const badge = $("#cartBtn"); badge.classList.remove("pulse"); void badge.offsetWidth; badge.classList.add("pulse");
 }
-const subtotal = () => cart.reduce((s,i)=> s + price(prod(i.id), i.w) * i.q, 0);
+const subtotal = () => roundMoney(cart.reduce((s,i)=> s + price(prod(i.id), i.w) * i.q, 0));
 const rad = x => x * Math.PI / 180;
 function km(a, b){ const h = Math.sin(rad(b.lat-a.lat)/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(rad(b.lng-a.lng)/2)**2; return 12742 * Math.asin(Math.sqrt(h)); }
-const distKm = () => userLoc ? km(CONFIG.shopLocation, userLoc) : null;
+const validLoc = p => p && Number.isFinite(p.lat) && Number.isFinite(p.lng) && Math.abs(p.lat)<=90 && Math.abs(p.lng)<=180;
+const distKm = () => validLoc(userLoc) && validLoc(CONFIG.shopLocation) ? km(CONFIG.shopLocation, userLoc) : null;
 function feeFor(sub, d){
-  d = d === null ? 0 : d;                       // no pin yet: show the nearest-zone fee until a location is chosen
-  for(const z of CONFIG.deliveryTiers) if(d <= z.upToKm) return sub >= z.freeOver ? 0 : z.fee;
-  const last = CONFIG.deliveryTiers[CONFIG.deliveryTiers.length-1];
-  return CONFIG.farBaseFee + CONFIG.farPerKm * Math.ceil(d - last.upToKm);
+  if(!Number.isFinite(d) || d < 0 || !Number.isFinite(sub) || sub < 0) return null;
+  if(d <= 5) return sub > 50 ? 0 : 10;
+  if(d <= 10) return sub > 200 ? 0 : 15;
+  return roundMoney(CONFIG.farBaseFee + CONFIG.farPerKm * Math.ceil(d - 10));
 }
-const deliveryFee = () => cart.length ? feeFor(subtotal(), distKm()) : 0;
-const noteHtml = () => {
-  let prev = 0;
-  const rows = CONFIG.deliveryTiers.map(z => { const r = t("nTier").replace("{a}", prev).replace("{b}", z.upToKm).replace("{amt}", money(z.freeOver)).replace("{fee}", money(z.fee)); prev = z.upToKm; return r; });
-  rows.push(t("nFar").replace("{b}", prev).replace("{base}", money(CONFIG.farBaseFee)).replace("{pk}", money(CONFIG.farPerKm)));
-  return `<small class="note">${rows.join("<br>")}</small>`;
-};
+const deliveryFee = () => feeFor(subtotal(), distKm());
+const noteHtml = () => '<small class="note"><a href="delivery.html">'+t("deliveryPolicy")+'</a></small>';
+
 const mapLink = () => userLoc ? `https://www.google.com/maps?q=${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : "";
-const totals = () => { const s = subtotal(), d = deliveryFee(); return { s, d, t: s + d }; };
+const totals = () => { const s = subtotal(), d = deliveryFee(); return { s, d, t: d === null ? null : roundMoney(s + d) }; };
 
 function renderCart(){
-  cart = cart.filter(i => prod(i.id));
+  cart = cart.filter(i => prod(i.id) && prod(i.id).opts.includes(i.w) && Number.isInteger(i.q) && i.q > 0 && i.q <= 50); saveCart();
   $("#cartCount").textContent = cart.reduce((n,i)=>n+i.q,0);
   $("#cartItems").innerHTML = cart.length ? cart.map((i,ix) => { const p = prod(i.id); return `
     <div class="li">${img(p)}<div class="m"><b>${pName(p)}</b><small>${wl(i.w,p)}${cutLbl(p,i.c)} · ${money(price(p,i.w))}</small>
@@ -285,10 +328,10 @@ function renderCart(){
   const x = totals();
   $("#cartFoot").innerHTML = cart.length ? `
     <div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div>
-    <div class="sum"><span>${t("del")}</span><span>${x.d? money(x.d): t("free")}</span></div>
+    <div class="sum"><span>${t("del")}</span><span>${x.d === 0 ? t("free") : money(x.d)}</span></div>
     <div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}
     <button class="btn full" id="goCo">${t("goCheckout")}</button>` : "";
-  renderSummary();
+  renderSummary(); updLocInfo();
 }
 $("#cartItems").addEventListener("click", e => {
   const b = e.target;
@@ -325,6 +368,7 @@ $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCa
 /* Views */
 function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); }
 function view(id){
+  $(".search-wrap").hidden = id === "checkoutView" || id === "doneView";
   if(id !== "productView") closeProduct();
   ["main","checkoutView","doneView","productView"].forEach(v => $("#" + v).hidden = v !== id);
   document.body.classList.remove("lock");
@@ -338,30 +382,40 @@ $(".logo").addEventListener("click", showMain);
 function renderSummary(){
   const x = totals();
   $("#coSummary").innerHTML = cart.map(i=>{ const p=prod(i.id); return `<div class="sum"><span>${pName(p)} · ${wl(i.w,p)}${cutLbl(p,i.c)} × ${i.q}</span><span>${money(price(p,i.w)*i.q)}</span></div>`; }).join("")
-   + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d?money(x.d):t("free")}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
+   + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d === 0 ? t("free") : money(x.d)}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
 }
 
-/* Checkout → WhatsApp */
+/* Website checkout: backend acknowledgment required. */
+let submitting = false, pendingOrder = null, pendingFingerprint = "";
 $("#coForm").addEventListener("submit", async e => {
   e.preventDefault();
+  if(submitting) return;
   const form = e.target, btn = $("button[type=submit]", form);
-  const f = Object.fromEntries(new FormData(form)), err = $("#coErr");
+  const f = Object.fromEntries(new FormData(form)); f.time=t("serviceHours"); const err = $("#coErr");
   $$("#coForm .bad").forEach(unflag);
   let first = null;
   const need = (el, msg) => { const b = flag(el, msg); first = first || b; };
   if(!f.name.trim()) need(form.elements["name"], t("reqName"));
   if(!f.mobile.trim()) need(form.elements["mobile"], t("reqMobile"));
   else if(!/^(\+?966|0)?5\d{8}$/.test(f.mobile.replace(/[\s-]/g,""))) need(form.elements["mobile"], t("errMobile"));
-  if(!f.area.trim()) need(form.elements["area"], t("reqArea"));
-  if(!userLoc && typeof L !== "undefined") need($("#map"), t("errLoc"));
+  if(!userLoc && !f.address.trim()) need(form.elements["address"], t("errLoc"));
+  if(!validLoc(userLoc)) need($("#map"), t("errLoc"));
   if(!cart.length){ err.textContent = t("errCart"); return; }
   if(first){ err.textContent = t("errFill"); first.scrollIntoView({ behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block:"center" }); (first.querySelector("input,select,textarea,button") || first).focus({preventScroll:true}); return; }
+  if(!catalogReady){ err.textContent=t("catalogUnavailable"); return; }
+  if(deliveryFee() === null){ err.textContent=t("deliveryUnconfirmed"); return; }
+  if(CONFIG.previewOnly){ err.textContent=t("previewMessage"); return; }
   err.textContent = "";
-  const order = buildOrder(f);
+  const fingerprint=JSON.stringify({f,cart,userLoc,totals:totals()});
+  if(fingerprint!==pendingFingerprint){ pendingOrder=buildOrder(f); pendingFingerprint=fingerprint; }
+  const order = pendingOrder;
+  submitting=true;
   store.set("mm_last_order", order);       // latest order, browser only
   btn.disabled = true; btn.textContent = t("sending");
   const ok = await sendOrder(order);       // true = saved, false = failed, null = not configured
-  btn.disabled = false; btn.textContent = t("place");
+  submitting=false; btn.disabled = false; btn.textContent = t("place");
+  if(!ok){ err.textContent=t("submitFailed"); return; }
+  pendingOrder=null; pendingFingerprint="";
   cart = []; saveCart(); renderCart(); form.reset();
   showDone(order, ok);
 });
@@ -371,16 +425,18 @@ async function sendOrder(order){
   try{
     const r = await fetch(CONFIG.orderEndpoint, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
       body: JSON.stringify({ secret: CONFIG.orderSecret, order }), signal: ctl.signal });
+    if(!r.ok) return false;
     const d = await r.json();
     if(d.ok && d.orderNumber){ order.message = order.message.split(order.orderNumber).join(d.orderNumber); order.orderNumber = d.orderNumber; store.set("mm_last_order", order); }
-    return !!d.ok;
+    return d.ok === true && typeof d.orderNumber === "string" && d.orderNumber.length > 0;
   }catch(e){ return false; }finally{ clearTimeout(tm); }
 }
 function showDone(order, ok){
   const fill = s => t(s).replace("{n}", order.customer.name).replace("{no}", order.orderNumber);
   $("#doneT").textContent = ok ? t("doneOk") : t("doneStep");
   $("#doneP").textContent = ok ? fill("doneOkP") : fill("doneStepP");
-  $("#doneNo").textContent = order.orderNumber;
+  const x=order.totals;
+  $("#doneNo").innerHTML='<strong>'+escapeHtml(order.orderNumber)+'</strong>'+order.lines.map(l=>'<div class="sum"><span>'+escapeHtml(lang==='ar'?l.ar:l.en)+' · '+escapeHtml(lang==='ar'?l.wa:l.we)+' × '+l.q+'</span><span>'+money(l.sub)+'</span></div>').join('')+'<div class="sum"><span>'+t('sub')+'</span><span>'+money(x.s)+'</span></div><div class="sum"><span>'+t('del')+'</span><span>'+money(x.d)+'</span></div><div class="sum t"><span>'+t('tot')+'</span><span>'+money(x.t)+'</span></div>';
   const wa = $("#doneWa");
   wa.textContent = ok ? t("doneWa2") : t("doneWa");
   wa.className = ok ? "btn full light" : "btn full";
@@ -392,7 +448,7 @@ $("#doneBack").onclick = () => { showMain(); scrollTo(0,0); };
 function buildOrder(f){
   const L = k => T.en[k];                 // WhatsApp message is always English so the shop can read it
   const x = totals(), d = new Date();
-  const no = "MM-" + Math.floor(1000 + Math.random()*9000);   // temporary; the Apps Script replaces it with a running number
+  const no = "MM-" + crypto.randomUUID();   // temporary; the Apps Script replaces it with a running number
   const w = (n,p) => p.unit==="kg" ? (n>=1000 ? `${n/1000} kg` : `${n} g`) : p.unit==="pc" ? `${n} pcs` : p.pk, m = n => `${num(n)} SAR`;
   const items = cart.map((i,ix) => { const p = prod(i.id);
     return `${ix+1}. ${p.en}\n   ${L("lW")}: ${w(i.w,p)}${cutEn(p,i.c)} | ${L("lQ")}: ${i.q} | ${L("lP")}: ${m(price(p,i.w))} each = ${m(price(p,i.w)*i.q)}`; }).join("\n");
@@ -404,7 +460,7 @@ function buildOrder(f){
   return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, lines, lang, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 
-$("#q").addEventListener("input", e => { query = e.target.value; renderGrids(); });
+$("#q").addEventListener("input", e => { query = e.target.value; filter="all"; showMain(); renderChips(); renderGrids(); $("#shop").scrollIntoView({block:"start",behavior:"instant"}); });
 /* Checkout field highlighting */
 function flag(el, msg){
   const box = el.closest("label") || el.closest(".pin"); box.classList.add("bad");
@@ -418,9 +474,10 @@ $("#coForm").addEventListener("input", e => { const b = e.target.closest("label"
 function updLocInfo(){
   const el = $("#locInfo"); if(!el) return;
   const d = distKm();
-  el.textContent = d === null ? t("pinHelp") : `${t("dist")}: ${d.toFixed(1)} ${t("kmU")} — ${t("del")}: ${deliveryFee() ? money(deliveryFee()) : t("free")}`;
+  el.textContent = d === null ? t("pinHelp") : `${t("del")}: ${deliveryFee() === 0 ? t("free") : money(deliveryFee())}`;
 }
 function setLoc(lat, lng, pan){
+  if(!validLoc({lat,lng})) return;
   userLoc = { lat, lng }; store.set("mm_loc", userLoc);
   if(map){
     if(!pin){ pin = L.marker([lat, lng], { draggable:true }).addTo(map); pin.on("dragend", () => { const p = pin.getLatLng(); setLoc(p.lat, p.lng); }); }
@@ -431,8 +488,10 @@ function setLoc(lat, lng, pan){
   updLocInfo(); renderCart();
 }
 function initMap(){
+  if(!validLoc(CONFIG.shopLocation)){ $("#map").hidden=true; $("#mapMsg").textContent=t("deliveryUnconfirmed"); return; }
   if(typeof L === "undefined"){ $("#map").hidden = true; $("#useMe").hidden = true; $("#mapMsg").textContent = t("mapFail"); return; }
   if(!map){
+    $("#map").hidden=false;
     const c = userLoc || CONFIG.shopLocation;
     map = L.map("map").setView([c.lat, c.lng], userLoc ? 16 : 12);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap contributors" }).addTo(map);
@@ -473,13 +532,13 @@ function renderProduct(p){
       <div class="pgal"><div class="imgw"><img id="pMain" src="${imageUrl(p.img)}" alt="${pName(p)}" ${imageSize(p.img)} fetchpriority="high" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">${p.tag ? `<span class="tag">${productTag(p)}</span>` : ""}</div>${thumbs}</div>
       <div class="pinfo card pcard" data-id="${p.id}">
         <h1>${pName(p)}</h1><p class="long">${long}</p>
-        <div class="unit">${unitLine(p)}</div>
-        <div class="tot">${money(price(p, s.w))} / ${wl(s.w,p)}</div>${cutSel(p, s)}
+  
+        <div class="tot">${selectedPrice(p,s)}</div>${cutSel(p, s)}
         <div class="row">
-          <select class="wSel" aria-label="${t("lW")}">${p.opts.map(w => `<option value="${w}" ${w===s.w?"selected":""}>${wl(w,p)}</option>`).join("")}</select>
+          ${weightControl(p,s)}
           <div class="qty"><button data-act="dec" aria-label="${t("decrease")}">−</button><span>${s.q}</span><button data-act="inc" aria-label="${t("increase")}">+</button></div>
         </div>
-        <button class="add" data-act="add">${t("add")}</button>
+        <button class="add" data-act="add" ${!catalogReady ? "disabled" : ""}>${t("add")}</button>
       </div>
     </div>
     ${rel.length ? `<h2>${t("related")}</h2><div class="grid">${rel.map(card).join("")}</div>` : ""}`;
@@ -488,14 +547,16 @@ function renderProduct(p){
 }
 let curProduct = null, deepLink = /^#product\//.test(location.hash);
 function closeProduct(){ $("#main").inert=false; $("#main").removeAttribute("aria-hidden"); document.getElementById("product-schema")?.remove(); document.querySelector('meta[name="description"]').content = baseDescription; $("#productView").hidden = true; document.body.classList.remove("lock"); document.title = baseTitle; curProduct = null; }
-function route(){                         // the product page opens as a layer on top, so the page underneath keeps its scroll position
+function route(){
+  $(".search-wrap").hidden = !$("#checkoutView").hidden || !$("#doneView").hidden;                         // the product page opens as a layer on top, so the page underneath keeps its scroll position
   const m = location.hash.match(/^#product\/([\w-]+)$/);
   if(!m){ if(!$("#productView").hidden) closeProduct(); return; }
   const p = prod(m[1]);
   if(!p){ if(sheetDone){ history.replaceState(null, "", location.pathname + location.search); closeProduct(); } return; }
   const pv = $("#productView"), fresh = pv.hidden || curProduct !== p.id;
   $("#main").hidden = false; $("#checkoutView").hidden = true; $("#doneView").hidden = true;
-  pv.style.paddingTop = $(".bar").offsetHeight + "px"; pv.hidden = false; $("#main").inert=true; $("#main").setAttribute("aria-hidden","true"); document.body.classList.add("lock");
+  updateHeaderOffset(); pv.hidden = false; $("#main").inert=true; $("#main").setAttribute("aria-hidden","true"); document.body.classList.add("lock");
+  $(".search-wrap").hidden=false;
   renderProduct(p); curProduct = p.id; if(fresh){ pv.scrollTop = 0; $("#pBack").focus({preventScroll:true}); }
 }
 window.addEventListener("hashchange", route);
@@ -504,7 +565,7 @@ $("#productBody").addEventListener("click", e => {
   const thumb = e.target.closest("[data-thumb]"); if(thumb){ $("#pMain").src = thumb.dataset.thumb; $$(".thumb", $("#productBody")).forEach(b => b.setAttribute("aria-pressed", String(b === thumb))); }
 });
 
-document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("#productView").hidden){ const b = $("#pBack"); if(b) b.click(); } });
+document.addEventListener("keydown", e => { if(!e.defaultPrevented && e.key === "Escape" && !$("#productView").hidden){ const b = $("#pBack"); if(b) b.click(); } });
 
 /* Top banner slider */
 function initSlider(){
@@ -558,11 +619,11 @@ function sheetToProducts(text){
     const img = g("image").replace(/[^\w.\- ]/g, "");
     out.push({ id, cat:g("category").toLowerCase(), unit, en, ar:g("name_ar") || en, d:g("desc_en"), da:g("desc_ar") || g("desc_en"),
       img:"images/" + (img || "none.jpg"), tag:g("tag"),
-      imgs:[g("image2"), g("image3")].map(x => x.replace(/[^\w.\- ]/g, "")).filter(Boolean).map(x => "images/" + x), prices:plist.length > 1 ? plist : null, cuts:g("cut_options").split(/[,;]+/).map(x => x.trim()).filter(Boolean), cutsAr:g("cut_options_ar").split(/[,;]+/).map(x => x.trim()).filter(Boolean), ld:g("long_desc_en"), lda:g("long_desc_ar"), price, pk:g("pack_en") || "1 pack", pka:g("pack_ar") || g("pack_en") || "عبوة", opts });
+      imgs:[g("image2"), g("image3")].map(x => x.replace(/[^\w.\- ]/g, "")).filter(Boolean).map(x => "images/" + x), prices:plist.length > 1 ? plist : null, cuts:g("cut_options").split(/[,;]+/).map(x => x.trim()).filter(Boolean), cutsAr:g("cut_options_ar").split(/[,;]+/).map(x => x.trim()).filter(Boolean), ld:g("long_desc_en"), lda:g("long_desc_ar"), price, old_price: Number(g("old_price")) || null, pk:g("pack_en") || "1 pack", pka:g("pack_ar") || g("pack_en") || "عبوة", opts });
   });
   return out;
 }
-async function loadSheet(){ try{ await loadSheet2(); }finally{ sheetDone = true; route(); } }
+async function loadSheet(){ try{ await loadSheet2(); }finally{ sheetDone = true; renderGrids(); route(); } }
 async function loadSheet2(){
   if(!CONFIG.productsSheetUrl) return;
   try{
@@ -571,8 +632,8 @@ async function loadSheet2(){
     const text = await r.text();
     const list = sheetToProducts(text);
     const managed = sheetManagesVegetables(text);
-    if(!list.length) return;                 // unreadable sheet: keep the current list
-    PRODUCTS = withVegetables(list, managed); store.set("mm_products", list);
+    if(!parseCSV(text)[0]?.some(h => h.trim().toLowerCase()==="name_en")) return;
+    catalogReady=true; PRODUCTS = list; store.set("mm_products", list);
     store.set("mm_vegetables_managed", managed);
     Object.keys(sel).forEach(k => {
       const p = prod(k), choice = sel[k];
@@ -605,4 +666,11 @@ applyLang();
 initSlider();
 route();
 loadSheet();
+
+
+function updateHeaderOffset(){ document.documentElement.style.setProperty('--header-bottom', Math.max(0,document.querySelector('.bar').getBoundingClientRect().bottom)+'px'); }
+new ResizeObserver(updateHeaderOffset).observe(document.querySelector('.bar'));
+window.addEventListener('resize',updateHeaderOffset);
+window.addEventListener('scroll',updateHeaderOffset,{passive:true});
+
 

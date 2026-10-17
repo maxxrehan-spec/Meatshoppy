@@ -1,37 +1,45 @@
-# Meat Market — Static Ordering Website (v1)
+# Tariq Meat Center — unpublished review preview
 
-Pure HTML/CSS/JavaScript. No backend, no database, no paid APIs. Works on GitHub Pages.
+Keep `CONFIG.previewOnly: true` until review is complete. Live order submission is disabled. No real test orders or customer messages were sent.
 
-## Files
-- `index.html` — page structure
-- `style.css` — design
-- `app.js` — **CONFIG, PRODUCTS, translations and all logic**
-- `images/` — put your photos here (create this folder)
+## Integrations
 
-## Deploy on GitHub Pages
-1. Create a new GitHub repository and upload all files, keeping `index.html` in the **root**.
-2. Go to **Settings → Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`, then **Save**.
-4. After about a minute your site is live at `https://YOUR-USERNAME.github.io/REPO-NAME/`.
+The Google Sheet URL, Apps Script endpoint and existing secret value are unchanged. Orders still POST `{ secret, order }` as text/plain JSON. Customer, items, lines, totals, message and payment fields are retained. The customer mobile is passed through unchanged. The shop contact number is +966 59 668 4625.
 
-## Things to change (top of `app.js`)
-- `WHATSAPP_NUMBER` — your WhatsApp Business number, international format, no `+` or spaces (e.g. `9665XXXXXXXX`).
-- `CONFIG` — shop name, phone, delivery fee, free-delivery threshold, currency, delivery areas and times.
-- `PRODUCTS` — name, Arabic name, description, Arabic description, image, category, tag, price per kg (`price`), optional old price (`was`) and allowed weights (`weights`, in grams).
+The repository contains no Apps Script backend, Telegram or email source. Their behavior cannot be verified here. Success now requires an HTTP-successful JSON response with `ok: true` and a nonempty string `orderNumber`. Check this contract against the actual backend before release.
 
-Prices are entered **per kg**. The website calculates the price for 250 g, 500 g, 1 kg and 2 kg automatically and always shows the weight beside the price.
+Failures retain cart/form and never switch to a WhatsApp submission step. Concurrent clicks are guarded. An unchanged retry reuses the client order number within the page session. Backend idempotency still needs checking for reloads, multiple tabs and ambiguous timeouts. The backend must validate prices, availability, location and delivery totals independently of browser values.
 
-## Images
-The product images are expected at the paths in `PRODUCTS` (for example `images/beef-steak.jpg`) and `images/hero.jpg` for the home banner. **The photos are not included**, so add your own (or change the paths). Until a file exists, a red placeholder with an icon is shown instead. Use photos you own or have a licence for.
+## Confirmed delivery rules (latest owner instructions)
 
-## Important limits of version 1
-- Orders are **not stored online**. The cart and the latest order are kept in the customer's browser (`localStorage`) only.
-- The order reaches you only through the WhatsApp message the customer sends. Confirm each one.
-- "Online Payment / Mada" is a **placeholder**. No card data is collected or processed.
-- Anyone can edit `app.js` prices in their own browser, so always check the total when you confirm an order.
+- Verified Maps listing: https://maps.app.goo.gl/Y3mNmNyiFn54K2gt9 — مركز طارق للحوم والدواجن خضروات وفواكه فرع 11.
+- Listed address: الأدباء، العزيزية، جدة 23342. Shop pin: latitude 21.5590012, longitude 39.2087398. The pin coordinates, not the map camera center, are used as the origin.
+- Up to and including 5 km: SAR 10, free only above SAR 50. More than 5 km through 10 km: SAR 15, free only above SAR 200. Over 10 km: SAR 15 + SAR 2 × ceil(distance − 10), with no free threshold. Exactly SAR 50/200 does not qualify. These latest rules supersede earlier tiers.
+- Haversine straight-line distance is retained; no paid road-routing service. Unknown customer location means unknown fee, never zero.
+- No maximum distance or minimum order was invented. Delivery availability is confirmed with the order on WhatsApp.
+- Shop/delivery hours are noon to midnight, Saudi time. Owner-provided expected delivery is within one hour. No automatic rejection outside hours was added because an outside-hours ordering policy was not specified.
 
-## Connecting a backend later
-- In `app.js`, the submit handler calls `buildOrder()`, which returns a structured `order` object (order number, customer, items, totals, payment, notes). Send that object to your API there (marked with a comment) to get permanent order storage, a customer database, admin dashboard, sales reports, inventory and order status.
-- Replace the `PRODUCTS` array with a fetch from your API for inventory.
-- Add a payment provider that supports Mada, cards and Apple Pay (e.g. Moyasar, HyperPay, Tap) on the server side.
+## Sheet pricing
+
+Existing columns work unchanged. Optional numeric `old_price` is a previous price in the product's unit. Missing, invalid or non-greater old prices are omitted. No live prices were changed or invented.
+
+For price=20 and old_price=22 per kg, 500 g costs SAR 10.00 with SAR 11.00 crossed out. Quantity multiplies those values. Selected-unit prices are rounded to cents before quantity multiplication; merchandise/final totals are rounded consistently.
+
+Existing comma-separated fixed size prices remain supported: whole chicken 1,000/1,200 g stays SAR 18/20. A scalar old_price is calculated by unit and displayed only where its selected amount exceeds the fixed selling amount. No old size prices are inferred.
+
+Live availability is authoritative. Unavailable rows are omitted; an all-unavailable valid catalogue stays empty. Cached/fallback products cannot be ordered until live availability loads. Existing photo filenames use optimized copies where available; future Sheet images still resolve from images/.
+
+## Business and policy confirmation
+
+The website is renamed Tariq Meat Center, matching the physical shop. About explains the former Meat Market name and links the verified listing/reviews, without copying ratings or testimonials. Genuine shop photographs remain optional and have not been substituted with generated imagery.
+
+Owner-confirmed policies: free cancellation before preparation; cancellation may not be possible after preparation/dispatch; report issues within 24 hours, without limiting statutory rights; refund or replace verified issues; initiate approved refunds within 3 business days, with bank timing variable. Actual final meat/chicken weight determines price, and additional charges require customer approval. The weight-adjustment policy remains on the refund policy page; the repeated checkout notice was removed.
+
+Retention is purpose-based for orders, delivery, support and required recordkeeping, followed by deletion/anonymization. Backend storage, recipient access and deletion implementation still require verification; no automatic backend deletion is claimed. Browser storage remains separately disclosed.
+
+Remaining publication work: inspect Apps Script acknowledgment, duplicate handling, validation and Telegram/email/privacy behavior; review the local preview; then authorize publication. No live orders/messages have been sent.
+
+## Review files
+
+app.js contains the revised logic, index.html the header search and policy links, improvements.css the compact responsive layout, and privacy.html/refunds.html the policy drafts. Original image files are retained alongside images/optimized WebP copies. Serve this folder over local HTTP to review. Publishing and enabling live submissions remain outstanding.
 

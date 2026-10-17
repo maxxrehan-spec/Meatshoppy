@@ -3,27 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meat Market | Fresh Meat, Chicken &amp; Vegetables</title>
+<title>Tariq Meat Center | Fresh Meat, Chicken &amp; Vegetables</title>
 <meta name="description" content="Fresh chicken, beef, mutton and vegetables with home delivery.">
 <meta name="theme-color" content="#681c2b">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Meat Market | Fresh Meat, Chicken &amp; Vegetables">
+<meta property="og:title" content="Tariq Meat Center | Fresh Meat, Chicken &amp; Vegetables">
 <meta property="og:description" content="Shop chicken, beef, mutton, eggs and vegetables. Choose your weight and order home delivery.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="images/hero.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="images/optimized/hero.jpg.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="design.css?v=20261015-premium">
-<link rel="stylesheet" href="motion.css?v=20261016-1">
+<link rel="stylesheet" href="improvements.css?v=20261017-review4">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i="skip">Skip to content</a>
-<div class="announcement"><span data-i="announcement">Fresh cuts. Clear prices. Delivered to your door.</span></div>
+
 <header class="bar">
-  <a class="logo" href="#home" translate="no"><span class="brand-mark" aria-hidden="true">M</span><span>Meat Market</span></a>
+  <a class="logo" href="#home" translate="no"><span class="brand-mark" aria-hidden="true">T</span><span>Tariq Meat Center</span></a>
   <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="Menu"><span aria-hidden="true">☰</span></button>
+<label class="search-wrap"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg><input type="search" id="q" name="search" class="search" autocomplete="off" aria-label="Search"></label>
   <nav id="nav" aria-label="Main navigation">
     <a href="#home" data-i="nHome"></a><a href="#shop" data-i="nShop"></a><a href="#about" data-i="nAbout"></a><a href="#contact" data-i="nContact"></a>
   </nav>
@@ -48,9 +49,9 @@
 <section class="sec categories-section"><div class="section-heading"><div><h2 data-i="cats"></h2></div><p class="section-intro" data-i="categoryIntro">Everyday favourites. Something for every recipe.</p></div><div class="cats" id="catTiles"></div></section>
 <section class="sec best-section"><div class="section-heading"><div><h2 data-i="best"></h2></div><a class="text-link" href="#shop"><span data-i="viewAll">Explore all cuts</span></a></div><div class="grid" id="bestGrid"></div></section>
 
-<section id="about" class="story"><div class="story-photo"><img src="images/beef-steaks.jpg" alt="" width="600" height="600" loading="lazy" decoding="async"></div><div class="story-copy"><h2 data-i="storyTitle">Good meals begin with good ingredients.</h2><p data-i="aboutP"></p><a class="text-link" href="#shop"><span data-i="shopNow"></span></a></div></section>
+<section id="about" class="story"><div class="story-photo"><img src="images/beef-steaks.jpg" alt="" width="600" height="600" loading="lazy" decoding="async"></div><div class="story-copy"><h2 data-i="storyTitle">Good meals begin with good ingredients.</h2><p data-i="aboutP"></p><a href="https://maps.app.goo.gl/Y3mNmNyiFn54K2gt9" target="_blank" rel="noopener" data-i="reviewsLink">View our Google listing &amp; reviews</a><a href="https://wa.me/966596684625" dir="ltr">+966 59 668 4625</a></div></section>
 
-<section id="shop" class="sec shop-section"><div class="section-heading"><div><h2 data-i="shopTitle">The butcher’s counter</h2></div><label class="search-wrap"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg><input type="search" id="q" name="search" class="search" autocomplete="off" aria-label="Search"></label></div><div class="catalog-toolbar"><div class="chips" id="chips"></div><span id="resultCount" class="result-count" role="status" aria-live="polite"></span></div><div class="grid" id="shopGrid"></div></section>
+<section id="shop" class="sec shop-section"><div class="section-heading"><div><h2 data-i="shopTitle">The butcher’s counter</h2></div></div><p id="serviceHours" class="service-hours"></p><p id="catalogStatus" role="status"></p><div class="catalog-toolbar"><div class="chips" id="chips"></div><span id="resultCount" class="result-count" role="status" aria-live="polite"></span></div><div class="grid" id="shopGrid"></div></section>
 
 <section class="promise-section"><div class="sec"><div class="section-heading"><div><h2 data-i="why"></h2></div></div><div class="feat"><div><b data-i="w1t"></b><p data-i="w1d"></p></div><div><b data-i="w2t"></b><p data-i="w2d"></p></div><div><b data-i="w3t"></b><p data-i="w3d"></p></div><div><b data-i="w4t"></b><p data-i="w4d"></p></div></div></div></section>
 <section id="how" class="sec how-section"><h2 data-i="how"></h2><ol class="steps"><li data-i="h1"></li><li data-i="h2"></li><li data-i="h3"></li><li data-i="h4"></li></ol></section>
@@ -66,7 +67,7 @@
     <form id="coForm" novalidate>
       <label><span data-i="fName"></span><input name="name" required autocomplete="name"></label>
       <label><span data-i="fMobile"></span><input name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"></label>
-      <label><span data-i="fArea"></span><input name="area" list="areaList" required autocomplete="off"><datalist id="areaList"></datalist></label>
+      <label><span data-i="fArea"></span><input name="area" list="areaList" autocomplete="off"><datalist id="areaList"></datalist></label>
       <div class="pin"><b data-i="pinT"></b>
         <p id="locInfo" class="hint"></p>
         <div id="map" class="map" tabindex="-1"></div>
@@ -74,15 +75,15 @@
         <button type="button" class="chip" id="useMe" data-i="useMe"></button>
       </div>
       <label><span data-i="fAddr"></span><textarea name="address" autocomplete="street-address" rows="2"></textarea></label>
-      <label><span data-i="fBldg"></span><input name="building"></label>
-      <label><span data-i="fTime"></span><select name="time" id="timeSel"></select></label>
+      <input type="hidden" name="building" value="">
+      <label hidden><span data-i="fTime"></span><select name="time" id="timeSel"></select></label>
       <label><span data-i="fNotes"></span><textarea name="notes" rows="2"></textarea></label>
       <fieldset><legend data-i="pay"></legend>
         <label class="radio"><input type="radio" name="pay" value="cod" checked><span data-i="cod"></span></label>
         <label class="radio"><input type="radio" name="pay" value="card"><span data-i="online"></span></label>
         <small data-i="payNote"></small>
       </fieldset>
-      <p class="err" id="coErr" role="alert"></p>
+      <div class="policy-links"><a href="delivery.html" data-i="deliveryPolicy">Delivery policy</a><a href="privacy.html" data-i="privacy">Privacy policy</a><a href="refunds.html" data-i="refunds">Refunds &amp; cancellations</a></div><p class="err" id="coErr" role="alert"></p>
       <button class="btn full" type="submit" data-i="place"></button>
     </form>
   </section>
@@ -105,14 +106,15 @@
 </aside>
 <div class="scrim" id="scrim"></div>
 
-<footer id="contact"><div class="footer-main"><div><a class="footer-brand" href="#home" translate="no">Meat Market</a><p data-i="footerLine">Fresh ingredients for the meals that matter.</p></div><div><h3 data-i="nContact"></h3><a id="phoneLink" dir="ltr"></a><a id="waLink2" target="_blank" rel="noopener">WhatsApp</a><p data-i="hours"></p></div><div><h3 data-i="footerExplore">Explore</h3><a href="#shop" data-i="nShop"></a><a href="#about" data-i="nAbout"></a><a href="#how" data-i="how"></a></div></div><div class="footer-bottom"><span>© <span id="yr"></span> Meat Market</span><span data-i="footerLocation">Made for your everyday table.</span></div></footer>
+<footer id="contact"><div class="footer-main"><div><a class="footer-brand" href="#home" translate="no">Tariq Meat Center</a><p data-i="footerLine">Fresh ingredients for the meals that matter.</p></div><div><h3 data-i="nContact"></h3><a id="phoneLink" dir="ltr"></a><a id="waLink2" target="_blank" rel="noopener">WhatsApp</a><p data-i="hours"></p><p id="shopLocation"></p><div class="policy-links"><a href="delivery.html" data-i="deliveryPolicy">Delivery policy</a><a href="privacy.html" data-i="privacy">Privacy policy</a><a href="refunds.html" data-i="refunds">Refunds &amp; cancellations</a></div></div><div><h3 data-i="footerExplore">Explore</h3><a href="#shop" data-i="nShop"></a><a href="#about" data-i="nAbout"></a><a href="#how" data-i="how"></a></div></div><div class="footer-bottom"><span>© <span id="yr"></span> Tariq Meat Center</span><span data-i="footerLocation">Made for your everyday table.</span></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script defer src="vegetables.js"></script>
-<script defer src="app.js?v=20261015-premium"></script>
-<script defer src="motion.js?v=20261016-1"></script>
+<script defer src="app.js?v=20261017-review4"></script>
+
 </body>
 </html>
+
 
 
 
