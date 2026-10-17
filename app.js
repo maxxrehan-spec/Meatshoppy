@@ -8,8 +8,9 @@ const CONFIG = {
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
   banners: ["images/optimized/hero.jpg.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
-  // Preview stays read-only until reviewed; do not enable before business details are verified.
-  previewOnly: true,
+  // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
+  previewOnly: location.protocol !== "https:" || location.hostname !== "maxxrehan-spec.github.io",
+  turnstileSiteKey: "0x4AAAAAAFX26n0fiv1yJXYE", // Public site key; never put the secret key here.
   // Owner-confirmed rules supersede the original strict thresholds.
   deliveryTiers: [{ upToKm: 5, freeOver: 50, fee: 10 }, { upToKm: 10, freeOver: 200, fee: 15 }],
   farBaseFee: 15,
@@ -366,7 +367,7 @@ $("#closeCart").onclick = $("#scrim").onclick = () => openCart(false);
 $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCart(false); showCheckout(); } });
 
 /* Views */
-function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); }
+function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); initVerification(); }
 function view(id){
   $(".search-wrap").hidden = id === "checkoutView" || id === "doneView";
   if(id !== "productView") closeProduct();
@@ -391,7 +392,7 @@ $("#coForm").addEventListener("submit", async e => {
   e.preventDefault();
   if(submitting) return;
   const form = e.target, btn = $("button[type=submit]", form);
-  const f = Object.fromEntries(new FormData(form)); f.time=t("serviceHours"); const err = $("#coErr");
+  const f = Object.fromEntries(new FormData(form)); f.time="12 noon–12 midnight; expected within one hour"; const err = $("#coErr");
   $$("#coForm .bad").forEach(unflag);
   let first = null;
   const need = (el, msg) => { const b = flag(el, msg); first = first || b; };
@@ -405,6 +406,8 @@ $("#coForm").addEventListener("submit", async e => {
   if(!catalogReady){ err.textContent=t("catalogUnavailable"); return; }
   if(deliveryFee() === null){ err.textContent=t("deliveryUnconfirmed"); return; }
   if(CONFIG.previewOnly){ err.textContent=t("previewMessage"); return; }
+  if(!verificationToken){ err.textContent=lang==='ar'?'يرجى إكمال التحقق الأمني قبل إرسال الطلب.':'Please complete the security verification before placing your order.'; initVerification(); return; }
+  delete f['cf-turnstile-response'];
   err.textContent = "";
   const fingerprint=JSON.stringify({f,cart,userLoc,totals:totals()});
   if(fingerprint!==pendingFingerprint){ pendingOrder=buildOrder(f); pendingFingerprint=fingerprint; }
@@ -424,12 +427,12 @@ async function sendOrder(order){
   const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 20000);
   try{
     const r = await fetch(CONFIG.orderEndpoint, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({ secret: CONFIG.orderSecret, order }), signal: ctl.signal });
+      body: JSON.stringify({ turnstileToken: verificationToken, order }), signal: ctl.signal });
     if(!r.ok) return false;
     const d = await r.json();
     if(d.ok && d.orderNumber){ order.message = order.message.split(order.orderNumber).join(d.orderNumber); order.orderNumber = d.orderNumber; store.set("mm_last_order", order); }
     return d.ok === true && typeof d.orderNumber === "string" && d.orderNumber.length > 0;
-  }catch(e){ return false; }finally{ clearTimeout(tm); }
+  }catch(e){ return false; }finally{ clearTimeout(tm); verificationToken=""; if(verificationWidget !== null && window.turnstile) window.turnstile.reset(verificationWidget); }
 }
 function showDone(order, ok){
   const fill = s => t(s).replace("{n}", order.customer.name).replace("{no}", order.orderNumber);
@@ -457,7 +460,7 @@ function buildOrder(f){
   const loc = userLoc ? `${L("lMap")}: ${mapLink()} (${distKm().toFixed(1)} km from shop)\n` : `${L("lMap")}: not pinned - please confirm the delivery fee\n`;
   const pay = f.pay==="cod" ? L("cod") : L("online");
   const message = `*${CONFIG.shopName} — ${L("newOrder")}*\n\n${L("lOrder")}: ${no}\n${L("lName")}: ${f.name}\n${L("lMob")}: ${f.mobile}\n${L("lArea")}: ${f.area}\n${L("lAddr")}: ${[f.address.trim(), f.building.trim() && "Bldg/Villa " + f.building.trim()].filter(Boolean).join(", ") || "Not provided"}\n${loc}${L("lTime")}: ${f.time}\n\n*${L("lProd")}*\n${items}\n\n${T.en.sub}: ${m(x.s)}\n${T.en.del}: ${x.d? m(x.d): "Free"}\n*${T.en.tot}: ${m(x.t)}*\n\n${L("lPay")}: ${pay}\n${L("lNotes")}: ${f.notes.trim()||L("none")}`;
-  return { orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, lines, lang, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
+  return { requestId:crypto.randomUUID(), orderNumber:no, createdAt:d.toISOString(), customer:{name:f.name,mobile:f.mobile,area:f.area,address:f.address,building:f.building, lat:userLoc?userLoc.lat:null, lng:userLoc?userLoc.lng:null, mapLink:mapLink()}, deliveryTime:f.time, itemsText:items, lines, lang, paymentMethod:f.pay, items:cart.map(i=>({...i})), totals:x, notes:f.notes, message };
 }
 
 $("#q").addEventListener("input", e => { query = e.target.value; filter="all"; showMain(); renderChips(); renderGrids(); $("#shop").scrollIntoView({block:"start",behavior:"instant"}); });
@@ -674,3 +677,19 @@ window.addEventListener('resize',updateHeaderOffset);
 window.addEventListener('scroll',updateHeaderOffset,{passive:true});
 
 
+
+let verificationToken="", verificationWidget=null, verificationLoading=false;
+function initVerification(){
+  if(CONFIG.previewOnly || !CONFIG.turnstileSiteKey) return;
+  const box=document.getElementById('verification');
+  if(window.turnstile){
+    if(verificationWidget===null) verificationWidget=window.turnstile.render(box,{sitekey:CONFIG.turnstileSiteKey,action:'checkout',size:'flexible',language:lang,'response-field':false,callback:token=>{verificationToken=token;},'expired-callback':()=>{verificationToken='';},'error-callback':()=>{verificationToken='';document.getElementById('coErr').textContent=lang==='ar'?'تعذر التحقق الأمني. يرجى إعادة المحاولة.':'Security verification could not load. Please try again.';}});
+    return;
+  }
+  if(verificationLoading)return;
+  verificationLoading=true;
+  const script=document.createElement('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.async=true;
+  script.onload=()=>{verificationLoading=false;initVerification();};
+  script.onerror=()=>{verificationLoading=false;script.remove();document.getElementById('coErr').textContent=lang==='ar'?'تعذر تحميل التحقق الأمني. يرجى إعادة المحاولة.':'Security verification could not load. Please try again.';};
+  document.head.appendChild(script);
+}

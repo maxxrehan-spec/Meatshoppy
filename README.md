@@ -1,6 +1,6 @@
 # Tariq Meat Center — unpublished review preview
 
-Keep `CONFIG.previewOnly: true` until review is complete. Live order submission is disabled. No real test orders or customer messages were sent.
+The public Turnstile site key is configured. Ordering is enabled on HTTPS maxxrehan-spec.github.io only. Local previews remain blocked. Deploy the updated Apps Script receiver first and set the matching secret in Script Properties. No real test orders or customer messages were sent.
 
 ## Integrations
 
@@ -42,4 +42,5 @@ Remaining publication work: inspect Apps Script acknowledgment, duplicate handli
 ## Review files
 
 app.js contains the revised logic, index.html the header search and policy links, improvements.css the compact responsive layout, and privacy.html/refunds.html the policy drafts. Original image files are retained alongside images/optimized WebP copies. Serve this folder over local HTTP to review. Publishing and enabling live submissions remain outstanding.
+
 
