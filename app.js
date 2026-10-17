@@ -1,7 +1,7 @@
 /* ============ CONFIG — edit here ============ */
 const WHATSAPP_NUMBER = "966596684625"; // international format, no + or spaces
 const CONFIG = {
-  shopName: "Tariq Meat Center",
+  shopName: "Tariq Meat Shop",
   whatsapp: WHATSAPP_NUMBER,
   phone: "+966 59 668 4625",
   orderEndpoint: "https://script.google.com/macros/s/AKfycbysyn-7FP122iRQA3cTW17B48pinTiyGs6Y7DnN08zjmlWYnCyRmrsz752Zqk6h2CnsFg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
@@ -9,12 +9,15 @@ const CONFIG = {
   banners: ["images/optimized/hero.jpg.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
-  previewOnly: location.protocol !== "https:" || location.hostname !== "maxxrehan-spec.github.io",
+  
+previewOnly: location.protocol !== "https:" ||
+  !["tariqmeatshop.com", "www.tariqmeatshop.com"].includes(location.hostname),
+
   turnstileSiteKey: "0x4AAAAAAFX26n0fiv1yJXYE", // Public site key; never put the secret key here.
   // Owner-confirmed rules supersede the original strict thresholds.
-  deliveryTiers: [{ upToKm: 5, freeOver: 50, fee: 10 }, { upToKm: 10, freeOver: 200, fee: 15 }],
-  farBaseFee: 15,
-  farPerKm: 2,
+  deliveryTiers: [{ upToKm: 1, freeOver: 50, fee: 10 }, { upToKm: 2, freeOver: 100, fee: 15 }],
+  farBaseFee: 20,
+  farPerKm: 0,
   shopLocation: { lat: 21.5590012, lng: 39.2087398 },
   shopAddress: "Al Udaba Street, Al Aziziyah, Jeddah 23342",
   shopAddressAr: "الأدباء، العزيزية، جدة 23342",
@@ -85,7 +88,7 @@ const T = {
   en:{nHome:"Home",nShop:"Shop",nAbout:"About Us",nContact:"Contact",heroT:"Fresh Meat Delivered to Your Door",heroS:"Fresh chicken, beef, mutton and vegetables, delivered to your home.",shopNow:"Shop Now",cats:"Categories",searchPh:"Search products…",noRes:"No products found.",pc:"pc",pcs:"pcs",best:"Best sellers",offers:"Special offers",why:"Why choose us",
    w1t:"Choose your cut",w1d:"Select from the available cuts and weights before adding to your cart.",w2t:"For your kitchen",w2d:"Browse chicken, mutton, beef, eggs and vegetables in one place.",w3t:"Clear pricing",w3d:"Every price shows its weight. No surprises.",w4t:"Home delivery",w4d:"Delivery charges are shown in your cart and calculated from your location.",
    how:"How it works",h1:"Choose your products",h2:"Select the weight",h3:"Place your order",h4:"We confirm on WhatsApp and deliver",waT:"Prefer to order by chat?",waB:"Chat on WhatsApp",
-   aboutP:"Shop chicken, mutton, beef, eggs and vegetables from Tariq Meat Center. Choose your products and available cuts, review your total, and place your order. We confirm orders on WhatsApp.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
+   aboutP:"Shop chicken, mutton, beef, eggs and vegetables from Tariq Meat Shop. Choose your products and available cuts, review your total, and place your order. We confirm orders on WhatsApp.",phone:"Phone",hours:"Orders are confirmed on WhatsApp.",
    all:"All",add:"Add to Cart",added:"Added ✓",cart:"Your cart",empty:"Your cart is empty. Add something fresh.",remove:"Remove",sub:"Subtotal",del:"Delivery fee",free:"Free",tot:"Total",goCheckout:"Checkout",back:"← Back to shop",checkout:"Checkout",
    fName:"Full name",fMobile:"Mobile number",fArea:"Area",fAddr:"Full address (optional)",fBldg:"Building / Villa number (optional)",fTime:"Preferred delivery time",fNotes:"Delivery notes (optional)",pay:"Payment method",cod:"Cash on Delivery (COD)",online:"Pay by Card upon Delivery",payNote:"You pay the delivery driver in cash or by card when your order arrives. No card details are collected on this site.",place:"Place order",pinT:"Delivery location",pinHelp:"Tap the map or drag the pin to your exact location.",useMe:"Use my current location",dist:"Distance from shop",inZone:"Inside our free-delivery area",outZone:"Outside the {km} km free-delivery area",mapFail:"The map could not load. Please type your full address.",freeNote:"Free delivery on orders over {amt} within {km} km of our shop.",errLoc:"Please pin your delivery location on the map.",locDenied:"Could not get your location. Tap the map instead.",kmU:"km",related:"You may also like",cut:"Cut",from:"From",reqName:"Please enter your full name.",reqMobile:"Please enter your mobile number.",reqArea:"Please enter your area.",nTier:"{a}–{b} km: free from {amt}, otherwise {fee}",nFar:"Over {b} km: {base} + {pk} per extra km",lMap:"Location pin",sending:"Sending your order…",doneOk:"Order placed ✓",doneOkP:"Thank you, {n}! Your order {no} has been received. We will confirm it on WhatsApp shortly.",doneStep:"One last step",doneStepP:"Tap the button below to send your order {no} to us on WhatsApp so we can confirm it.",doneWa:"Send order on WhatsApp",doneWa2:"Message us on WhatsApp",
    errFill:"Please complete all required fields.",errMobile:"Enter a valid Saudi mobile number (e.g. 05XXXXXXXX).",errCart:"Your cart is empty.",kg:"kg",g:"g",selArea:"Select area",newOrder:"New Order",lOrder:"Order Number",lName:"Customer Name",lMob:"Mobile Number",lArea:"Area",lAddr:"Address",lTime:"Delivery Time",lProd:"Products",lW:"Weight",lQ:"Qty",lP:"Price",lPay:"Payment Method",lNotes:"Customer Notes",none:"None",onlinePending:"Online Payment (to be arranged)"},
@@ -123,25 +126,25 @@ Object.assign(T.ar, {
 });
 
 
-Object.assign(T.en, {best:"Featured",bestTag:"Featured",pendingFee:"Needs confirmation",privacy:"Privacy policy",refunds:"Refunds & cancellations",coverage:"Up to 1 km: free above SAR 50; SAR 50 or less needs fee confirmation. Over 1 km to 2 km: free above SAR 200, otherwise SAR 15. Beyond 2 km: coverage and fee need confirmation. Based on merchandise subtotal after discounts, excluding delivery. Distances are straight-line, not driving routes.",deliveryUnconfirmed:"Delivery cannot be priced yet. The shop location or applicable fee needs confirmation. Please contact the shop.",previewMessage:"Review preview: live order submission is disabled.",catalogUnavailable:"Product availability is being verified. Ordering is disabled until the live catalogue loads. Please refresh or contact us if this continues.",submitFailed:"Receipt could not be confirmed. Your cart and details are kept. Please contact the shop before retrying if the connection was interrupted.",noRes:"No matching products. Try an English or Arabic product name, or clear your search.",locationPending:"Shop address and Google Maps link awaiting verification.",fArea:"Area (optional)",fAddr:"Delivery address, building / villa & directions",fNotes:"Delivery or preparation instructions (optional)"});
-Object.assign(T.ar, {best:"منتجات مختارة",bestTag:"مختار",pendingFee:"بانتظار التأكيد",privacy:"سياسة الخصوصية",refunds:"الاسترجاع والإلغاء",coverage:"حتى 1 كم: توصيل مجاني للطلبات الأعلى من 50 ر.س؛ رسوم الطلبات بقيمة 50 ر.س أو أقل تحتاج تأكيداً. أكثر من 1 وحتى 2 كم: مجاني للطلبات الأعلى من 200 ر.س وإلا فالرسوم 15 ر.س. أبعد من 2 كم: التغطية والرسوم تحتاج تأكيداً. يعتمد الحساب على قيمة المنتجات بعد الخصم دون التوصيل، والمسافة بخط مستقيم وليست مسافة الطريق.",deliveryUnconfirmed:"لا يمكن حساب التوصيل بعد. موقع المتجر أو الرسوم يحتاج تأكيداً. يرجى التواصل مع المتجر.",previewMessage:"نسخة للمراجعة: إرسال الطلبات الفعلية معطل.",catalogUnavailable:"جارٍ التحقق من توفر المنتجات. الطلب معطل حتى تحميل القائمة المباشرة. يرجى تحديث الصفحة أو التواصل معنا إذا استمرت المشكلة.",submitFailed:"تعذر تأكيد استلام الطلب. تم الاحتفاظ بالسلة والبيانات. يرجى التواصل مع المتجر قبل إعادة المحاولة إذا انقطع الاتصال.",noRes:"لا توجد منتجات مطابقة. جرّب اسم المنتج بالعربية أو الإنجليزية أو امسح البحث.",locationPending:"عنوان المتجر ورابط خرائط Google بانتظار التحقق.",fArea:"الحي (اختياري)",fAddr:"عنوان التوصيل ورقم المبنى / الفيلا وإرشادات الوصول",fNotes:"تعليمات التوصيل أو التحضير (اختياري)"});
+Object.assign(T.en, {best:"Featured",bestTag:"Featured",pendingFee:"Needs confirmation",privacy:"Privacy policy",refunds:"Refunds & cancellations",coverage:"Up to 1 km: free above SAR 50, otherwise SAR 10. Over 1–2 km: free above SAR 100, otherwise SAR 15. Beyond 2 km: SAR 20.",deliveryUnconfirmed:"Delivery cannot be priced yet. The shop location or applicable fee needs confirmation. Please contact the shop.",previewMessage:"Review preview: live order submission is disabled.",catalogUnavailable:"Product availability is being verified. Ordering is disabled until the live catalogue loads. Please refresh or contact us if this continues.",submitFailed:"Receipt could not be confirmed. Your cart and details are kept. Please contact the shop before retrying if the connection was interrupted.",noRes:"No matching products. Try an English or Arabic product name, or clear your search.",locationPending:"Shop address and Google Maps link awaiting verification.",fArea:"Area (optional)",fAddr:"Delivery address, building / villa & directions",fNotes:"Delivery or preparation instructions (optional)"});
+Object.assign(T.ar, {best:"منتجات مختارة",bestTag:"مختار",pendingFee:"بانتظار التأكيد",privacy:"سياسة الخصوصية",refunds:"الاسترجاع والإلغاء",coverage:"حتى 1 كم: مجاني فوق 50 ر.س وإلا 10 ر.س. أكثر من 1 وحتى 2 كم: مجاني فوق 100 ر.س وإلا 15 ر.س. أبعد من 2 كم: 20 ر.س.",deliveryUnconfirmed:"لا يمكن حساب التوصيل بعد. موقع المتجر أو الرسوم يحتاج تأكيداً. يرجى التواصل مع المتجر.",previewMessage:"نسخة للمراجعة: إرسال الطلبات الفعلية معطل.",catalogUnavailable:"جارٍ التحقق من توفر المنتجات. الطلب معطل حتى تحميل القائمة المباشرة. يرجى تحديث الصفحة أو التواصل معنا إذا استمرت المشكلة.",submitFailed:"تعذر تأكيد استلام الطلب. تم الاحتفاظ بالسلة والبيانات. يرجى التواصل مع المتجر قبل إعادة المحاولة إذا انقطع الاتصال.",noRes:"لا توجد منتجات مطابقة. جرّب اسم المنتج بالعربية أو الإنجليزية أو امسح البحث.",locationPending:"عنوان المتجر ورابط خرائط Google بانتظار التحقق.",fArea:"الحي (اختياري)",fAddr:"عنوان التوصيل ورقم المبنى / الفيلا وإرشادات الوصول",fNotes:"تعليمات التوصيل أو التحضير (اختياري)"});
 
 
 Object.assign(T.en, {
-  coverage:"Within 2 km: SAR 15 delivery, free on merchandise subtotals of SAR 50 or more. Beyond 2 km: SAR 15 + SAR 2 for each additional kilometer, rounding up only the distance beyond 2 km; free on subtotals of SAR 200 or more. Calculated after discounts, excluding delivery. Distance is straight-line, not driving distance. Delivery availability is confirmed with your order on WhatsApp.",
+  coverage:"Up to 1 km: free above SAR 50, otherwise SAR 10. Over 1–2 km: free above SAR 100, otherwise SAR 15. Beyond 2 km: SAR 20.",
   serviceHours:"Delivery hours: 12 noon–12 midnight. Expected delivery: within one hour.",
   hours:"Delivery hours: 12 noon–12 midnight. Expected delivery within one hour.",
-  aboutP:"Order online directly from Tariq Meat Center, our physical shop in Al Aziziyah, Jeddah. Choose meat, poultry, eggs and vegetables, select your weights and cuts, and place your order here. We confirm your order and delivery availability on WhatsApp.",
-  storyTitle:"Your Tariq Meat Center, online.",
+  aboutP:"Order online directly from Tariq Meat Shop, our physical shop in Al Aziziyah, Jeddah. Choose meat, poultry, eggs and vegetables, select your weights and cuts, and place your order here. We confirm your order and delivery availability on WhatsApp.",
+  storyTitle:"Your Tariq Meat Shop, online.",
   weightNotice:"Fresh meat and chicken may vary slightly in final weight after preparation. Your displayed total uses the selected weight. The final price is based on the actual weight supplied; any additional charge requires your approval. Price differences will be adjusted accordingly.",
   reviewsLink:"View our Google listing & reviews"
 });
 Object.assign(T.ar, {
-  coverage:"حتى 2 كم: رسوم التوصيل 15 ر.س، ومجاني عند وصول قيمة المنتجات إلى 50 ر.س أو أكثر. أبعد من 2 كم: 15 ر.س + 2 ر.س لكل كيلومتر إضافي، مع تقريب المسافة الزائدة عن أول 2 كم فقط إلى الكيلومتر التالي؛ ومجاني للطلبات بقيمة 200 ر.س أو أكثر. الحساب بعد الخصم ودون رسوم التوصيل. المسافة بخط مستقيم وليست مسافة الطريق. نؤكد توفر التوصيل مع طلبك عبر واتساب.",
+  coverage:"حتى 1 كم: مجاني فوق 50 ر.س وإلا 10 ر.س. أكثر من 1 وحتى 2 كم: مجاني فوق 100 ر.س وإلا 15 ر.س. أبعد من 2 كم: 20 ر.س.",
   serviceHours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
   hours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
-  aboutP:"اطلب مباشرة عبر الإنترنت من مركز طارق للحوم، متجرنا في العزيزية بجدة. اختر اللحوم والدواجن والبيض والخضروات والأوزان والتقطيع، ثم أرسل طلبك هنا. نؤكد الطلب وتوفر التوصيل عبر واتساب.",
-  storyTitle:"مركز طارق للحوم، الآن عبر الإنترنت.",
+  aboutP:"اطلب مباشرة عبر الإنترنت من متجر طارق للحوم، متجرنا في العزيزية بجدة. اختر اللحوم والدواجن والبيض والخضروات والأوزان والتقطيع، ثم أرسل طلبك هنا. نؤكد الطلب وتوفر التوصيل عبر واتساب.",
+  storyTitle:"متجر طارق للحوم، الآن عبر الإنترنت.",
   weightNotice:"قد يختلف الوزن النهائي للحوم والدجاج قليلاً بعد التقطيع والتحضير. المجموع المعروض يعتمد على الوزن المختار، والسعر النهائي حسب الوزن الفعلي المسلم. تتطلب أي زيادة في السعر موافقتك، ويتم تسوية فرق السعر وفقاً لذلك.",
   reviewsLink:"المتجر والتقييمات على خرائط Google"
 });
@@ -308,12 +311,14 @@ const validLoc = p => p && Number.isFinite(p.lat) && Number.isFinite(p.lng) && M
 const distKm = () => validLoc(userLoc) && validLoc(CONFIG.shopLocation) ? km(CONFIG.shopLocation, userLoc) : null;
 function feeFor(sub, d){
   if(!Number.isFinite(d) || d < 0 || !Number.isFinite(sub) || sub < 0) return null;
-  if(d <= 5) return sub > 50 ? 0 : 10;
-  if(d <= 10) return sub > 200 ? 0 : 15;
-  return roundMoney(CONFIG.farBaseFee + CONFIG.farPerKm * Math.ceil(d - 10));
+  if(d <= 1) return sub > 50 ? 0 : 10;
+  if(d <= 2) return sub > 100 ? 0 : 15;
+  return 20;
 }
 const deliveryFee = () => feeFor(subtotal(), distKm());
-const noteHtml = () => '<small class="note"><a href="delivery.html">'+t("deliveryPolicy")+'</a></small>';
+const estimatedTotals = () => { const x=totals(); return x.d===null ? {s:x.s,d:feeFor(x.s,0),t:roundMoney(x.s+feeFor(x.s,0))} : x; };
+const estimateNote = () => distKm()===null ? '<small class="note">'+(lang==='ar'?'تقدير ضمن 1 كم. حدد موقعك لمعرفة الرسوم النهائية.':'Estimate within 1 km. Select your location for the final fee.')+'</small>' : '';
+const noteHtml = () => estimateNote() + '<small class="note"><a href="delivery.html">'+t("deliveryPolicy")+'</a></small>';
 
 const mapLink = () => userLoc ? `https://www.google.com/maps?q=${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : "";
 const totals = () => { const s = subtotal(), d = deliveryFee(); return { s, d, t: d === null ? null : roundMoney(s + d) }; };
@@ -326,7 +331,7 @@ function renderCart(){
       <div class="qty"><button data-ci="${ix}" data-d="-1" aria-label="${t("decrease")}">−</button><span>${i.q}</span><button data-ci="${ix}" data-d="1" aria-label="${t("increase")}">+</button></div></div>
       <div><b>${money(price(p,i.w)*i.q)}</b><br><button class="rm" data-rm="${ix}">${t("remove")}</button></div></div>`; }).join("")
     : `<p class="empty">${t("empty")}</p>`;
-  const x = totals();
+  const x = estimatedTotals();
   $("#cartFoot").innerHTML = cart.length ? `
     <div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div>
     <div class="sum"><span>${t("del")}</span><span>${x.d === 0 ? t("free") : money(x.d)}</span></div>
@@ -381,7 +386,7 @@ $("#nav").addEventListener("click", () => { showMain(); closeMenu(); });
 $("footer").addEventListener("click", e => { if(e.target.closest('a[href^="#"]')) showMain(); });
 $(".logo").addEventListener("click", showMain);
 function renderSummary(){
-  const x = totals();
+  const x = estimatedTotals();
   $("#coSummary").innerHTML = cart.map(i=>{ const p=prod(i.id); return `<div class="sum"><span>${pName(p)} · ${wl(i.w,p)}${cutLbl(p,i.c)} × ${i.q}</span><span>${money(price(p,i.w)*i.q)}</span></div>`; }).join("")
    + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d === 0 ? t("free") : money(x.d)}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
 }
@@ -498,7 +503,7 @@ function initMap(){
     const c = userLoc || CONFIG.shopLocation;
     map = L.map("map").setView([c.lat, c.lng], userLoc ? 16 : 12);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap contributors" }).addTo(map);
-    CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7a1527", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
+    if(!matchMedia("(max-width: 767px)").matches) CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7a1527", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
     map.on("click", e => setLoc(e.latlng.lat, e.latlng.lng));
     if(userLoc) setLoc(userLoc.lat, userLoc.lng);
   }
