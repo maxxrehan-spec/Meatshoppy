@@ -9,7 +9,10 @@ const CONFIG = {
   banners: ["images/optimized/hero.jpg.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
-  previewOnly: location.protocol !== "https:" || location.hostname !== "maxxrehan-spec.github.io",
+  
+previewOnly: location.protocol !== "https:" ||
+  !["tariqmeatshop.com", "www.tariqmeatshop.com"].includes(location.hostname),
+
   turnstileSiteKey: "0x4AAAAAAFX26n0fiv1yJXYE", // Public site key; never put the secret key here.
   // Owner-confirmed rules supersede the original strict thresholds.
   deliveryTiers: [{ upToKm: 5, freeOver: 50, fee: 10 }, { upToKm: 10, freeOver: 200, fee: 15 }],
