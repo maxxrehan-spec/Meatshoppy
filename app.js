@@ -15,9 +15,9 @@ previewOnly: location.protocol !== "https:" ||
 
   turnstileSiteKey: "0x4AAAAAAFX26n0fiv1yJXYE", // Public site key; never put the secret key here.
   // Owner-confirmed rules supersede the original strict thresholds.
-  deliveryTiers: [{ upToKm: 1, freeOver: 50, fee: 10 }, { upToKm: 2, freeOver: 100, fee: 15 }],
-  farBaseFee: 20,
-  farPerKm: 0,
+  deliveryTiers: [{ upToKm: 3, freeOver: 50, fee: 10 }],
+  farBaseFee: 12,
+  farPerKm: 2,
   shopLocation: { lat: 21.5590012, lng: 39.2087398 },
   shopAddress: "Al Udaba Street, Al Aziziyah, Jeddah 23342",
   shopAddressAr: "الأدباء، العزيزية، جدة 23342",
@@ -126,12 +126,12 @@ Object.assign(T.ar, {
 });
 
 
-Object.assign(T.en, {best:"Featured",bestTag:"Featured",pendingFee:"Needs confirmation",privacy:"Privacy policy",refunds:"Refunds & cancellations",coverage:"Up to 1 km: free above SAR 50, otherwise SAR 10. Over 1–2 km: free above SAR 100, otherwise SAR 15. Beyond 2 km: SAR 20.",deliveryUnconfirmed:"Delivery cannot be priced yet. The shop location or applicable fee needs confirmation. Please contact the shop.",previewMessage:"Review preview: live order submission is disabled.",catalogUnavailable:"Product availability is being verified. Ordering is disabled until the live catalogue loads. Please refresh or contact us if this continues.",submitFailed:"Receipt could not be confirmed. Your cart and details are kept. Please contact the shop before retrying if the connection was interrupted.",noRes:"No matching products. Try an English or Arabic product name, or clear your search.",locationPending:"Shop address and Google Maps link awaiting verification.",fArea:"Area (optional)",fAddr:"Delivery address, building / villa & directions",fNotes:"Delivery or preparation instructions (optional)"});
-Object.assign(T.ar, {best:"منتجات مختارة",bestTag:"مختار",pendingFee:"بانتظار التأكيد",privacy:"سياسة الخصوصية",refunds:"الاسترجاع والإلغاء",coverage:"حتى 1 كم: مجاني فوق 50 ر.س وإلا 10 ر.س. أكثر من 1 وحتى 2 كم: مجاني فوق 100 ر.س وإلا 15 ر.س. أبعد من 2 كم: 20 ر.س.",deliveryUnconfirmed:"لا يمكن حساب التوصيل بعد. موقع المتجر أو الرسوم يحتاج تأكيداً. يرجى التواصل مع المتجر.",previewMessage:"نسخة للمراجعة: إرسال الطلبات الفعلية معطل.",catalogUnavailable:"جارٍ التحقق من توفر المنتجات. الطلب معطل حتى تحميل القائمة المباشرة. يرجى تحديث الصفحة أو التواصل معنا إذا استمرت المشكلة.",submitFailed:"تعذر تأكيد استلام الطلب. تم الاحتفاظ بالسلة والبيانات. يرجى التواصل مع المتجر قبل إعادة المحاولة إذا انقطع الاتصال.",noRes:"لا توجد منتجات مطابقة. جرّب اسم المنتج بالعربية أو الإنجليزية أو امسح البحث.",locationPending:"عنوان المتجر ورابط خرائط Google بانتظار التحقق.",fArea:"الحي (اختياري)",fAddr:"عنوان التوصيل ورقم المبنى / الفيلا وإرشادات الوصول",fNotes:"تعليمات التوصيل أو التحضير (اختياري)"});
+Object.assign(T.en, {best:"Featured",bestTag:"Featured",pendingFee:"...",privacy:"Privacy policy",refunds:"Refunds & cancellations",coverage:"Within 3 km: free on SAR 50 or more, otherwise SAR 10. Beyond 3 km: SAR 12 plus SAR 2 per extra kilometre, rounded up.",deliveryUnconfirmed:"Delivery cannot be priced yet. The shop location or applicable fee needs confirmation. Please contact the shop.",previewMessage:"Review preview: live order submission is disabled.",catalogUnavailable:"Product availability is being verified. Ordering is disabled until the live catalogue loads. Please refresh or contact us if this continues.",submitFailed:"Receipt could not be confirmed. Your cart and details are kept. Please contact the shop before retrying if the connection was interrupted.",noRes:"No matching products. Try an English or Arabic product name, or clear your search.",locationPending:"Shop address and Google Maps link awaiting verification.",fArea:"Area (optional)",fAddr:"Delivery address, building / villa & directions",fNotes:"Delivery or preparation instructions (optional)"});
+Object.assign(T.ar, {best:"منتجات مختارة",bestTag:"مختار",pendingFee:"...",privacy:"سياسة الخصوصية",refunds:"الاسترجاع والإلغاء",coverage:"حتى 3 كم: مجاني عند 50 ر.س أو أكثر وإلا 10 ر.س. أبعد من 3 كم: 12 ر.س إضافة إلى 2 ر.س لكل كيلومتر زائد مع التقريب للأعلى.",deliveryUnconfirmed:"لا يمكن حساب التوصيل بعد. موقع المتجر أو الرسوم يحتاج تأكيداً. يرجى التواصل مع المتجر.",previewMessage:"نسخة للمراجعة: إرسال الطلبات الفعلية معطل.",catalogUnavailable:"جارٍ التحقق من توفر المنتجات. الطلب معطل حتى تحميل القائمة المباشرة. يرجى تحديث الصفحة أو التواصل معنا إذا استمرت المشكلة.",submitFailed:"تعذر تأكيد استلام الطلب. تم الاحتفاظ بالسلة والبيانات. يرجى التواصل مع المتجر قبل إعادة المحاولة إذا انقطع الاتصال.",noRes:"لا توجد منتجات مطابقة. جرّب اسم المنتج بالعربية أو الإنجليزية أو امسح البحث.",locationPending:"عنوان المتجر ورابط خرائط Google بانتظار التحقق.",fArea:"الحي (اختياري)",fAddr:"عنوان التوصيل ورقم المبنى / الفيلا وإرشادات الوصول",fNotes:"تعليمات التوصيل أو التحضير (اختياري)"});
 
 
 Object.assign(T.en, {
-  coverage:"Up to 1 km: free above SAR 50, otherwise SAR 10. Over 1–2 km: free above SAR 100, otherwise SAR 15. Beyond 2 km: SAR 20.",
+  coverage:"Within 3 km: free on SAR 50 or more, otherwise SAR 10. Beyond 3 km: SAR 12 plus SAR 2 per extra kilometre, rounded up.",
   serviceHours:"Delivery hours: 12 noon–12 midnight. Expected delivery: within one hour.",
   hours:"Delivery hours: 12 noon–12 midnight. Expected delivery within one hour.",
   aboutP:"Order online directly from Tariq Meat Shop, our physical shop in Al Aziziyah, Jeddah. Choose meat, poultry, eggs and vegetables, select your weights and cuts, and place your order here. We confirm your order and delivery availability on WhatsApp.",
@@ -140,7 +140,7 @@ Object.assign(T.en, {
   reviewsLink:"View our Google listing & reviews"
 });
 Object.assign(T.ar, {
-  coverage:"حتى 1 كم: مجاني فوق 50 ر.س وإلا 10 ر.س. أكثر من 1 وحتى 2 كم: مجاني فوق 100 ر.س وإلا 15 ر.س. أبعد من 2 كم: 20 ر.س.",
+  coverage:"حتى 3 كم: مجاني عند 50 ر.س أو أكثر وإلا 10 ر.س. أبعد من 3 كم: 12 ر.س إضافة إلى 2 ر.س لكل كيلومتر زائد مع التقريب للأعلى.",
   serviceHours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
   hours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
   aboutP:"اطلب مباشرة عبر الإنترنت من متجر طارق للحوم، متجرنا في العزيزية بجدة. اختر اللحوم والدواجن والبيض والخضروات والأوزان والتقطيع، ثم أرسل طلبك هنا. نؤكد الطلب وتوفر التوصيل عبر واتساب.",
@@ -163,7 +163,9 @@ if(!["en", "ar"].includes(lang)) lang = "en";
 let cart = store.get("mm_cart", []);       // [{id, w, q}]
 let filter = "all", query = "";
 let catalogReady = !CONFIG.productsSheetUrl;
-let map = null, pin = null, userLoc = store.get("mm_loc", null);   // {lat,lng} chosen on the map
+Object.assign(T.en,{pinHelp:'Use my current location to calculate delivery. Check that the pin matches your delivery address.',errLoc:'Please use the current-location button and allow location access before ordering.'});
+Object.assign(T.ar,{pinHelp:'استخدم موقعي الحالي لحساب التوصيل. تأكد أن الدبوس يطابق عنوان التوصيل.',errLoc:'يرجى استخدام زر الموقع الحالي والسماح بالوصول إلى الموقع قبل الطلب.'});
+let map = null, pin = null, userLoc = null;   // {lat,lng} chosen on the map
 const sel = {};                             // per-product selection {w,q}
 
 const t = k => T[lang][k] ?? k;
@@ -311,13 +313,18 @@ const validLoc = p => p && Number.isFinite(p.lat) && Number.isFinite(p.lng) && M
 const distKm = () => validLoc(userLoc) && validLoc(CONFIG.shopLocation) ? km(CONFIG.shopLocation, userLoc) : null;
 function feeFor(sub, d){
   if(!Number.isFinite(d) || d < 0 || !Number.isFinite(sub) || sub < 0) return null;
-  if(d <= 1) return sub > 50 ? 0 : 10;
-  if(d <= 2) return sub > 100 ? 0 : 15;
-  return 20;
+  if(d <= 3) return sub >= 50 ? 0 : 10;
+  return roundMoney(12 + 2 * Math.ceil(d - 3));
 }
 const deliveryFee = () => feeFor(subtotal(), distKm());
-const estimatedTotals = () => { const x=totals(); return x.d===null ? {s:x.s,d:feeFor(x.s,0),t:roundMoney(x.s+feeFor(x.s,0))} : x; };
-const estimateNote = () => distKm()===null ? '<small class="note">'+(lang==='ar'?'تقدير ضمن 1 كم. حدد موقعك لمعرفة الرسوم النهائية.':'Estimate within 1 km. Select your location for the final fee.')+'</small>' : '';
+const estimatedTotals = () => { const x=totals(); return {...x,t:x.d===null?x.s:x.t}; };
+const totalLabel = () => distKm()===null ? (lang==='ar'?'الإجمالي قبل التوصيل':'Total before delivery') : t('tot');
+const estimateNote = () => {
+  const distance=distKm(), sub=subtotal();
+  if(distance===null || distance>3 || sub>=50) return '';
+  const more=money(roundMoney(50-sub));
+  return '<small class="note">'+(lang==='ar'?'أضف '+more+' للحصول على توصيل مجاني.':'Add '+more+' more for free delivery.')+'</small>';
+};
 const noteHtml = () => estimateNote() + '<small class="note"><a href="delivery.html">'+t("deliveryPolicy")+'</a></small>';
 
 const mapLink = () => userLoc ? `https://www.google.com/maps?q=${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : "";
@@ -335,7 +342,7 @@ function renderCart(){
   $("#cartFoot").innerHTML = cart.length ? `
     <div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div>
     <div class="sum"><span>${t("del")}</span><span>${x.d === 0 ? t("free") : money(x.d)}</span></div>
-    <div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}
+    <div class="sum t"><span>${totalLabel()}</span><span>${money(x.t)}</span></div>${noteHtml()}
     <button class="btn full" id="goCo">${t("goCheckout")}</button>` : "";
   renderSummary(); updLocInfo();
 }
@@ -388,7 +395,7 @@ $(".logo").addEventListener("click", showMain);
 function renderSummary(){
   const x = estimatedTotals();
   $("#coSummary").innerHTML = cart.map(i=>{ const p=prod(i.id); return `<div class="sum"><span>${pName(p)} · ${wl(i.w,p)}${cutLbl(p,i.c)} × ${i.q}</span><span>${money(price(p,i.w)*i.q)}</span></div>`; }).join("")
-   + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d === 0 ? t("free") : money(x.d)}</span></div><div class="sum t"><span>${t("tot")}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
+   + `<div class="sum"><span>${t("sub")}</span><span>${money(x.s)}</span></div><div class="sum"><span>${t("del")}</span><span>${x.d === 0 ? t("free") : money(x.d)}</span></div><div class="sum t"><span>${totalLabel()}</span><span>${money(x.t)}</span></div>${noteHtml()}`;
 }
 
 /* Website checkout: backend acknowledgment required. */
@@ -488,7 +495,7 @@ function setLoc(lat, lng, pan){
   if(!validLoc({lat,lng})) return;
   userLoc = { lat, lng }; store.set("mm_loc", userLoc);
   if(map){
-    if(!pin){ pin = L.marker([lat, lng], { draggable:true }).addTo(map); pin.on("dragend", () => { const p = pin.getLatLng(); setLoc(p.lat, p.lng); }); }
+    if(!pin){ pin = L.marker([lat, lng], { draggable:false }).addTo(map); pin.on("dragend", () => { const p = pin.getLatLng(); setLoc(p.lat, p.lng); }); }
     else pin.setLatLng([lat, lng]);
     if(pan) map.setView([lat, lng], 16);
   }
@@ -497,22 +504,33 @@ function setLoc(lat, lng, pan){
 }
 function initMap(){
   if(!validLoc(CONFIG.shopLocation)){ $("#map").hidden=true; $("#mapMsg").textContent=t("deliveryUnconfirmed"); return; }
-  if(typeof L === "undefined"){ $("#map").hidden = true; $("#useMe").hidden = true; $("#mapMsg").textContent = t("mapFail"); return; }
+  if(typeof L === "undefined"){ $("#map").hidden = true; $("#mapMsg").textContent = t("mapFail"); return; }
   if(!map){
     $("#map").hidden=false;
     const c = userLoc || CONFIG.shopLocation;
     map = L.map("map").setView([c.lat, c.lng], userLoc ? 16 : 12);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap contributors" }).addTo(map);
     if(!matchMedia("(max-width: 767px)").matches) CONFIG.deliveryTiers.forEach((z,i) => L.circle([CONFIG.shopLocation.lat, CONFIG.shopLocation.lng], { radius:z.upToKm*1000, color:"#7a1527", weight:1, dashArray:i?"6 6":null, fillOpacity:i?0:.06 }).addTo(map));
-    map.on("click", e => setLoc(e.latlng.lat, e.latlng.lng));
+    // Delivery pin comes from the current-location button.
     if(userLoc) setLoc(userLoc.lat, userLoc.lng);
   }
   setTimeout(() => map.invalidateSize(), 80);
 }
 $("#useMe").onclick = () => {
-  $("#mapMsg").textContent = "";
-  if(!navigator.geolocation){ $("#mapMsg").textContent = t("locDenied"); return; }
-  navigator.geolocation.getCurrentPosition(p => setLoc(p.coords.latitude, p.coords.longitude, true), () => { $("#mapMsg").textContent = t("locDenied"); }, { enableHighAccuracy:true, timeout:15000 });
+  const button=$("#useMe"), msg=$("#mapMsg");
+  msg.textContent='';
+  if(!navigator.geolocation){msg.textContent=lang==='ar'?'المتصفح لا يدعم تحديد الموقع. تواصل مع المتجر.':'Location is unavailable in this browser. Please contact the shop.';return;}
+  button.disabled=true;
+  userLoc=null; if(pin && map){map.removeLayer(pin);pin=null;} renderCart();
+  msg.textContent=lang==='ar'?'جارٍ تحديد موقعك…':'Finding your current location…';
+  navigator.geolocation.getCurrentPosition(p=>{
+    button.disabled=false;msg.textContent='';setLoc(p.coords.latitude,p.coords.longitude,true);
+  },error=>{
+    button.disabled=false;
+    msg.textContent=error.code===1
+      ? (lang==='ar'?'اسمح بالوصول إلى الموقع في إعدادات المتصفح ثم حاول مجدداً.':'Allow location access in your browser settings, then try again.')
+      : (lang==='ar'?'تعذر تحديد الموقع. شغّل خدمة الموقع وحاول مجدداً، أو تواصل مع المتجر.':'Could not get your location. Turn on location services and try again, or contact the shop.');
+  },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
 };
 
 /* Product metadata follows the visible selected pack; no invented ratings or stock claims. */
