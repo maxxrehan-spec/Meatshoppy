@@ -15,8 +15,8 @@ previewOnly: location.protocol !== "https:" ||
 
   turnstileSiteKey: "0x4AAAAAAFX26n0fiv1yJXYE", // Public site key; never put the secret key here.
   // Owner-confirmed rules supersede the original strict thresholds.
-  deliveryTiers: [{ upToKm: 3, freeOver: 50, fee: 10 }],
-  farBaseFee: 10,
+  deliveryTiers: [{ upToKm: 3, freeOver: 50, fee: 10 }, { upToKm: 6, freeOver: 200, fee: 15 }],
+  farBaseFee: 15,
   farPerKm: 2,
   shopLocation: { lat: 21.5590012, lng: 39.2087398 },
   shopAddress: "Al Udaba Street, Al Aziziyah, Jeddah 23342",
@@ -143,8 +143,8 @@ Object.assign(T.ar, {
   coverage:"حتى 3 كم: مجاني عند 50 ر.س أو أكثر وإلا 10 ر.س. أبعد من 3 كم: 10 ر.س إضافة إلى 2 ر.س لكل كيلومتر زائد مع التقريب للأعلى.",
   serviceHours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
   hours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
-  aboutP:"اطلب مباشرة عبر الإنترنت من متجر طارق للحوم، متجرنا في العزيزية بجدة. اختر اللحوم والدواجن والبيض والخضروات والأوزان والتقطيع، ثم أرسل طلبك هنا. نؤكد الطلب وتوفر التوصيل عبر واتساب.",
-  storyTitle:"متجر طارق للحوم، الآن عبر الإنترنت.",
+  aboutP:"اطلب مباشرة عبر الإنترنت من مركز طارق، متجرنا في العزيزية بجدة. اختر اللحوم والدواجن والبيض والخضروات والأوزان والتقطيع، ثم أرسل طلبك هنا. نؤكد الطلب وتوفر التوصيل عبر واتساب.",
+  storyTitle:"مركز طارق، الآن عبر الإنترنت.",
   weightNotice:"قد يختلف الوزن النهائي للحوم والدجاج قليلاً بعد التقطيع والتحضير. المجموع المعروض يعتمد على الوزن المختار، والسعر النهائي حسب الوزن الفعلي المسلم. تتطلب أي زيادة في السعر موافقتك، ويتم تسوية فرق السعر وفقاً لذلك.",
   reviewsLink:"المتجر والتقييمات على خرائط Google"
 });
@@ -215,6 +215,9 @@ const saveCart = () => store.set("mm_cart", cart);
 
 /* i18n */
 function applyLang(){
+  const brand=lang==='ar'?'مركز طارق':CONFIG.shopName;
+  document.querySelectorAll('.logo > span:nth-child(2), .footer-brand, .footer-bottom > span:first-child').forEach(el=>el.innerHTML=el.closest('.footer-bottom')?'© <span id="yr">'+new Date().getFullYear()+'</span> '+brand:brand);
+
   document.documentElement.lang = lang;
   document.documentElement.dir = lang==="ar" ? "rtl" : "ltr";
   $("#langBtn").textContent = lang==="ar" ? "English" : "العربية";
@@ -316,18 +319,21 @@ const distKm = () => validLoc(userLoc) && validLoc(CONFIG.shopLocation) ? km(CON
 function feeFor(sub, d){
   if(!Number.isFinite(d) || d < 0 || !Number.isFinite(sub) || sub < 0) return null;
   if(d <= 3) return sub >= 50 ? 0 : 10;
-  return roundMoney(10 + 2 * Math.ceil(d - 3));
+  if(d <= 6) return sub >= 200 ? 0 : 15;
+  return roundMoney(15 + 2 * Math.ceil(d - 6));
 }
 const deliveryFee = () => feeFor(subtotal(), distKm());
 const estimatedTotals = () => { const x=totals(); return {...x,t:x.d===null?x.s:x.t}; };
 const totalLabel = () => distKm()===null ? (lang==='ar'?'الإجمالي قبل التوصيل':'Total before delivery') : t('tot');
 const estimateNote = () => {
   const distance=distKm(), sub=subtotal();
-  if(distance===null || distance>3 || sub>=50) return '';
-  const more=money(roundMoney(50-sub));
+  if(distance===null || distance>6) return '';
+  const threshold=distance<=3?50:200;
+  if(sub>=threshold) return '';
+  const more=money(roundMoney(threshold-sub));
   return '<small class="note">'+(lang==='ar'?'أضف '+more+' للحصول على توصيل مجاني.':'Add '+more+' more for free delivery.')+'</small>';
 };
-const noteHtml = () => estimateNote() + '<small class="note"><a href="delivery.html">'+t("deliveryPolicy")+'</a></small>';
+const noteHtml = () => estimateNote();
 
 const mapLink = () => userLoc ? `https://www.google.com/maps?q=${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : "";
 const totals = () => { const s = subtotal(), d = deliveryFee(); return { s, d, t: d === null ? null : roundMoney(s + d) }; };
