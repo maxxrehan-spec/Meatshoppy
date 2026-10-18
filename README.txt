@@ -1,9 +1,9 @@
-Replace app.js, index.html and delivery.html in your existing website repository. This package has not been published. No Apps Script changes or Geoapify needed.
+Replace app.js, index.html and delivery.html in your website repository. Keep all other website files and your working Apps Script. This update is not published.
 
-Within 3 km: free at SAR 50 or more; otherwise SAR 10. Beyond 3 km: SAR 12 plus SAR 2 per extra kilometre beyond 3 km, rounded up (4 km = SAR 14; 4.1 km = SAR 16). No free-delivery threshold beyond 3 km.
+Map first, then name/mobile and remaining details, then order summary. Address textarea removed; a blank hidden address field preserves the existing backend payload. Instructions are a single-line input. Current location and manual map placement/drag are supported. A delivery pin remains required. The 3 km zone is visible on mobile and desktop.
 
-Before current location succeeds: delivery shows ... and merchandise amount is labelled Total before delivery. A successful current-location button request remains required before placing an order. Device location can be inaccurate: check the pin. If location is blocked or fails, retry or contact the shop.
+Within 3 km: free at SAR 50 or more, otherwise SAR 10. Beyond 3 km: SAR 10 + SAR 2 for each additional kilometre beyond 3 km, rounded up. Examples: 3.1 km = SAR 12; 4 km = SAR 12; 4.1 km = SAR 14.
 
-Within 3 km only, customers below SAR 50 see Add SAR X more for free delivery. Smaller orders are allowed with the fee.
+Before location selection: Select location to see delivery fee. The merchandise amount remains Total before delivery. Within 3 km the free-delivery incentive remains.
 
-Order submission, endpoint, Turnstile, Telegram/email integration unchanged. Automated calculation/display tests passed; no real orders sent.
+Validated mobile/desktop layout, Arabic toggle, manual map selection, fee boundaries and unchanged order transport. No real orders or messages sent. No Geoapify added.

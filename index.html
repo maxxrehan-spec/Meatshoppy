@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="design.css?v=20261015-premium">
 <link rel="stylesheet" href="improvements.css?v=20261017-endpoint3">
-</head>
+<style>#coForm h2{font-size:1.3rem;margin:1.5rem 0 .7rem}#coForm>.pin{margin-bottom:1.3rem}#coForm .summary{margin:0 0 1.5rem}#coForm input[name="notes"]{min-height:44px}.sum>span:last-child{max-width:65%;text-align:end;overflow-wrap:anywhere}</style></head>
 <body>
 <a class="skip-link" href="#main" data-i="skip">Skip to content</a>
 
@@ -63,21 +63,24 @@
   <section class="sec narrow">
     <button class="link" id="backBtn" data-i="back"></button>
     <h1 data-i="checkout">Checkout</h1>
-    <div class="summary" id="coSummary"></div>
     <form id="coForm" novalidate>
-      <label><span data-i="fName"></span><input name="name" required autocomplete="name"></label>
-      <label><span data-i="fMobile"></span><input name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"></label>
-      <label><span data-i="fArea"></span><input name="area" list="areaList" autocomplete="off"><datalist id="areaList"></datalist></label>
+      <h2 data-i="deliveryDetails">1. Delivery details</h2>
       <div class="pin"><b data-i="pinT"></b>
         <p id="locInfo" class="hint"></p>
         <div id="map" class="map" tabindex="-1"></div>
         <p class="err" id="mapMsg"></p>
         <button type="button" class="chip" id="useMe" data-i="useMe"></button>
       </div>
-      <label><span data-i="fAddr"></span><textarea name="address" autocomplete="street-address" rows="2"></textarea></label>
+      <label><span data-i="fName"></span><input name="name" required autocomplete="name"></label>
+      <label><span data-i="fMobile"></span><input name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"></label>
+      <label><span data-i="fArea"></span><input name="area" list="areaList" autocomplete="off"><datalist id="areaList"></datalist></label>
+
+      <input type="hidden" name="address" value="">
       <input type="hidden" name="building" value="">
       <label hidden><span data-i="fTime"></span><select name="time" id="timeSel"></select></label>
-      <label><span data-i="fNotes"></span><textarea name="notes" rows="2"></textarea></label>
+      <label><span data-i="fNotes"></span><input name="notes" type="text"></label>
+      <h2 data-i="orderSummary">2. Order summary</h2>
+      <div class="summary" id="coSummary"></div>
       <fieldset><legend data-i="pay"></legend>
         <label class="radio"><input type="radio" name="pay" value="cod" checked><span data-i="cod"></span></label>
         <label class="radio"><input type="radio" name="pay" value="card"><span data-i="online"></span></label>
@@ -110,7 +113,7 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script defer src="vegetables.js"></script>
-<script defer src="app.js?v=20261018-inclusive50"></script>
+<script defer src="app.js?v=20261018-checkout-mapfirst"></script>
 
 </body>
 </html>
