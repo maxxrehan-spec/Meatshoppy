@@ -242,7 +242,7 @@ function trackConfirmedPurchase(order) {
   trackCommerce("purchase", {
     transaction_id: order.orderNumber,
     currency: "SAR",
-    value: Number(order.totals.t),
+    value: Number(order.totals.s),
     shipping: Number(order.totals.d || 0),
     items: analyticsCartItems()
   });
