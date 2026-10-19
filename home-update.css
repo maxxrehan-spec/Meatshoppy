@@ -1,0 +1,12 @@
+.delivery-progress{margin:18px 0 10px;padding:16px;background:#fffaf0;border:1px solid #c9ad7c;border-radius:8px;color:#681c2b}
+.delivery-progress strong{display:block;font-size:15px;line-height:1.5;margin-bottom:10px}
+.delivery-progress progress{display:block;width:100%;height:12px;border:0;border-radius:20px;overflow:hidden;background:#eadfce;accent-color:#681c2b}
+.delivery-progress progress::-webkit-progress-bar{background:#eadfce;border-radius:20px}
+.delivery-progress progress::-webkit-progress-value{background:#681c2b;border-radius:20px}
+.delivery-progress progress::-moz-progress-bar{background:#681c2b;border-radius:20px}
+#dots{display:flex!important;justify-content:center;gap:10px;position:absolute;bottom:14px;left:0;right:0;z-index:3}
+#dots button{width:28px;height:28px;border:2px solid #fff;border-radius:50%;background:#681c2b;cursor:pointer}
+#dots button.on{background:#fff}
+#dots button:focus-visible{outline:3px solid #d4b47a;outline-offset:4px}
+.about-content{max-width:800px;margin:auto;padding:32px 24px 60px;line-height:1.8}
+.about-content h1{margin-bottom:16px}.about-content section{margin-top:32px}

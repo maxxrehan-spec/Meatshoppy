@@ -1,6 +1,11 @@
-Replace app.js, index.html and delivery.html. Not published. No backend changes or Geoapify needed.
-Within 3 km: free at SAR 50+, otherwise SAR 10.
-More than 3 and up to 6 km: free at SAR 200+, otherwise SAR 15.
-Beyond 6 km: SAR 15 + SAR 2 per extra kilometre beyond 6, rounded up (6.1 km = SAR 17).
-Both zones have their own Add X more message. The 6 km ring is dotted. Arabic brand is مركز طارق. Policy links removed from cart/checkout but retained in footer. Compact Checkout/back header.
-Mobile/desktop and Arabic checks plus delivery boundaries passed. No real orders sent. Working order integration preserved.
+Upload app.js, index.html, about.html, home-update.css and delivery.html. Merge the included images folder into your existing images folder; do not delete existing images, styles or other files. No Apps Script changes.
+
+Hero 1 retained. Hero 2 uses the supplied vegetable background. Hero 3 uses the supplied shop scene with its sign number corrected to 0596684625. Slides can be selected with the visible buttons or swiped on mobile; no automatic rotation. The supplied vegetable picture is now the Vegetables category tile.
+
+About has moved to about.html with English and Arabic content; navigation/footer links updated. No ratings or shop history invented.
+
+Free-delivery progress shows the amount remaining and a prominent progress bar: SAR 50 within 3 km, SAR 200 over 3–6 km. Success shown when reached; no progress claim beyond 6 km or before location selection.
+
+Current delivery rules and working order/Turnstile configuration retained. Mobile/desktop/Arabic preview checks and progress threshold tests passed with simulated products and blocked order requests. No real orders or messages sent. Images encoded as WebP. Static performance review only; no PageSpeed/CrUX score.
+
+This package is a review copy and has not been published.

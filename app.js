@@ -6,7 +6,7 @@ const CONFIG = {
   phone: "+966 59 668 4625",
   orderEndpoint: "https://script.google.com/macros/s/AKfycbysyn-7FP122iRQA3cTW17B48pinTiyGs6Y7DnN08zjmlWYnCyRmrsz752Zqk6h2CnsFg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
-  banners: ["images/optimized/hero.jpg.webp"],   // top slider pictures (images that do not exist are skipped)
+  banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/hero-3.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
   
@@ -245,7 +245,7 @@ function applyLang(){
 
 /* Catalogue */
 function renderTiles(){
-  const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-category.jpg"};
+  const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-tile.webp"};
   $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><img src="${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy"><span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
 }
 function renderChips(){
@@ -329,9 +329,9 @@ const estimateNote = () => {
   const distance=distKm(), sub=subtotal();
   if(distance===null || distance>6) return '';
   const threshold=distance<=3?50:200;
-  if(sub>=threshold) return '';
-  const more=money(roundMoney(threshold-sub));
-  return '<small class="note">'+(lang==='ar'?'أضف '+more+' للحصول على توصيل مجاني.':'Add '+more+' more for free delivery.')+'</small>';
+  const more=money(Math.max(0,roundMoney(threshold-sub)));
+  const text=sub>=threshold?(lang==='ar'?'طلبك مؤهل للتوصيل المجاني!':'Your order qualifies for free delivery!'):(lang==='ar'?'أضف '+more+' للحصول على توصيل مجاني.':'Add '+more+' more for free delivery.');
+  return '<div class="delivery-progress" role="status"><strong>'+text+'</strong><progress max="'+threshold+'" value="'+Math.min(sub,threshold)+'" aria-label="'+(lang==='ar'?'التقدم نحو التوصيل المجاني':'Progress toward free delivery')+'"></progress></div>';
 };
 const noteHtml = () => estimateNote();
 
@@ -611,9 +611,9 @@ function initSlider(){
     if(!list.length) return;
     $("#slides").innerHTML = list.map((u, i) => `<div class="slide${i ? "" : " on"}" style="background-image:url('${u}')"></div>`).join("");
     if(list.length < 2) return;
-    $("#dots").innerHTML = list.map((_, i) => `<button aria-label="${i+1}"${i ? "" : ' class="on"'}></button>`).join("");
+    $("#dots").innerHTML = list.map((_, i) => `<button aria-label="${lang==='ar'?'الصورة':'Show slide'} ${i+1}" aria-pressed="${i===0}"${i ? "" : ' class="on"'}></button>`).join("");
     let cur = 0, timer, x0 = null;
-    const go = n => { cur = (n + list.length) % list.length; $$("#slides .slide").forEach((s, i) => s.classList.toggle("on", i === cur)); $$("#dots button").forEach((d, i) => d.classList.toggle("on", i === cur)); };
+    const go = n => { cur = (n + list.length) % list.length; $$("#slides .slide").forEach((s, i) => s.classList.toggle("on", i === cur)); $$("#dots button").forEach((d, i) => {d.classList.toggle("on", i === cur);d.setAttribute("aria-pressed",String(i===cur));}); };
     // Manual-only slides keep the headline still and respect reduced motion.
     const play = () => { clearInterval(timer); };
     $("#dots").onclick = e => { const b = e.target.closest("button"); if(b){ go([...$("#dots").children].indexOf(b)); play(); } };
@@ -725,3 +725,6 @@ function initVerification(){
   script.onerror=()=>{verificationLoading=false;script.remove();document.getElementById('coErr').textContent=lang==='ar'?'تعذر تحميل التحقق الأمني. يرجى إعادة المحاولة.':'Security verification could not load. Please try again.';};
   document.head.appendChild(script);
 }
+
+if(location.hash==="#about") location.replace("about.html");
+
