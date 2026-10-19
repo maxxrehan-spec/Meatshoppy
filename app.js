@@ -6,7 +6,7 @@ const CONFIG = {
   phone: "+966 59 668 4625",
   orderEndpoint: "https://script.google.com/macros/s/AKfycbysyn-7FP122iRQA3cTW17B48pinTiyGs6Y7DnN08zjmlWYnCyRmrsz752Zqk6h2CnsFg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
-  banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/hero-3.webp"],   // top slider pictures (images that do not exist are skipped)
+  banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"],   // top slider pictures (images that do not exist are skipped)
   orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
   // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
   
@@ -245,7 +245,7 @@ function applyLang(){
 
 /* Catalogue */
 function renderTiles(){
-  const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-tile.webp"};
+  const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-new.webp"};
   $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><img src="${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy"><span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
 }
 function renderChips(){
@@ -615,7 +615,12 @@ function initSlider(){
     let cur = 0, timer, x0 = null;
     const go = n => { cur = (n + list.length) % list.length; $$("#slides .slide").forEach((s, i) => s.classList.toggle("on", i === cur)); $$("#dots button").forEach((d, i) => {d.classList.toggle("on", i === cur);d.setAttribute("aria-pressed",String(i===cur));}); };
     // Manual-only slides keep the headline still and respect reduced motion.
-    const play = () => { clearInterval(timer); };
+    let paused=false;
+    const play = () => { clearInterval(timer); if(!paused && !document.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) timer=setInterval(()=>go(cur+1),2000); };
+    const pause=document.createElement('button'); pause.type='button';pause.className='slider-pause';pause.textContent='Ⅱ';pause.setAttribute('aria-label',lang==='ar'?'إيقاف عرض الصور':'Pause slideshow');
+    pause.onclick=()=>{paused=!paused;pause.textContent=paused?'▶':'Ⅱ';pause.setAttribute('aria-label',paused?'Play slideshow':'Pause slideshow');play();};
+    document.querySelector('#home').append(pause);
+    document.addEventListener('visibilitychange',play);
     $("#dots").onclick = e => { const b = e.target.closest("button"); if(b){ go([...$("#dots").children].indexOf(b)); play(); } };
     const hero = $("#home");
     hero.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive:true });

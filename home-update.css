@@ -10,3 +10,15 @@
 #dots button:focus-visible{outline:3px solid #d4b47a;outline-offset:4px}
 .about-content{max-width:800px;margin:auto;padding:32px 24px 60px;line-height:1.8}
 .about-content h1{margin-bottom:16px}.about-content section{margin-top:32px}
+/* Compact centered delivery progress and subtle slider controls */
+.delivery-progress{box-sizing:border-box;width:min(100%,300px);margin:16px auto;padding:12px 14px;border:0;background:#fff;border-radius:5px;color:#68636d;text-align:center}
+.delivery-progress strong{font-size:12px;font-weight:500;line-height:1.5;margin:0 0 8px}
+.delivery-progress progress{height:8px;background:#e5e3e8;accent-color:#9345c4}
+.delivery-progress progress::-webkit-progress-bar{background:#e5e3e8}
+.delivery-progress progress::-webkit-progress-value{background:repeating-linear-gradient(120deg,#9246c6 0,#9246c6 8px,#a05ad0 8px,#a05ad0 16px)}
+.delivery-progress progress::-moz-progress-bar{background:#9345c4}
+#dots{gap:5px;bottom:8px}
+#dots button,#dots button.on{position:relative;width:32px;height:24px;border:0;border-radius:0;background:transparent;padding:0}
+#dots button::after{content:"";position:absolute;inset:10px 3px;border-radius:3px;background:#ffffff70}
+#dots button.on::after{background:#fff}
+.slider-pause{position:absolute;z-index:4;bottom:8px;right:15px;width:28px;height:24px;padding:0;border:0;border-radius:3px;background:#0004;color:#fff;cursor:pointer}
