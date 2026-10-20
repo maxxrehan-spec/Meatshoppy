@@ -213,6 +213,42 @@ const productTag = p => p.tag === "Best Seller" ? t("bestTag") : p.tag;
 const img = p => `<img src="${imageUrl(p.img)}" alt="${pName(p)}" ${imageSize(p.img)} loading="lazy" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">`;
 const saveCart = () => store.set("mm_cart", cart);
 
+/* GA4 ecommerce events: sent to the existing Google Tag Manager dataLayer.
+   Never include customer names, numbers, addresses, or precise coordinates. */
+function analyticsItem(id, weight, quantity, cut = 0) {
+  const p = prod(id);
+  if(!p) return null;
+  return {
+    item_id: p.id,
+    item_name: p.en,
+    item_category: p.cat,
+    item_variant: String(weight) + (cut ? "-cut-" + cut : ""),
+    price: Math.round(price(p, weight) * 100) / 100,
+    quantity
+  };
+}
+function analyticsCartItems() {
+  return cart.map(i => analyticsItem(i.id, i.w, i.q, i.c || 0)).filter(Boolean);
+}
+function trackCommerce(event, ecommerce) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ ecommerce: null });
+  window.dataLayer.push({ event, ecommerce });
+}
+function trackConfirmedPurchase(order) {
+  if(!order || !order.orderNumber) return;
+  const storageKey = "mm_ga4_purchase_" + order.orderNumber;
+  try { if(sessionStorage.getItem(storageKey)) return; } catch (_) {}
+  trackCommerce("purchase", {
+    transaction_id: order.orderNumber,
+    currency: "SAR",
+    value: Number(order.totals.s),
+    shipping: Number(order.totals.d || 0),
+    items: analyticsCartItems()
+  });
+  try { sessionStorage.setItem(storageKey, "1"); } catch (_) {}
+}
+
 /* i18n */
 function applyLang(){
   const brand=lang==='ar'?'مركز طارق':CONFIG.shopName;
@@ -306,7 +342,16 @@ function syncCards(id){            // keep same product in every grid in sync, w
 function addToCart(id, w, q, c = 0){
   if(!prod(id) || !catalogReady || !prod(id).opts.includes(w)) return;
   const it = cart.find(i => i.id===id && i.w===w && (i.c || 0)===c);
+  const before = it ? it.q : 0;
   it ? it.q = Math.min(50, it.q+q) : cart.push({id, w, q, c});
+  const actuallyAdded = (it ? it.q : q) - before;
+  if(actuallyAdded > 0) {
+    trackCommerce("add_to_cart", {
+      currency: "SAR",
+      value: Math.round(price(prod(id), w) * actuallyAdded * 100) / 100,
+      items: [analyticsItem(id, w, actuallyAdded, c)]
+    });
+  }
   saveCart(); renderCart();
   showToast(t("cartAdded").replace("{name}", pName(prod(id))));
   const badge = $("#cartBtn"); badge.classList.remove("pulse"); void badge.offsetWidth; badge.classList.add("pulse");
@@ -387,7 +432,11 @@ $("#closeCart").onclick = $("#scrim").onclick = () => openCart(false);
 $("#cartFoot").addEventListener("click", e => { if(e.target.id==="goCo"){ openCart(false); showCheckout(); } });
 
 /* Views */
-function showCheckout(){ view("checkoutView"); scrollTo(0,0); initMap(); initVerification(); }
+function showCheckout(){
+  view("checkoutView"); scrollTo(0,0); initMap(); initVerification();
+  const items = analyticsCartItems();
+  if(items.length) trackCommerce("begin_checkout", { currency:"SAR", value:subtotal(), items });
+}
 function view(id){
   $(".search-wrap").hidden = id === "checkoutView" || id === "doneView";
   if(id !== "productView") closeProduct();
@@ -438,6 +487,7 @@ $("#coForm").addEventListener("submit", async e => {
   const ok = await sendOrder(order);       // true = saved, false = failed, null = not configured
   submitting=false; btn.disabled = false; btn.textContent = t("place");
   if(!ok){ err.textContent=t("submitFailed"); return; }
+  trackConfirmedPurchase(order);
   pendingOrder=null; pendingFingerprint="";
   cart = []; saveCart(); renderCart(); form.reset();
   showDone(order, ok);
@@ -592,7 +642,14 @@ function route(){
   $("#main").hidden = false; $("#checkoutView").hidden = true; $("#doneView").hidden = true;
   updateHeaderOffset(); pv.hidden = false; $("#main").inert=true; $("#main").setAttribute("aria-hidden","true"); document.body.classList.add("lock");
   $(".search-wrap").hidden=false;
-  renderProduct(p); curProduct = p.id; if(fresh){ pv.scrollTop = 0; $("#pBack").focus({preventScroll:true}); }
+  renderProduct(p); curProduct = p.id;
+  if(fresh) {
+    const s = sel[p.id];
+    const item = analyticsItem(p.id, s.w, 1, s.c || 0);
+    if(item) trackCommerce("view_item", { currency:"SAR", value:item.price, items:[item] });
+    pv.scrollTop = 0;
+    $("#pBack").focus({preventScroll:true});
+  }
 }
 window.addEventListener("hashchange", route);
 $("#productBody").addEventListener("click", e => {
