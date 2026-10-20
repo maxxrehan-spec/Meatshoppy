@@ -1,0 +1,23 @@
+.slider-pause{display:none!important}
+#slides .slide{transition:opacity .65s ease,transform .65s ease;transform:translateX(12px)}
+#slides .slide.on{transform:translateX(0)}
+@media(hover:hover) and (pointer:fine){
+ .card{transition:transform .2s ease,box-shadow .2s ease}
+ .card:hover{transform:translateY(-3px);box-shadow:0 7px 18px #38101912}
+ .card .imgw img{transition:transform .3s ease}
+ .card:hover .imgw img{transform:scale(1.025)}
+}
+.add.added{animation:added-feedback .3s ease}
+#cartBtn.pulse{animation:cart-feedback .35s ease}
+#productView:not([hidden]) #productBody{animation:product-open .22s ease-out}
+@keyframes added-feedback{50%{filter:brightness(1.2)}}
+@keyframes cart-feedback{50%{transform:scale(1.06)}}
+@keyframes product-open{from{opacity:.5;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){
+ #slides .slide,.card,.card .imgw img{transition:none!important;transform:none!important}
+ .add.added,#cartBtn.pulse,#productView:not([hidden]) #productBody{animation:none!important}
+}
+#dots{display:flex!important;position:absolute;bottom:8px;left:0;right:0;justify-content:center;gap:5px;z-index:3}
+#dots button,#dots button.on{position:relative;width:32px;height:24px;border:0;border-radius:0;background:transparent;padding:0;cursor:pointer}
+#dots button::after{content:"";position:absolute;inset:10px 3px;border-radius:3px;background:#ffffff70}
+#dots button.on::after{background:#fff}

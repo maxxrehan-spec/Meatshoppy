@@ -1,7 +1,6 @@
-Replace app.js, index.html and home-update.css. Merge the images folder into your existing images folder; keep all existing assets and about.html.
+Upload index.html, animations.css and animations.js beside your existing app.js. Do not replace app.js. The index.html is based on your current published site, preserving Tag Manager and current scripts.
 
-The new vegetables-new.webp is used for both Vegetables category and hero 3. Existing hero 1 and hero 2 remain. Slideshow advances every 2 seconds, has small dash indicators and a pause button, and does not autoplay for reduced-motion users.
+Includes 2-second hero transitions with no visible pause button, subtle one-time category/product entrances, desktop card hover, existing add-to-cart feedback enhancement, product opening animation, and animated delivery progress changes. Hero pauses on hover/focus and when the page is hidden; reduced-motion users do not get automatic animation. Existing hero image paths retained.
 
-Free-delivery progress is centered, maximum 300px wide, with a slim purple striped bar. Delivery rules, Google Sheet connection, order endpoint and Turnstile remain unchanged.
-
-Tested slide auto-advance, manual selection, checkout and mobile/desktop/Arabic layouts. No real orders sent. Not published.
+Not published. No order backend changes or real test orders.
+JavaScript syntax and slideshow behavior verified using local image fixtures: two-second advance, no visible pause button, reduced-motion stop. Remote-image preview initialization timed out, so live image availability was not confirmed in this check.
