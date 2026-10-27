@@ -23,11 +23,11 @@ export function normalize(csv,parse){
     const numbers=s=>s.split(/[,\s]+/).map(Number);
     const prices=numbers(r.price),opts=r.unit==='pack'?[1]:numbers(r.options);
     if(!r.name_en||!['kg','pc','pack'].includes(r.unit)||!prices.every(n=>Number.isFinite(n)&&n>0)||!opts.every(n=>Number.isFinite(n)&&n>0)||prices.length>1&&prices.length!==opts.length)throw Error('Invalid price/options: '+r.id);
-    out.push({...r,prices,opts,available:!/^(no|false|0|n)$/i.test(r.available),category:/^[a-z0-9-]+$/.test(r.category)?r.category:'other'});
+    out.push({...r,prices,opts,fixedPrice:r.id==='c3'&&opts.length===1,available:!/^(no|false|0|n)$/i.test(r.available),category:/^[a-z0-9-]+$/.test(r.category)?r.category:'other'});
   }
   if(!out.length)throw Error('Empty catalog: refusing to replace site');return out;
 }
-export const amount=(p,w,i)=>Math.round((p.prices.length>1?p.prices[i]:p.prices[0]*(p.unit==='kg'?w/1000:p.unit==='pc'?w:1))*100)/100;
+export const amount=(p,w,i)=>Math.round(((p.prices.length>1||p.fixedPrice)?p.prices[i]:p.prices[0]*(p.unit==='kg'?w/1000:p.unit==='pc'?w:1))*100)/100;
 const weight=(p,w,ar)=>p.unit==='kg'?(w>=1000?`${w/1000} ${ar?'كجم':'kg'}`:`${w} ${ar?'جم':'g'}`):p.unit==='pc'?`${w} ${ar?'قطعة':'pc'}`:(ar?p.pack_ar:p.pack_en)||'1 pack';
 const href=(p,ar=false)=>`${ar?'/ar':''}/products/${p.id}/`;
 const categoryName=(cat,ar)=>ar?({chicken:'الدجاج',mutton:'لحم الضأن',beef:'لحم البقر',eggs:'البيض',vegetables:'الخضروات',other:'منتجات أخرى'}[cat]||cat):cat[0].toUpperCase()+cat.slice(1);

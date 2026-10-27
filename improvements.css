@@ -49,3 +49,6 @@ button:disabled{opacity:.6;cursor:not-allowed}.hero,[dir=rtl] .hero{min-height:3
 footer a,footer a:visited,footer .policy-links a,footer #shopLocation a{color:#f5efe5}
 footer p,footer .footer-bottom{color:#d4c5b5}
 footer a:hover,footer a:focus-visible{color:#fff}
+
+/* Delivery offer stays readable on small screens and in both languages. */
+.announcement{font-size:13px;line-height:1.5;letter-spacing:0;padding:9px 16px;font-weight:600;text-wrap:balance}

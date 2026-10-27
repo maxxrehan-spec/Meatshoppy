@@ -38,3 +38,9 @@ test('static bilingual pages, escaping, stable URL, noindex fallback, original a
   assert((await fs.readFile(path.join(temp,'incomplete/products/stable-1/index.html'),'utf8')).includes('noindex,follow'));
  }finally{await fs.rm(temp,{recursive:true,force:true});}
 });
+
+test('Fakieh single-size pack is SAR 20, while ordinary per-kg chicken is SAR 22',()=>{
+ const csv=header+'c3,Fakieh Chicken,دجاج فقيه,Chicken,,chicken,kg,20,1100,yes,fakieh-chicken.jpg';
+ const p=normalize(csv,parse)[0];assert.equal(amount(p,1100,0),20);
+ const regular=normalize(csv.replace('c3,','c4,'),parse)[0];assert.equal(amount(regular,1100,0),22);
+});
