@@ -1,6 +1,6 @@
 /* Storefront finishing touches, November 2026 */
 .bar{background-color:#fffaf3;background-image:url('/images/meat-pattern.svg');background-size:280px 140px}
-.bar .logo,.bar .lang,.bar .menu-btn,.bar .cartBtn{background-color:rgba(255,250,243,.92)}
+.bar .logo,.bar .lang,.bar .menu-btn{background-color:rgba(255,250,243,.92)}
 .announcement{display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px}
 .announcement-copy{animation:delivery-fade 6s ease-in-out infinite}
 @keyframes delivery-fade{0%,65%,100%{opacity:1}78%,87%{opacity:0}}
