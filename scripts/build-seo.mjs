@@ -98,6 +98,8 @@ refresh();document.addEventListener('visibilitychange',()=>{if(!document.hidden)
   // Crawlable links; ordinary clicks retain the current modal/cart flow. New tabs open static pages.
   let linked=app.replaceAll('href="#product/${p.id}"','href="/products/${p.id}/" data-product-link="${p.id}"');
   linked+=`\ndocument.addEventListener('click',e=>{const a=e.target.closest('a[data-product-link]');if(a&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&e.button===0){e.preventDefault();location.hash='product/'+a.dataset.productLink;}});\n`;
+  // Preserve the two existing hero photos and append the supplied butcher photo.
+  linked=linked.replace('banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"]','banners: ["images/optimized/hero.jpg.webp", "images/vegetables-new.webp", "images/hero-butcher.jpg"]');
   await fs.writeFile(path.join(output,'app.js'),linked);
   const staticUrls=['/','/about.html','/delivery.html','/privacy.html','/refunds.html'];
   await fs.writeFile(path.join(output,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...staticUrls,...urls].map(u=>`<url><loc>${base+u}</loc></url>`).join('')}</urlset>`);
