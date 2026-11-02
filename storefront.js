@@ -1,7 +1,7 @@
 /* Presentation only: reuse the existing catalog, language and contact configuration. */
 (() => {
-  Object.assign(T.en,{serviceHours:"12 PM to 12 AM",hours:"12 PM to 12 AM",best:"Best Seller",bestTag:"Best Seller",waT:"Prefer to order on WhatsApp?",waB:"Order on WhatsApp"});
-  Object.assign(T.ar,{serviceHours:"من 12 ظهراً إلى 12 منتصف الليل",hours:"من 12 ظهراً إلى 12 منتصف الليل",best:"الأكثر مبيعاً",bestTag:"الأكثر مبيعاً",waT:"تفضّل الطلب عبر واتساب؟",waB:"اطلب عبر واتساب"});
+  Object.assign(T.en,{serviceHours:"Delivery time: 12 PM to 12 AM",hours:"Delivery time: 12 PM to 12 AM",best:"Best Seller",bestTag:"Best Seller",waT:"Prefer to order on WhatsApp?",waB:"Order on WhatsApp"});
+  Object.assign(T.ar,{serviceHours:"وقت التوصيل: من 12 ظهراً إلى 12 منتصف الليل",hours:"وقت التوصيل: من 12 ظهراً إلى 12 منتصف الليل",best:"الأكثر مبيعاً",bestTag:"الأكثر مبيعاً",waT:"تفضّل الطلب عبر واتساب؟",waB:"اطلب عبر واتساب"});
   applyLang();
   const floating=document.getElementById("whatsappFloat");
   function sync(){
@@ -48,4 +48,37 @@
    const observer=new MutationObserver(()=>{observer.disconnect();tidyPrices(root);observer.observe(root,{childList:true,subtree:true,characterData:true});});
    tidyPrices(root);observer.observe(root,{childList:true,subtree:true,characterData:true});
  }
+})();
+
+/* Native modal menu: left-hand drawer with focus containment and Escape support. */
+(() => {
+ const trigger=document.getElementById("menuBtn"),nav=document.getElementById("nav");
+ const panel=document.createElement("dialog");panel.id="menuDrawer";panel.setAttribute("aria-labelledby","menuDrawerTitle");
+ panel.innerHTML='<div class="menu-drawer-head"><h2 id="menuDrawerTitle"></h2><button type="button" class="menu-close"><span aria-hidden="true">×</span></button></div><nav class="menu-drawer-links"></nav><p class="menu-delivery"></p>';
+ document.body.append(panel);
+ const links=panel.querySelector("nav"),close=panel.querySelector("button");
+ let previousOverflow="";
+ function localize(){
+  const ar=document.documentElement.lang==="ar";
+  panel.dir=ar?"rtl":"ltr";
+  panel.querySelector("h2").textContent=ar?"القائمة":"Menu";
+  close.setAttribute("aria-label",ar?"إغلاق القائمة":"Close menu");
+  links.setAttribute("aria-label",ar?"التنقل الرئيسي":"Main navigation");
+  links.replaceChildren(...[...nav.querySelectorAll("a")].map(a=>a.cloneNode(true)));
+  panel.querySelector(".menu-delivery").textContent=ar?"وقت التوصيل: من 12 ظهراً إلى 12 منتصف الليل":"Delivery time: 12 PM to 12 AM";
+ }
+ function dismiss(){if(panel.open)panel.close();}
+ trigger.setAttribute("aria-controls","menuDrawer");
+ trigger.setAttribute("aria-haspopup","dialog");
+ trigger.onclick=()=>{
+  nav.classList.remove("open");localize();
+  previousOverflow=document.body.style.overflow;document.body.style.overflow="hidden";
+  panel.showModal();trigger.setAttribute("aria-expanded","true");close.focus();
+ };
+ close.onclick=dismiss;
+ panel.addEventListener("click",e=>{if(e.target===panel){const r=panel.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dismiss();}});
+ links.addEventListener("click",e=>{const a=e.target.closest("a");if(a){dismiss();if(a.getAttribute("href").startsWith("#"))showMain();}});
+ panel.addEventListener("close",()=>{document.body.style.overflow=previousOverflow;trigger.setAttribute("aria-expanded","false");trigger.focus();});
+ new MutationObserver(localize).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+ localize();
 })();
