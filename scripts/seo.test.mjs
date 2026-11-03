@@ -31,10 +31,10 @@ test('static bilingual pages, escaping, stable URL, noindex fallback, original a
   assert(en.includes('/products/stable-1/'));assert(!en.includes('/products/Chicken'));
   const built=await fs.readFile(path.join(temp,'site/app.js'),'utf8');
   const expected=app.replaceAll('href="#product/${p.id}"','href="/products/${p.id}/" data-product-link="${p.id}"')
-    .replace('banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"]','banners: ["images/optimized/hero.jpg.webp", "images/vegetables-new.webp", "images/hero-butcher.jpg"]');
+    .replace('banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"]','banners: ["images/hero-steak-tray.jpg", "images/vegetables-new.webp", "images/hero-butcher.jpg"]');
   assert(built.startsWith(expected));
-  assert(built.includes('banners: ["images/optimized/hero.jpg.webp", "images/vegetables-new.webp", "images/hero-butcher.jpg"]'));
-  for(const image of ['images/optimized/hero.jpg.webp','images/vegetables-new.webp','images/hero-butcher.jpg','images/footer-steak.jpg']){
+  assert(built.includes('banners: ["images/hero-steak-tray.jpg", "images/vegetables-new.webp", "images/hero-butcher.jpg"]'));
+  for(const image of ['images/hero-steak-tray.jpg','images/vegetables-new.webp','images/hero-butcher.jpg','images/footer-steak.jpg']){
     assert((await fs.stat(path.join(temp,'site',image))).size>0);
   }
   assert.equal(await fs.readFile(path.join(root,'app.js'),'utf8'),app);
