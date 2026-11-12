@@ -15,8 +15,9 @@ previewOnly: location.protocol !== "https:" ||
 
   turnstileSiteKey: "0x4AAAAAAFX26n0fiv1yJXYE", // Public site key; never put the secret key here.
   // Owner-confirmed rules supersede the original strict thresholds.
-  deliveryTiers: [{ upToKm: 3, freeOver: 50, fee: 10 }, { upToKm: 6, freeOver: 200, fee: 15 }],
-  farBaseFee: 15,
+  deliveryTiers: [{ upToKm: 3, freeOver: 50, fee: 10 }, { upToKm: 6, freeOver: 150, fee: 12 }],
+  farBaseFee: 12,
+  farFreeOver: 250,
   farPerKm: 2,
   shopLocation: { lat: 21.5590012, lng: 39.2087398 },
   shopAddress: "Al Udaba Street, Al Aziziyah, Jeddah 23342",
@@ -126,12 +127,12 @@ Object.assign(T.ar, {
 });
 
 
-Object.assign(T.en, {best:"Featured",bestTag:"Featured",pendingFee:"Select location to see delivery fee",privacy:"Privacy policy",refunds:"Refunds & cancellations",coverage:"Within 3 km: free on SAR 50 or more, otherwise SAR 10. Beyond 3 km: SAR 10 plus SAR 2 per extra kilometre, rounded up.",deliveryUnconfirmed:"Delivery cannot be priced yet. The shop location or applicable fee needs confirmation. Please contact the shop.",previewMessage:"Review preview: live order submission is disabled.",catalogUnavailable:"Product availability is being verified. Ordering is disabled until the live catalogue loads. Please refresh or contact us if this continues.",submitFailed:"Receipt could not be confirmed. Your cart and details are kept. Please contact the shop before retrying if the connection was interrupted.",noRes:"No matching products. Try an English or Arabic product name, or clear your search.",locationPending:"Shop address and Google Maps link awaiting verification.",fArea:"Area (optional)",fAddr:"Delivery address, building / villa & directions",fNotes:"Delivery or preparation instructions (optional)"});
-Object.assign(T.ar, {best:"منتجات مختارة",bestTag:"مختار",pendingFee:"حدد الموقع لمعرفة رسوم التوصيل",privacy:"سياسة الخصوصية",refunds:"الاسترجاع والإلغاء",coverage:"حتى 3 كم: مجاني عند 50 ر.س أو أكثر وإلا 10 ر.س. أبعد من 3 كم: 10 ر.س إضافة إلى 2 ر.س لكل كيلومتر زائد مع التقريب للأعلى.",deliveryUnconfirmed:"لا يمكن حساب التوصيل بعد. موقع المتجر أو الرسوم يحتاج تأكيداً. يرجى التواصل مع المتجر.",previewMessage:"نسخة للمراجعة: إرسال الطلبات الفعلية معطل.",catalogUnavailable:"جارٍ التحقق من توفر المنتجات. الطلب معطل حتى تحميل القائمة المباشرة. يرجى تحديث الصفحة أو التواصل معنا إذا استمرت المشكلة.",submitFailed:"تعذر تأكيد استلام الطلب. تم الاحتفاظ بالسلة والبيانات. يرجى التواصل مع المتجر قبل إعادة المحاولة إذا انقطع الاتصال.",noRes:"لا توجد منتجات مطابقة. جرّب اسم المنتج بالعربية أو الإنجليزية أو امسح البحث.",locationPending:"عنوان المتجر ورابط خرائط Google بانتظار التحقق.",fArea:"الحي (اختياري)",fAddr:"عنوان التوصيل ورقم المبنى / الفيلا وإرشادات الوصول",fNotes:"تعليمات التوصيل أو التحضير (اختياري)"});
+Object.assign(T.en, {best:"Featured",bestTag:"Featured",pendingFee:"Select location to see delivery fee",privacy:"Privacy policy",refunds:"Refunds & cancellations",coverage:"Within 3 km: free on SAR 50 or more, otherwise SAR 10. More than 3 km and up to 6 km: free on SAR 150 or more, otherwise SAR 12. Beyond 6 km: free on SAR 250 or more, otherwise SAR 12 plus SAR 2 per extra kilometre beyond 6 km, rounded up.",deliveryUnconfirmed:"Delivery cannot be priced yet. The shop location or applicable fee needs confirmation. Please contact the shop.",previewMessage:"Review preview: live order submission is disabled.",catalogUnavailable:"Product availability is being verified. Ordering is disabled until the live catalogue loads. Please refresh or contact us if this continues.",submitFailed:"Receipt could not be confirmed. Your cart and details are kept. Please contact the shop before retrying if the connection was interrupted.",noRes:"No matching products. Try an English or Arabic product name, or clear your search.",locationPending:"Shop address and Google Maps link awaiting verification.",fArea:"Area (optional)",fAddr:"Delivery address, building / villa & directions",fNotes:"Delivery or preparation instructions (optional)"});
+Object.assign(T.ar, {best:"منتجات مختارة",bestTag:"مختار",pendingFee:"حدد الموقع لمعرفة رسوم التوصيل",privacy:"سياسة الخصوصية",refunds:"الاسترجاع والإلغاء",coverage:"حتى 3 كم: مجاني عند 50 ر.س أو أكثر وإلا 10 ر.س. أكثر من 3 وحتى 6 كم: مجاني عند 150 ر.س أو أكثر وإلا 12 ر.س. أبعد من 6 كم: مجاني عند 250 ر.س أو أكثر وإلا 12 ر.س إضافة إلى 2 ر.س لكل كيلومتر زائد عن 6 كم مع التقريب للأعلى.",deliveryUnconfirmed:"لا يمكن حساب التوصيل بعد. موقع المتجر أو الرسوم يحتاج تأكيداً. يرجى التواصل مع المتجر.",previewMessage:"نسخة للمراجعة: إرسال الطلبات الفعلية معطل.",catalogUnavailable:"جارٍ التحقق من توفر المنتجات. الطلب معطل حتى تحميل القائمة المباشرة. يرجى تحديث الصفحة أو التواصل معنا إذا استمرت المشكلة.",submitFailed:"تعذر تأكيد استلام الطلب. تم الاحتفاظ بالسلة والبيانات. يرجى التواصل مع المتجر قبل إعادة المحاولة إذا انقطع الاتصال.",noRes:"لا توجد منتجات مطابقة. جرّب اسم المنتج بالعربية أو الإنجليزية أو امسح البحث.",locationPending:"عنوان المتجر ورابط خرائط Google بانتظار التحقق.",fArea:"الحي (اختياري)",fAddr:"عنوان التوصيل ورقم المبنى / الفيلا وإرشادات الوصول",fNotes:"تعليمات التوصيل أو التحضير (اختياري)"});
 
 
 Object.assign(T.en, {
-  coverage:"Within 3 km: free on SAR 50 or more, otherwise SAR 10. Beyond 3 km: SAR 10 plus SAR 2 per extra kilometre, rounded up.",
+  coverage:"Within 3 km: free on SAR 50 or more, otherwise SAR 10. More than 3 km and up to 6 km: free on SAR 150 or more, otherwise SAR 12. Beyond 6 km: free on SAR 250 or more, otherwise SAR 12 plus SAR 2 per extra kilometre beyond 6 km, rounded up.",
   serviceHours:"Delivery hours: 12 noon–12 midnight. Expected delivery: within one hour.",
   hours:"Delivery hours: 12 noon–12 midnight. Expected delivery within one hour.",
   aboutP:"Order online directly from Tariq Meat Shop, our physical shop in Al Aziziyah, Jeddah. Choose meat, poultry, eggs and vegetables, select your weights and cuts, and place your order here. We confirm your order and delivery availability on WhatsApp.",
@@ -140,7 +141,7 @@ Object.assign(T.en, {
   reviewsLink:"View our Google listing & reviews"
 });
 Object.assign(T.ar, {
-  coverage:"حتى 3 كم: مجاني عند 50 ر.س أو أكثر وإلا 10 ر.س. أبعد من 3 كم: 10 ر.س إضافة إلى 2 ر.س لكل كيلومتر زائد مع التقريب للأعلى.",
+  coverage:"حتى 3 كم: مجاني عند 50 ر.س أو أكثر وإلا 10 ر.س. أكثر من 3 وحتى 6 كم: مجاني عند 150 ر.س أو أكثر وإلا 12 ر.س. أبعد من 6 كم: مجاني عند 250 ر.س أو أكثر وإلا 12 ر.س إضافة إلى 2 ر.س لكل كيلومتر زائد عن 6 كم مع التقريب للأعلى.",
   serviceHours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
   hours:"ساعات التوصيل: من 12 ظهراً إلى 12 منتصف الليل. التوصيل المتوقع خلال ساعة.",
   aboutP:"اطلب مباشرة عبر الإنترنت من مركز طارق، متجرنا في العزيزية بجدة. اختر اللحوم والدواجن والبيض والخضروات والأوزان والتقطيع، ثم أرسل طلبك هنا. نؤكد الطلب وتوفر التوصيل عبر واتساب.",
@@ -378,16 +379,16 @@ const distKm = () => validLoc(userLoc) && validLoc(CONFIG.shopLocation) ? km(CON
 function feeFor(sub, d){
   if(!Number.isFinite(d) || d < 0 || !Number.isFinite(sub) || sub < 0) return null;
   if(d <= 3) return sub >= 50 ? 0 : 10;
-  if(d <= 6) return sub >= 200 ? 0 : 15;
-  return roundMoney(15 + 2 * Math.ceil(d - 6));
+  if(d <= 6) return sub >= CONFIG.deliveryTiers[1].freeOver ? 0 : CONFIG.deliveryTiers[1].fee;
+  return sub >= CONFIG.farFreeOver ? 0 : roundMoney(CONFIG.farBaseFee + CONFIG.farPerKm * Math.ceil(d - 6));
 }
 const deliveryFee = () => feeFor(subtotal(), distKm());
 const estimatedTotals = () => { const x=totals(); return {...x,t:x.d===null?x.s:x.t}; };
 const totalLabel = () => distKm()===null ? (lang==='ar'?'الإجمالي قبل التوصيل':'Total before delivery') : t('tot');
 const estimateNote = () => {
   const distance=distKm(), sub=subtotal();
-  if(distance===null || distance>6) return '';
-  const threshold=distance<=3?50:200;
+  if(distance===null) return '';
+  const threshold=distance<=3?50:distance<=6?CONFIG.deliveryTiers[1].freeOver:CONFIG.farFreeOver;
   const more=money(Math.max(0,roundMoney(threshold-sub)));
   const text=sub>=threshold?(lang==='ar'?'طلبك مؤهل للتوصيل المجاني!':'Your order qualifies for free delivery!'):(lang==='ar'?'أضف '+more+' للحصول على توصيل مجاني.':'Add '+more+' more for free delivery.');
   return '<div class="delivery-progress" role="status"><strong>'+text+'</strong><progress max="'+threshold+'" value="'+Math.min(sub,threshold)+'" aria-label="'+(lang==='ar'?'التقدم نحو التوصيل المجاني':'Progress toward free delivery')+'"></progress></div>';
