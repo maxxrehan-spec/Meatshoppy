@@ -1,3 +1,4 @@
+import {translations,homePage,categoryCopy,productDetails} from './seo-content.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -58,7 +59,7 @@ async function refresh(){try{const r=await fetch(config.sheet+'&live='+Date.now(
 refresh();document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});`;
   await fs.writeFile(path.join(output,'seo-live.js'),liveScript);
   const gtm=home.match(/<!-- Google Tag Manager -->[\s\S]*?<!-- End Google Tag Manager -->/)?.[0]||'';
-  const shell=(title,desc,url,ar,body,extra='',index=true)=>`<!doctype html><html lang="${ar?'ar':'en'}" dir="${ar?'rtl':'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${base+url}">${index?'':'<meta name="robots" content="noindex,follow">'}${style}${gtm}${extra}</head><body><header class="bar"><a class="logo" href="/">${ar?'مركز طارق':'Tariq Meat Shop'}</a><a href="/#shop">${ar?'تسوق':'Shop'}</a></header><main class="seo-main">${body}</main><footer><p>Tariq Meat Shop | مركز طارق</p><p>Al Udaba Street, Al Aziziyah, Jeddah 23342</p><a href="tel:+966596684625">+966 59 668 4625</a><nav class="seo-links"><a href="/about.html">About</a><a href="/delivery.html">Delivery</a><a href="/privacy.html">Privacy</a><a href="/refunds.html">Refunds</a></nav></footer></body></html>`;
+  const shell=(title,desc,url,ar,body,extra='',index=true)=>`<!doctype html><html lang="${ar?'ar':'en'}" dir="${ar?'rtl':'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${base+url}">${index?'':'<meta name="robots" content="noindex,follow">'}${style}${gtm}${extra}</head><body><header class="bar"><a class="logo" href="${ar?'/ar/':'/'}">${ar?'مركز طارق':'Tariq Meat Shop'}</a><a href="${ar?'/ar/':'/'}#shop">${ar?'تسوق':'Shop'}</a></header><main class="seo-main">${body}</main><footer><p>Tariq Meat Shop | مركز طارق</p><p>${ar?'الأدباء، العزيزية، جدة 23342':'Al Udaba Street, Al Aziziyah, Jeddah 23342'}</p><a href="tel:+966596684625">+966 59 668 4625</a><nav class="seo-links"><a href="/about.html">${ar?'من نحن':'About'}</a><a href="/delivery.html">${ar?'التوصيل':'Delivery'}</a><a href="/privacy.html">${ar?'الخصوصية':'Privacy'}</a><a href="/refunds.html">${ar?'الاسترجاع':'Refunds'}</a></nav></footer></body></html>`;
   const write=async(url,html)=>{const file=path.join(output,url,'index.html');await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,html);};
   const seenDescriptions=new Map();
   for(const p of products){
@@ -79,7 +80,7 @@ refresh();document.addEventListener('visibilitychange',()=>{if(!document.hidden)
       const schema={'@context':'https://schema.org','@type':'Product','@id':base+url+'#product',name,sku:p.id,description,...(image?{image:[image]}:{}),offers};
       const alternate=enQuality&&arQuality?`<link rel="alternate" hreflang="en-SA" href="${base+href(p)}"><link rel="alternate" hreflang="ar-SA" href="${base+href(p,true)}">`:'';
       const cuts=(ar?p.cut_options_ar:p.cut_options)||p.cut_options;
-      const body=`<nav class="seo-links"><a href="${ar?'/ar':''}/categories/${p.category}/">${esc(categoryName(p.category,ar))}</a><a href="${href(p,!ar)}" lang="${ar?'en':'ar'}">${ar?'English':'العربية'}</a></nav><h1>${esc(name)}</h1><div class="seo-product"><div>${image?`<img src="/images/${encodeURIComponent(imageFile)}" alt="${esc(name)}" width="600" height="600">`:''}</div><div><p>${esc(description)}</p><p>${ar?'متوفر من متجرنا في العزيزية، جدة.':'From our shop in Al Aziziyah, Jeddah.'}</p><p>${ar?'التوفر':'Availability'}: <strong id="stock-status">${p.available?(ar?'متوفر':'In stock'):(ar?'غير متوفر حالياً':'Currently unavailable')}</strong></p><table><thead><tr><th>${ar?'الوزن / العبوة':'Weight / pack'}</th><th>${ar?'السعر':'Price'}</th></tr></thead><tbody>${rows}</tbody></table>${cuts?`<p>${ar?'خيارات التقطيع':'Cut options'}: ${esc(cuts)}</p>`:''}<p id="price-status">${ar?'السعر والتوفر يتم تأكيدهما من القائمة المباشرة قبل الإضافة للسلة.':'Prices and availability are checked against the live catalog before adding to cart.'}</p><p>${ar?'آخر تحديث':'Snapshot updated'}: ${new Date().toISOString().slice(0,16).replace('T',' ')} UTC</p><a id="order-link" class="btn" ${p.available?'':'hidden'} href="/index.html#product/${p.id}" ${ar?'onclick="try{localStorage.setItem(\'mm_lang\',JSON.stringify(\'ar\'))}catch(e){}"':''}>${ar?'تحقق من التوفر واختر الخيارات':'Check availability & choose options'}</a></div></div><p><a href="/delivery.html">${ar?'رسوم ومناطق التوصيل':'Delivery fees and coverage'}</a></p>`;
+      const body=`<nav class="seo-links"><a href="${ar?'/ar':''}/categories/${p.category}/">${esc(categoryName(p.category,ar))}</a><a href="${href(p,!ar)}" lang="${ar?'en':'ar'}">${ar?'English':'العربية'}</a></nav><h1>${esc(name)}</h1><div class="seo-product"><div>${image?`<img src="/images/${encodeURIComponent(imageFile)}" alt="${esc(name)}" width="600" height="600">`:''}</div><div><p>${esc(description)}</p><p>${ar?'متوفر من متجرنا في العزيزية، جدة.':'From our shop in Al Aziziyah, Jeddah.'}</p><p>${ar?'التوفر':'Availability'}: <strong id="stock-status">${p.available?(ar?'متوفر':'In stock'):(ar?'غير متوفر حالياً':'Currently unavailable')}</strong></p><table><thead><tr><th>${ar?'الوزن / العبوة':'Weight / pack'}</th><th>${ar?'السعر':'Price'}</th></tr></thead><tbody>${rows}</tbody></table>${cuts?`<p>${ar?'خيارات التقطيع':'Cut options'}: ${esc(cuts)}</p>`:''}<p id="price-status">${ar?'السعر والتوفر يتم تأكيدهما من القائمة المباشرة قبل الإضافة للسلة.':'Prices and availability are checked against the live catalog before adding to cart.'}</p><p>${ar?'آخر تحديث':'Snapshot updated'}: ${new Date().toISOString().slice(0,16).replace('T',' ')} UTC</p><a id="order-link" class="btn" ${p.available?'':'hidden'} href="${ar?'/ar/':'/'}#product/${p.id}">${ar?'تحقق من التوفر واختر الخيارات':'Check availability & choose options'}</a></div></div>${productDetails(p,ar,p.opts.map(w=>weight(p,w,ar)))}<p><a href="/delivery.html">${ar?'رسوم ومناطق التوصيل':'Delivery fees and coverage'}</a></p>`;
       await write(url,shell(title,`${name} — ${description}`.slice(0,170),url,ar,body,alternate+`<script id="product-schema" type="application/ld+json">${json(schema)}</script><script id="seo-config" type="application/json">${json({sheet,id:p.id,ar,url:base+url})}</script><script defer src="/seo-live.js"></script>`,index));
       if(index)urls.push(url);
     }
@@ -88,20 +89,25 @@ refresh();document.addEventListener('visibilitychange',()=>{if(!document.hidden)
   for(const ar of [false,true])for(const cat of categories){
     const url=`${ar?'/ar':''}/categories/${cat}/`,items=products.filter(p=>p.category===cat);
     const title=ar?`${categoryName(cat,true)} في جدة | مركز طارق`:`${cat[0].toUpperCase()+cat.slice(1)} in Jeddah | Tariq Meat Shop`;
-    const body=`<h1>${esc(title)}</h1><p>${ar?'اختر منتجاً لمشاهدة الأوزان والأسعار وخيارات التقطيع.':'Choose a product to view its sizes, prices and available cuts.'}</p><ul>${items.map(p=>`<li><a href="${href(p,ar)}">${esc((ar?p.name_ar:p.name_en)||p.name_en)}</a> — ${esc((ar?p.desc_ar:p.desc_en)||p.desc_en||'')}</li>`).join('')}</ul>`;
-    const ready=items.every(p=>!ar||p.name_ar&&p.desc_ar);await write(url,shell(title,title,url,ar,body,'',ready));if(ready)urls.push(url);
+    const body=`<nav class="seo-links"><a href="${ar?'':'/ar'}/categories/${cat}/" lang="${ar?'en':'ar'}">${ar?'English':'العربية'}</a></nav><h1>${esc(title)}</h1><p>${esc(categoryCopy(cat,ar))}</p><p>${ar?'اختر منتجاً لمشاهدة الأوزان والأسعار وخيارات التقطيع.':'Choose a product to view its sizes, prices and available cuts.'}</p><ul>${items.map(p=>`<li><a href="${href(p,ar)}">${esc((ar?p.name_ar:p.name_en)||p.name_en)}</a> — ${esc((ar?p.desc_ar:p.desc_en)||p.desc_en||'')}</li>`).join('')}</ul>`;
+    const ready=items.every(p=>!ar||p.name_ar&&p.desc_ar);await write(url,shell(title,categoryCopy(cat,ar).slice(0,170),url,ar,body,`<link rel="alternate" hreflang="en-SA" href="${base}/categories/${cat}/"><link rel="alternate" hreflang="ar-SA" href="${base}/ar/categories/${cat}/">`,ready));if(ready)urls.push(url);
   }
-  const catalogLinks=`<nav class="sec seo-links" aria-label="Product categories">${categories.map(c=>`<a href="/categories/${c}/">${esc(c[0].toUpperCase()+c.slice(1))}</a>`).join('')}</nav>`;
-  let updated=home.replace('</main>',catalogLinks+'</main>');
-  if(!/rel=["']canonical/.test(updated))updated=updated.replace('</head>',`<link rel="canonical" href="${base}/"></head>`);
-  await fs.writeFile(path.join(output,'index.html'),updated);
+  const dict=translations(app,await fs.readFile(path.join(root,'storefront.js'),'utf8'));
+  await fs.writeFile(path.join(output,'index.html'),homePage(home,false,dict,categories,base));
+  await write('/ar/',homePage(home,true,dict,categories,base));
   // Crawlable links; ordinary clicks retain the current modal/cart flow. New tabs open static pages.
-  let linked=app.replaceAll('href="#product/${p.id}"','href="/products/${p.id}/" data-product-link="${p.id}"');
+  let linked=app.replaceAll('href="#product/${p.id}"','href="${lang===\'ar\'?\'/ar\':\'\'}/products/${p.id}/" data-product-link="${p.id}"');
   linked+=`\ndocument.addEventListener('click',e=>{const a=e.target.closest('a[data-product-link]');if(a&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&e.button===0){e.preventDefault();location.hash='product/'+a.dataset.productLink;}});\n`;
   // Preserve the two existing hero photos and append the supplied butcher photo.
   linked=linked.replace('banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"]','banners: ["images/hero-steak-tray.jpg", "images/vegetables-new.webp", "images/hero-butcher.jpg"]');
   await fs.writeFile(path.join(output,'app.js'),linked);
-  const staticUrls=['/','/about.html','/delivery.html','/privacy.html','/refunds.html'];
+  const staticUrls=['/','/ar/'];
+  for(const page of ['about.html','delivery.html','privacy.html','refunds.html']){
+    const file=path.join(output,page);let html=await fs.readFile(file,'utf8');
+    if(!/rel=["']canonical/.test(html))html=html.replace('</head>',`<link rel="canonical" href="${base}/${page}"></head>`);
+    await fs.writeFile(file,html);
+    if(!/<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html))staticUrls.push('/'+page);
+  }
   await fs.writeFile(path.join(output,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...staticUrls,...urls].map(u=>`<url><loc>${base+u}</loc></url>`).join('')}</urlset>`);
   await fs.writeFile(path.join(output,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml\n`);
   await fs.writeFile(path.join(output,'seo-build-report.json'),JSON.stringify({products:products.length,indexableUrls:urls.length,warnings},null,2));

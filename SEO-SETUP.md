@@ -49,3 +49,12 @@ node scripts/check-seo.mjs _site
 ```
 
 The output directory must be new/empty. Use a different output directory for another build. Never point output at the source repository. For reproducible offline checks, the builder accepts a CSV file path as the fourth command argument.
+
+## Bilingual homepage and SEO maintenance (November 2026)
+
+- `/` is the English storefront; `/ar/` is its Arabic counterpart. Both are generated from the same `index.html`, translation dictionary and product Sheet. Do not hand-edit generated Arabic files.
+- A price edit remains a single Sheet edit. Fill the existing English/Arabic name and description columns when adding a product, keep IDs unique, and supply its real image. Both language URLs and category links are generated together on the next successful scheduled build. Scheduled builds may be delayed; the live storefront and product price tables refresh from the published Sheet independently.
+- The language link changes URL and language in place, preserving cart and entered checkout data. Direct visits use the URL's language, not a previous stored preference.
+- Category descriptions and reciprocal language links are maintained in `scripts/seo-content.mjs` and generated consistently. Product preparation text uses the row's own pack sizes and cut options; it does not invent cleaning-weight or sourcing claims.
+- Privacy/refunds remain noindex and are excluded from the generated sitemap. Informational pages receive self-canonical URLs. The footer uses the compressed WebP version of the existing photo.
+- Google Search Console ownership, indexing requests and field performance measurements remain separate from code validation. Search snippets do not update immediately after a Sheet edit.

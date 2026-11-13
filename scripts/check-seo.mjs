@@ -11,7 +11,7 @@ for(const url of urls){
   const pathname=new URL(url).pathname;
   const file=path.join(root,pathname,pathname.endsWith('/')?'index.html':'');
   const html=await fs.readFile(file,'utf8');
-  if(!pathname.includes('/products/')&&!pathname.includes('/categories/'))continue;
+
   assert(html.includes(`href="${url}"`),'Missing canonical '+url);
   assert(!html.includes('noindex'),'Noindex URL in sitemap '+url);
   const title=html.match(/<title>(.*?)<\/title>/)?.[1];assert(title&&!titles.has(title),'Duplicate/missing title '+url);titles.add(title);
@@ -19,6 +19,7 @@ for(const url of urls){
     const target=match[1].split('#')[0].split('?')[0];
     await fs.access(path.join(root,decodeURIComponent(target),target.endsWith('/')?'index.html':''));
   }
+  if(pathname.includes('/categories/'))assert(html.includes('hreflang="en-SA"')&&html.includes('hreflang="ar-SA"'),'Missing category language tags');
   if(pathname.includes('/products/')){
     const schema=JSON.parse(html.match(/id="product-schema" type="application\/ld\+json">(.*?)<\/script>/s)[1]);
     assert.equal(schema['@type'],'Product');assert(schema.image?.length);

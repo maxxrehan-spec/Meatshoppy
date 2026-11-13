@@ -30,7 +30,7 @@ test('static bilingual pages, escaping, stable URL, noindex fallback, original a
   assert(en.includes('Chicken &amp; &lt;special&gt;'));assert(ar.includes('dir="rtl"'));
   assert(en.includes('/products/stable-1/'));assert(!en.includes('/products/Chicken'));
   const built=await fs.readFile(path.join(temp,'site/app.js'),'utf8');
-  const expected=app.replaceAll('href="#product/${p.id}"','href="/products/${p.id}/" data-product-link="${p.id}"')
+  const expected=app.replaceAll('href="#product/${p.id}"','href="${lang===\'ar\'?\'/ar\':\'\'}/products/${p.id}/" data-product-link="${p.id}"')
     .replace('banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"]','banners: ["images/hero-steak-tray.jpg", "images/vegetables-new.webp", "images/hero-butcher.jpg"]');
   assert(built.startsWith(expected));
   assert(built.includes('banners: ["images/hero-steak-tray.jpg", "images/vegetables-new.webp", "images/hero-butcher.jpg"]'));
@@ -49,4 +49,25 @@ test('Fakieh single-size pack is SAR 20, while ordinary per-kg chicken is SAR 22
  const csv=header+'c3,Fakieh Chicken,دجاج فقيه,Chicken,,chicken,kg,20,1100,yes,fakieh-chicken.jpg';
  const p=normalize(csv,parse)[0];assert.equal(amount(p,1100,0),20);
  const regular=normalize(csv.replace('c3,','c4,'),parse)[0];assert.equal(amount(regular,1100,0),22);
+});
+
+test('one catalog edit updates both languages, homepages, categories and sitemap',async()=>{
+ const temp=await fs.mkdtemp(path.join(os.tmpdir(),'tariq-sync-'));
+ try{
+  const csv=header+row.replace('"18,20"','"23,26"')+'\n'+row.replaceAll('stable-1','new-item').replace('Chicken,','New product,').replace('"18,20"','"23,26"');
+  await build(root,path.join(temp,'site'),csv);
+  for(const prefix of ['', 'ar/']){
+   const home=await fs.readFile(path.join(temp,'site',prefix,'index.html'),'utf8');
+   assert(home.includes('hreflang="en-SA"'));assert(home.includes('hreflang="ar-SA"'));
+   assert(home.includes('src="/app.js'));assert(home.includes(`href="https://tariqmeatshop.com/${prefix}"`));
+   assert(home.includes(prefix?'تسوق الآن':'Shop Now'));
+   const category=await fs.readFile(path.join(temp,'site',prefix,'categories/chicken/index.html'),'utf8');
+   assert(category.includes('hreflang="ar-SA"'));assert(category.includes('/products/new-item/'));
+   const product=await fs.readFile(path.join(temp,'site',prefix,'products/new-item/index.html'),'utf8');
+   assert(product.includes('23.00 SAR'));assert(product.includes('26.00 SAR'));
+   assert(product.includes(`href="/${prefix}#product/new-item"`));
+  }
+  const sitemap=await fs.readFile(path.join(temp,'site/sitemap.xml'),'utf8');
+  assert(sitemap.includes('/ar/</loc>'));assert(!sitemap.includes('/privacy.html'));assert(!sitemap.includes('/refunds.html'));
+ }finally{await fs.rm(temp,{recursive:true,force:true});}
 });

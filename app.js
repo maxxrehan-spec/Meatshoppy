@@ -159,7 +159,7 @@ const store = {
   get(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } },
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 };
-let lang = store.get("mm_lang", "en");
+let lang = location.pathname.startsWith("/ar/") ? "ar" : "en";
 if(!["en", "ar"].includes(lang)) lang = "en";
 let cart = store.get("mm_cart", []);       // [{id, w, q}]
 let filter = "all", query = "";
@@ -223,7 +223,7 @@ const imageAliases = {
 const imageDimensions = {"images/beef-boneless-nehari.jpg": [1000, 1000], "images/beef-boneless.jpg": [600, 600], "images/beef-manchurian.jpg": [600, 600], "images/beef-minced.jpg": [612, 408], "images/beef-paya.jpg": [1000, 1000], "images/beef-simple-bone.jpg": [600, 600], "images/beef-steaks.jpg": [600, 600], "images/beef-striploin.jpg": [600, 600], "images/beef-t-bone-steak.jpg": [447, 447], "images/beef-undercut.jpg": [1000, 1000], "images/beef-with-bone-nehari.jpg.jpg": [1000, 1000], "images/beef-with-bone.jpg": [1000, 1000], "images/chicken-boneless-cubes.jpg": [600, 600], "images/chicken-boneless-manchurian.jpg": [600, 600], "images/chicken-boneless-steak.jpg": [1000, 1000], "images/chicken-boneless-striploin.jpg": [600, 600], "images/chicken-boneless.jpg": [600, 600], "images/chicken-drumsticks.jpg": [1000, 1000], "images/chicken-full-legs.jpg": [1024, 1024], "images/chicken-gizzard.jpg": [800, 800], "images/chicken-heart.jpg": [600, 600], "images/chicken-liver.jpg": [2500, 2500], "images/chopped-chicken.jpg": [600, 600], "images/desi-egg-crate-30-eggs.jpg": [500, 351], "images/egg-crate-30-eggs.jpg.jpg": [500, 500], "images/fakieh-chicken.jpg": [351, 437], "images/hero.jpg": [612, 408], "images/mutton-boneless.jpg": [600, 600], "images/mutton-brain.jpg": [1000, 1000], "images/mutton-chops-champ.jpg": [447, 447], "images/mutton-fish-joints.jpg": [1000, 1000], "images/mutton-fry-chops.jpg": [600, 600], "images/mutton-kidney.jpg": [1000, 1000], "images/mutton-kunna-cut.jpg": [1000, 1000], "images/mutton-leg.jpg": [1000, 1000], "images/mutton-liver.jpg": [600, 600], "images/mutton-minced.jpg": [1000, 1000], "images/mutton-paya.jpg": [1000, 1000], "images/mutton-shoulder.jpg": [1000, 1000], "images/pakistani-mutton-whole.jpg": [1080, 1080], "images/veg-beetroot.jpg": [280, 220], "images/veg-bitter-gourd.jpg": [170, 105], "images/veg-bottle-gourd.jpg": [245, 205], "images/veg-carrot.jpg": [140, 75], "images/veg-cauliflower.jpg": [205, 205], "images/veg-coriander.jpg": [125, 120], "images/veg-cucumber.jpg": [240, 250], "images/veg-garlic.jpg": [230, 190], "images/veg-ginger.jpg": [150, 140], "images/veg-green-beans.jpg": [165, 140], "images/veg-green-cabbage.jpg": [215, 230], "images/veg-green-chilli.jpg": [150, 95], "images/veg-green-eggplant.jpg": [258, 140], "images/veg-green-pepper.jpg": [165, 110], "images/veg-lemon.jpg": [135, 140], "images/veg-mint.jpg": [235, 205], "images/veg-okra.jpg": [280, 290], "images/veg-onion.jpg": [380, 400], "images/veg-parwal.jpg": [170, 115], "images/veg-potato.jpg": [340, 180], "images/veg-purple-eggplant.jpg": [283, 240], "images/veg-red-cabbage.jpg": [250, 130], "images/veg-red-pepper.jpg": [50, 90], "images/veg-sweet-potato.jpg": [178, 100], "images/veg-taro.jpg": [230, 150], "images/veg-tinda.jpg": [295, 190], "images/veg-tomato.jpg": [210, 85], "images/veg-turnip.jpg": [343, 275], "images/veg-yellow-pepper.jpg": [75, 60], "images/vegetables-category.jpg": [478, 660], "images/whole-chicken.jpg": [600, 600]};
 const imageSize = u => { const [w,h] = imageDimensions[imageAliases[u] || u] || [600,600]; return `width="${w}" height="${h}" decoding="async"`; };
 const optimizedImages = {"images/beef-boneless-nehari.jpg":"images/optimized/beef-boneless-nehari.jpg.webp","images/beef-boneless.jpg":"images/optimized/beef-boneless.jpg.webp","images/beef-manchurian.jpg":"images/optimized/beef-manchurian.jpg.webp","images/beef-minced.jpg":"images/optimized/beef-minced.jpg.webp","images/beef-paya.jpg":"images/optimized/beef-paya.jpg.webp","images/beef-simple-bone.jpg":"images/optimized/beef-simple-bone.jpg.webp","images/beef-steaks.jpg":"images/optimized/beef-steaks.jpg.webp","images/beef-striploin.jpg":"images/optimized/beef-striploin.jpg.webp","images/beef-t-bone-steak.jpg":"images/optimized/beef-t-bone-steak.jpg.webp","images/beef-undercut.jpg":"images/optimized/beef-undercut.jpg.webp","images/beef-with-bone-nehari.jpg.jpg":"images/optimized/beef-with-bone-nehari.jpg.jpg.webp","images/beef-with-bone.jpg":"images/optimized/beef-with-bone.jpg.webp","images/chicken-boneless-cubes.jpg":"images/optimized/chicken-boneless-cubes.jpg.webp","images/chicken-boneless-manchurian.jpg":"images/optimized/chicken-boneless-manchurian.jpg.webp","images/chicken-boneless-steak.jpg":"images/optimized/chicken-boneless-steak.jpg.webp","images/chicken-boneless-striploin.jpg":"images/optimized/chicken-boneless-striploin.jpg.webp","images/chicken-boneless.jpg":"images/optimized/chicken-boneless.jpg.webp","images/chicken-drumsticks.jpg":"images/optimized/chicken-drumsticks.jpg.webp","images/chicken-full-legs.jpg":"images/optimized/chicken-full-legs.jpg.webp","images/chicken-gizzard.jpg":"images/optimized/chicken-gizzard.jpg.webp","images/chicken-heart.jpg":"images/optimized/chicken-heart.jpg.webp","images/chicken-liver.jpg":"images/optimized/chicken-liver.jpg.webp","images/chopped-chicken.jpg":"images/optimized/chopped-chicken.jpg.webp","images/desi-egg-crate-30-eggs.jpg":"images/optimized/desi-egg-crate-30-eggs.jpg.webp","images/egg-crate-30-eggs.jpg.jpg":"images/optimized/egg-crate-30-eggs.jpg.jpg.webp","images/Eggplant.jpg":"images/optimized/Eggplant.jpg.webp","images/fakieh-chicken.jpg":"images/optimized/fakieh-chicken.jpg.webp","images/hero.jpg":"images/optimized/hero.jpg.webp","images/mutton-boneless.jpg":"images/optimized/mutton-boneless.jpg.webp","images/mutton-brain.jpg":"images/optimized/mutton-brain.jpg.webp","images/mutton-chops-champ.jpg":"images/optimized/mutton-chops-champ.jpg.webp","images/mutton-fish-joints.jpg":"images/optimized/mutton-fish-joints.jpg.webp","images/mutton-fry-chops.jpg":"images/optimized/mutton-fry-chops.jpg.webp","images/mutton-kidney.jpg":"images/optimized/mutton-kidney.jpg.webp","images/mutton-kunna-cut.jpg":"images/optimized/mutton-kunna-cut.jpg.webp","images/mutton-leg.jpg":"images/optimized/mutton-leg.jpg.webp","images/mutton-liver.jpg":"images/optimized/mutton-liver.jpg.webp","images/mutton-minced.jpg":"images/optimized/mutton-minced.jpg.webp","images/mutton-paya.jpg":"images/optimized/mutton-paya.jpg.webp","images/mutton-shoulder.jpg":"images/optimized/mutton-shoulder.jpg.webp","images/pakistani-mutton-whole.jpg":"images/optimized/pakistani-mutton-whole.jpg.webp","images/veg-beetroot.jpg":"images/optimized/veg-beetroot.jpg.webp","images/veg-bitter-gourd.jpg":"images/optimized/veg-bitter-gourd.jpg.webp","images/veg-bottle-gourd.jpg":"images/optimized/veg-bottle-gourd.jpg.webp","images/veg-carrot.jpg":"images/optimized/veg-carrot.jpg.webp","images/veg-cauliflower.jpg":"images/optimized/veg-cauliflower.jpg.webp","images/veg-coriander.jpg":"images/optimized/veg-coriander.jpg.webp","images/veg-cucumber.jpg":"images/optimized/veg-cucumber.jpg.webp","images/veg-garlic.jpg":"images/optimized/veg-garlic.jpg.webp","images/veg-ginger.jpg":"images/optimized/veg-ginger.jpg.webp","images/veg-green-beans.jpg":"images/optimized/veg-green-beans.jpg.webp","images/veg-green-cabbage.jpg":"images/optimized/veg-green-cabbage.jpg.webp","images/veg-green-chilli.jpg":"images/optimized/veg-green-chilli.jpg.webp","images/veg-green-eggplant.jpg":"images/optimized/veg-green-eggplant.jpg.webp","images/veg-green-pepper.jpg":"images/optimized/veg-green-pepper.jpg.webp","images/veg-lemon.jpg":"images/optimized/veg-lemon.jpg.webp","images/veg-mint.jpg":"images/optimized/veg-mint.jpg.webp","images/veg-okra.jpg":"images/optimized/veg-okra.jpg.webp","images/veg-onion.jpg":"images/optimized/veg-onion.jpg.webp","images/veg-parwal.jpg":"images/optimized/veg-parwal.jpg.webp","images/veg-potato.jpg":"images/optimized/veg-potato.jpg.webp","images/veg-purple-eggplant.jpg":"images/optimized/veg-purple-eggplant.jpg.webp","images/veg-red-cabbage.jpg":"images/optimized/veg-red-cabbage.jpg.webp","images/veg-red-pepper.jpg":"images/optimized/veg-red-pepper.jpg.webp","images/veg-sweet-potato.jpg":"images/optimized/veg-sweet-potato.jpg.webp","images/veg-taro.jpg":"images/optimized/veg-taro.jpg.webp","images/veg-tinda.jpg":"images/optimized/veg-tinda.jpg.webp","images/veg-tomato.jpg":"images/optimized/veg-tomato.jpg.webp","images/veg-turnip.jpg":"images/optimized/veg-turnip.jpg.webp","images/veg-yellow-pepper.jpg":"images/optimized/veg-yellow-pepper.jpg.webp","images/vegetables-category.jpg":"images/optimized/vegetables-category.jpg.webp","images/whole-chicken.jpg":"images/optimized/whole-chicken.jpg.webp"};
-const imageUrl = u => { const source=imageAliases[u] || u; return source + (source.includes('?')?'&':'?')+'v=20261020-images'; };
+const imageUrl = u => { const source=imageAliases[u] || u; return (source.startsWith("images/") ? "/"+source : source) + (source.includes('?')?'&':'?')+'v=20261020-images'; };
 const productTag = p => p.tag === "Best Seller" ? t("bestTag") : p.tag;
 const img = p => `<img src="${imageUrl(p.img)}" alt="${pName(p)}" ${imageSize(p.img)} loading="lazy" onerror="this.onerror=null;this.src=ph(prod('${p.id}'))">`;
 const saveCart = () => store.set("mm_cart", cart);
@@ -272,6 +272,8 @@ function applyLang(){
   document.documentElement.lang = lang;
   document.documentElement.dir = lang==="ar" ? "rtl" : "ltr";
   $("#langBtn").textContent = lang==="ar" ? "English" : "العربية";
+  $("#langBtn").setAttribute("href",(lang==="ar"?"/":"/ar/")+location.hash);
+  document.querySelectorAll('[data-seo-category]').forEach(a=>{const c=CATS.find(c=>c[0]===a.dataset.seoCategory);a.href=(lang==='ar'?'/ar':'')+'/categories/'+a.dataset.seoCategory+'/';if(c)a.textContent=lang==='ar'?c[3]:c[2];});
   $$("[data-i]").forEach(el => el.textContent = t(el.dataset.i));
   $("#phoneLink").textContent = CONFIG.phone; $("#phoneLink").href = "tel:" + CONFIG.phone.replace(/\s/g,"");
   $("#waLink").href = $("#waLink2").href = "https://wa.me/" + CONFIG.whatsapp;
@@ -297,7 +299,7 @@ function applyLang(){
 /* Catalogue */
 function renderTiles(){
   const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-new.webp"};
-  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><img src="${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy"><span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
+  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><img src="/${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy"><span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
 }
 function renderChips(){
   $("#chips").innerHTML = [["all",t("all")], ...CATS.map(c=>[c[0], lang==="ar"?c[3]:c[2]])]
@@ -618,8 +620,8 @@ function updateProductMetadata(p, weight){
 }
 
 /* Product pages: #product/ID */
-const baseDescription = document.querySelector('meta[name="description"]').content;
-const baseTitle = document.title; let sheetDone = !CONFIG.productsSheetUrl;
+let baseDescription = document.querySelector('meta[name="description"]').content;
+let baseTitle = document.title; let sheetDone = !CONFIG.productsSheetUrl;
 function renderProduct(p){
   const s = sel[p.id] ||= { w: p.unit==="kg" && p.opts.includes(1000) ? 1000 : p.opts[0], q: 1, c: 0 };
   const imgs = [p.img, ...(p.imgs || [])].map(imageUrl);
@@ -676,7 +678,7 @@ document.addEventListener("keydown", e => { if(!e.defaultPrevented && e.key === 
 
 /* Top banner slider */
 function initSlider(){
-  const urls = CONFIG.banners || [], ok = []; let pending = urls.length; if(!pending) return;
+  const urls = (CONFIG.banners || []).map(u=>u.startsWith("images/")?"/"+u:u), ok = []; let pending = urls.length; if(!pending) return;
   const done = () => { if(--pending === 0) build(urls.filter(u => ok.includes(u))); };
   urls.forEach(u => { const im = new Image(); im.onload = () => { ok.push(u); done(); }; im.onerror = done; im.src = u; });
   function build(list){
@@ -773,7 +775,16 @@ $("#menuBtn").onclick = () => { const open = $("#nav").classList.toggle("open");
 document.addEventListener("keydown", e => { if(e.key === "Escape" && $("#nav").classList.contains("open")){closeMenu();$("#menuBtn").focus();} });
 document.addEventListener("click", e => { if(!e.target.closest(".bar")) closeMenu(); });
 
-$("#langBtn").onclick = () => { lang = lang==="en" ? "ar" : "en"; store.set("mm_lang", lang); applyLang(); };
+$("#langBtn").onclick = e => {
+  e.preventDefault(); lang = lang==="en" ? "ar" : "en"; store.set("mm_lang", lang);
+  history.replaceState(null, "", (lang==="ar"?"/ar/":"/") + location.search + location.hash);
+  baseTitle = lang==="ar" ? "توصيل لحوم ودجاج في جدة | مركز طارق العزيزية" : "Meat Shop in Al Aziziyah, Jeddah | Tariq Meat Shop";
+  baseDescription = lang==="ar" ? "اطلب لحوم الغنم والبقر والدجاج والبيض والخضروات من مركز طارق في العزيزية، جدة. اختر الوزن والتقطيع واطلب التوصيل إلى منزلك." : "Shop fresh meat, chicken, eggs and vegetables from Tariq Meat Shop in Al Aziziyah, Jeddah. Choose your cuts and weights and order online.";
+  document.title=baseTitle; document.querySelector('meta[name="description"]').content=baseDescription;
+  document.querySelector('link[rel="canonical"]').href=location.origin+(lang==="ar"?"/ar/":"/");
+  for(const property of ['title','description','url']) { const el=document.querySelector('meta[property="og:'+property+'"]');if(el)el.content=property==='title'?baseTitle:property==='description'?baseDescription:document.querySelector('link[rel="canonical"]').href; }
+  applyLang();
+};
 $("#yr").textContent = new Date().getFullYear();
 const cachedProducts = CONFIG.productsSheetUrl ? store.get("mm_products", null) : null;
 if(Array.isArray(cachedProducts) && cachedProducts.length) PRODUCTS = withVegetables(cachedProducts, store.get("mm_vegetables_managed", false));   // last good copy of the sheet
@@ -806,5 +817,5 @@ function initVerification(){
   document.head.appendChild(script);
 }
 
-if(location.hash==="#about") location.replace("about.html");
+if(location.hash==="#about") location.replace("/about.html");
 
