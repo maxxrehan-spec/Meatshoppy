@@ -15,12 +15,12 @@ export function homePage(source,ar,dict,categories,base){
  const title=ar?'توصيل لحوم ودجاج في جدة | مركز طارق العزيزية':'Meat Shop in Al Aziziyah, Jeddah | Tariq Meat Shop';
  const description=ar?'اطلب لحوم الغنم والبقر والدجاج والبيض والخضروات من مركز طارق في العزيزية، جدة. اختر الوزن والتقطيع واطلب التوصيل إلى منزلك.':'Shop fresh meat, chicken, eggs and vegetables from Tariq Meat Shop in Al Aziziyah, Jeddah. Choose your cuts and weights and order online.';
  html=html.replace(/<title>.*?<\/title>/,`<title>${title}</title>`).replace(/(<meta name="description" content=")[^"]*/,`$1${description}`).replace(/(<meta property="og:title" content=")[^"]*/,`$1${title}`).replace(/(<meta property="og:description" content=")[^"]*/,`$1${description}`).replace(/<link rel="canonical"[^>]+>/,`<link rel="canonical" href="${base+url}">`);
- html=html.replace('</head>',`<link rel="alternate" hreflang="en-SA" href="${base}/"><link rel="alternate" hreflang="ar-SA" href="${base}/ar/"><meta property="og:url" content="${base+url}"><meta property="og:image" content="${base}/images/hero-steak-tray.jpg"><style>.lang{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;text-decoration:none}.seo-links{display:flex;flex-wrap:wrap;gap:16px}</style></head>`);
+ html=html.replace('</head>',`<link rel="alternate" hreflang="en-SA" href="${base}/"><link rel="alternate" hreflang="ar-SA" href="${base}/ar/"><meta property="og:url" content="${base+url}"><meta property="og:image" content="${base}/images/hero-steak-tray.jpg"><style>.lang{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;text-decoration:none}</style></head>`);
  html=html.replace(/<a class="lang"[^>]*>.*?<\/a>/,`<a class="lang" id="langBtn" href="${ar?'/':'/ar/'}" lang="${ar?'en':'ar'}" aria-label="${ar?'English':'العربية'}">${ar?'English':'العربية'}</a>`);
  if(ar)html=html.replaceAll('<span>Tariq Meat Shop</span>','<span>مركز طارق</span>').replace('translate="no">Tariq Meat Shop</a>','translate="no">مركز طارق</a>');
- const names={chicken:['Chicken','الدجاج'],mutton:['Mutton','الغنم'],beef:['Beef','اللحم البقري'],eggs:['Eggs','البيض'],vegetables:['Vegetables','الخضروات']};
- const links=`<nav class="sec seo-links" aria-label="${ar?'أقسام المنتجات':'Product categories'}">${categories.map(c=>`<a data-seo-category="${escapeHTML(c)}" href="${ar?'/ar':''}/categories/${c}/">${escapeHTML(names[c]?.[ar?1:0]||c)}</a>`).join('')}</nav>`;
- return html.replace('</main>',links+'</main>');
+ // The storefront already has category tiles and filters. A second nav inherits
+ // mobile header positioning and overlays those tiles.
+ return html;
 }
 export function categoryCopy(cat,ar){
  const copy={
