@@ -41,6 +41,14 @@ export async function build(root,output,csv){
   if(!sheet?.startsWith('https://docs.google.com/spreadsheets/'))throw Error('Unexpected Sheet URL');
   if(csv===undefined){const response=await fetch(sheet+'&seo='+Date.now(),{signal:AbortSignal.timeout(30000)});if(!response.ok)throw Error('Sheet HTTP '+response.status);csv=await response.text();}
   const products=normalize(csv,parser(app)),warnings=[],urls=[];
+  // Share the storefront's defaults while preserving authored Sheet descriptions.
+  const vegetableContext = vm.createContext({});
+  vm.runInContext(await fs.readFile(path.join(root,'vegetables.js'),'utf8'), vegetableContext);
+  for(const p of products){
+    const [copy] = vegetableContext.applyVegetableDescriptions([{id:p.id,cat:p.category,d:p.desc_en,da:p.desc_ar}]);
+    p.desc_en=copy.d; p.desc_ar=copy.da;
+  }
+
   if(!app.includes('href="#product/${p.id}"'))throw Error('Product link template changed; review integration before publishing');
   // Build into a fresh staging directory; the source checkout is never overwritten.
   await fs.mkdir(output,{recursive:true});
