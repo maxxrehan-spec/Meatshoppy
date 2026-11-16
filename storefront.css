@@ -64,3 +64,20 @@ body .bar{background:#fffaf3;background-image:none;border-bottom:1px solid #dfd2
 .bar .brand-mark{background:#681c2b;color:#fff;border-color:#681c2b}
 body .announcement{min-height:0;padding:6px 12px;line-height:1.4;font-size:12px;background:#681c2b;text-shadow:none}
 @media(max-width:759px){body .announcement{padding:5px 8px;font-size:11px}}
+
+/* Mobile section navigation stays beneath the existing sticky header. */
+@media(max-width:759px){
+ .shop-section .catalog-toolbar{position:sticky;top:var(--category-top,75px);z-index:19;background:#fffaf3;margin-inline:-18px;padding:8px 18px;gap:4px;border-bottom:1px solid #dfd2c3}
+ #chips{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;gap:8px;padding:3px 0;scrollbar-width:none}
+ #chips::-webkit-scrollbar{display:none}
+ #chips .chip{flex:0 0 auto;min-height:44px;font-size:13px;padding:10px 17px;border-radius:999px;white-space:nowrap}
+ #chips .chip.on{background:#681c2b;color:#fff}
+ #chips .chip:disabled{opacity:.45;cursor:default}
+ #chips .chip:focus-visible{outline-offset:-3px}
+ #main[inert] .catalog-toolbar{visibility:hidden}
+ #shopGrid.category-sections{display:block}
+ .category-section{margin-bottom:36px}
+ .category-section>h3{font-size:24px;margin:0 0 18px;padding-top:8px}
+ .category-section+.category-section{border-top:1px solid #dfd2c3;padding-top:24px}
+}
+@media(max-width:759px) and (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

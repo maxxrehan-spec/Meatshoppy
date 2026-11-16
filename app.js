@@ -6,9 +6,7 @@ const CONFIG = {
   phone: "+966 59 668 4625",
   orderEndpoint: "https://script.google.com/macros/s/AKfycbysyn-7FP122iRQA3cTW17B48pinTiyGs6Y7DnN08zjmlWYnCyRmrsz752Zqk6h2CnsFg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
-  banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"],   // top slider pictures (images that do not exist are skipped)
-  orderSecret: "iamrehan",   // must match SETTINGS.SECRET in the Apps Script
-  // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
+  banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"],   // top slider pictures (images that do not exist are skipped)  // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
   
 previewOnly: location.protocol !== "https:" ||
   !["tariqmeatshop.com", "www.tariqmeatshop.com"].includes(location.hostname),
@@ -297,11 +295,49 @@ function applyLang(){
 }
 
 /* Catalogue */
+function scheduleCategoryUpdate(){
+  if(!mobileCatalog.matches || categoryFrame)return;
+  categoryFrame=requestAnimationFrame(()=>{
+    categoryFrame=0;
+    if($('#main').hidden || $('#main').inert)return;
+    const toolbar=$('.catalog-toolbar'), header=$('.bar');
+    const headerHeight=header.getBoundingClientRect().height;
+    toolbar.style.setProperty('--category-top',headerHeight+'px');
+    const sections=$$('#shopGrid [data-category]');
+    const line=headerHeight+toolbar.getBoundingClientRect().height+24;
+    let current=sections[0];
+    for(const section of sections){if(section.getBoundingClientRect().top<=line)current=section;else break;}
+    activeMobileCategory=current?.dataset.category || '';
+    let active;
+    $$('#chips [data-cat]').forEach(button=>{
+      const selected=button.dataset.cat===activeMobileCategory;
+      const changed=button.classList.contains('on')!==selected;
+      button.classList.toggle('on',selected);
+      if(selected){button.setAttribute('aria-current','true');if(changed)active=button;}
+      else button.removeAttribute('aria-current');
+    });
+    // Scroll only the horizontal strip, never the document or focused control.
+    if(active){
+      const strip=$('#chips'), a=active.getBoundingClientRect(), r=strip.getBoundingClientRect();
+      strip.scrollBy({left:a.left-r.left-(r.width-a.width)/2,behavior:'instant'});
+    }
+  });
+}
 function renderTiles(){
   const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-new.webp"};
   $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><img src="/${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy"><span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
 }
+const mobileCatalog = matchMedia('(max-width: 759px)');
+let activeMobileCategory = '', categoryFrame = 0;
 function renderChips(){
+  if(mobileCatalog.matches){
+    $('#chips').setAttribute('role','navigation');
+    $('#chips').setAttribute('aria-label',lang==='ar'?'أقسام المنتجات':'Product categories');
+    $('#chips').innerHTML = CATS.map(c=>`<button type="button" class="chip" data-cat="${c[0]}" aria-controls="category-${c[0]}">${lang==='ar'?c[3]:c[2]}</button>`).join('');
+    return;
+  }
+  $('#chips').removeAttribute('role');
+  $('#chips').removeAttribute('aria-label');
   $("#chips").innerHTML = [["all",t("all")], ...CATS.map(c=>[c[0], lang==="ar"?c[3]:c[2]])]
     .map(([k,l]) => `<button class="chip ${k===filter?"on":""}" aria-pressed="${k===filter}" data-cat="${k}">${l}</button>`).join("");
 }
@@ -323,15 +359,39 @@ function card(p){
 function renderGrids(){
   $("#bestGrid").innerHTML = PRODUCTS.filter(p=>p.tag==="Best Seller").slice(0,5).map(card).join("");
   const q = query.trim().toLowerCase();
-  const list = PRODUCTS.filter(p => (filter==="all"||p.cat===filter) && (!q || (p.en+" "+p.ar+" "+p.d+" "+p.da).toLowerCase().includes(q)));
-  $("#shopGrid").innerHTML = list.length ? list.map(card).join("") : `<div class="empty"><p>${t("noRes")}</p><button class="link text-link" data-cat="all">${t("clearSearch")}</button></div>`;
+  const list = PRODUCTS.filter(p => (mobileCatalog.matches||filter==="all"||p.cat===filter) && (!q || (p.en+" "+p.ar+" "+p.d+" "+p.da).toLowerCase().includes(q)));
+  $('#shopGrid').classList.toggle('category-sections',mobileCatalog.matches);
+  const sections = mobileCatalog.matches ? CATS.map(c=>{
+    const items=list.filter(p=>p.cat===c[0]);
+    return items.length ? `<section class="category-section" id="category-${c[0]}" data-category="${c[0]}" aria-labelledby="heading-${c[0]}"><h3 id="heading-${c[0]}" tabindex="-1">${lang==='ar'?c[3]:c[2]}</h3><div class="grid">${items.map(card).join('')}</div></section>` : '';
+  }).join('') + list.filter(p=>!CATS.some(c=>c[0]===p.cat)).map(card).join('') : list.map(card).join('');
+  $("#shopGrid").innerHTML = list.length ? sections : `<div class="empty"><p>${t("noRes")}</p><button class="link text-link" data-cat="all">${t("clearSearch")}</button></div>`;
+  if(mobileCatalog.matches){
+    $$('#chips [data-cat]').forEach(b=>{b.disabled=!list.some(p=>p.cat===b.dataset.cat);});
+    scheduleCategoryUpdate();
+  }
   $("#resultCount").textContent = list.length === 1 ? t("productCount") : t("productsCount").replace("{n}", list.length);
   $("#catalogStatus").textContent = catalogReady ? "" : t("catalogUnavailable");
   revealContent();
 }
 document.addEventListener("click", e => {
   const cat = e.target.closest("[data-cat]");
-  if(cat){ filter = cat.dataset.cat; query = ""; $("#q").value = ""; renderChips(); renderGrids(); showMain(); $("#shop").scrollIntoView(); return; }
+  if(cat){
+    if(mobileCatalog.matches){
+      const target=cat.dataset.cat;
+      if(query || !cat.closest('#chips')){query=''; $('#q').value=''; renderGrids();}
+      showMain();
+      const section=document.getElementById('category-'+target);
+      const headerHeight=$('.bar').getBoundingClientRect().height;
+      const toolbarHeight=$('.catalog-toolbar').getBoundingClientRect().height;
+      const destination=section || $('#shopGrid');
+      const top=destination.getBoundingClientRect().top+scrollY-headerHeight-toolbarHeight-12;
+      destination.querySelector('h3')?.focus({preventScroll:true});
+      window.scrollTo({top,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+      return;
+    }
+    filter = cat.dataset.cat; query = ""; $("#q").value = ""; renderChips(); renderGrids(); showMain(); $("#shop").scrollIntoView(); return;
+  }
   const c = e.target.closest(".card"); const b = e.target.closest("[data-act]");
   if(!c || !b) return;
   const p = prod(c.dataset.id), s = sel[p.id];
@@ -798,6 +858,10 @@ function updateHeaderOffset(){ document.documentElement.style.setProperty('--hea
 new ResizeObserver(updateHeaderOffset).observe(document.querySelector('.bar'));
 window.addEventListener('resize',updateHeaderOffset);
 window.addEventListener('scroll',updateHeaderOffset,{passive:true});
+window.addEventListener('scroll',scheduleCategoryUpdate,{passive:true});
+window.addEventListener('resize',scheduleCategoryUpdate);
+new ResizeObserver(scheduleCategoryUpdate).observe(document.querySelector('.bar'));
+mobileCatalog.addEventListener('change',()=>{renderChips();renderGrids();});
 
 
 
