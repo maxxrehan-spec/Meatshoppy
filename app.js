@@ -6,7 +6,8 @@ const CONFIG = {
   phone: "+966 59 668 4625",
   orderEndpoint: "https://script.google.com/macros/s/AKfycbysyn-7FP122iRQA3cTW17B48pinTiyGs6Y7DnN08zjmlWYnCyRmrsz752Zqk6h2CnsFg/exec",   // paste your Google Apps Script web app URL here (see setup steps)
   productsSheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxjuKqaYpz1Is_yfx2ItbtNmE4byA9eN3-iUWnPg6G6nh1HyfBTUTyac_COY5QEcs3voFoAsbcz5Ua/pub?gid=379728535&single=true&output=csv",   // optional: published Google Sheet CSV link with your products (leave "" to use the list below)
-  banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"],   // top slider pictures (images that do not exist are skipped)  // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
+  banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"],   // top slider pictures (images that do not exist are skipped)
+  // Local/review copies cannot submit live orders. Deploy with the matching Apps Script update.
   
 previewOnly: location.protocol !== "https:" ||
   !["tariqmeatshop.com", "www.tariqmeatshop.com"].includes(location.hostname),
@@ -80,7 +81,7 @@ let PRODUCTS = [
 PRODUCTS = withVegetables(PRODUCTS);
 
 const CATS = [
-  ["chicken","🍗","Chicken","دجاج"],["mutton","🐑","Mutton","غنم"],["beef","🥩","Beef","لحم بقري"],["eggs","🥚","Eggs","بيض"],["vegetables","🥬","Vegetables","خضروات"]
+  ["chicken","🍗","Chicken","دجاج"],["mutton","🐑","Mutton","غنم"],["beef","🥩","Beef","لحم بقري"],["eggs","🥚","Eggs","بيض"],["vegetables","🥬","Vegetables","خضروات"],["fruits","🍎","Fruits","فواكه"]
 ];
 
 const T = {
@@ -325,7 +326,7 @@ function scheduleCategoryUpdate(){
 }
 function renderTiles(){
   const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-new.webp"};
-  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}"><img src="/${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy"><span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
+  $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}">${photos[c[0]] ? `<img src="/${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy">` : '<span aria-hidden="true" style="display:grid;place-items:center;height:100%;background:#efe5d5;font-size:72px">🍎</span>'}<span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
 }
 const mobileCatalog = matchMedia('(max-width: 759px)');
 let activeMobileCategory = '', categoryFrame = 0;

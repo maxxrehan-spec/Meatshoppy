@@ -27,6 +27,7 @@ export function homePage(source,ar,dict,categories,base){
 }
 export function categoryCopy(cat,ar){
  const copy={
+ fruits:['Browse fruits for delivery from Tariq Meat Shop in Al Aziziyah, Jeddah. Compare per-kilogram prices and pack sizes, including berries, citrus and mangoes.','تصفح الفواكه للتوصيل من مركز طارق في العزيزية بجدة. قارن أسعار الكيلو وأحجام العبوات، بما فيها التوت والحمضيات والمانجو.'],
  chicken:['Choose whole chicken, chopped chicken, boneless cuts or chicken mince from our Al Aziziyah shop in Jeddah. Open a product to compare its available weights, prices and preparation options.','اختر الدجاج الكامل أو المقطع أو القطع بدون عظم أو الدجاج المفروم من متجرنا في العزيزية بجدة. افتح صفحة المنتج لمقارنة الأوزان والأسعار وخيارات التحضير المتاحة.'],
  mutton:['Browse mutton legs, shoulders, chops, mince and other available cuts from Tariq Meat Shop in Al Aziziyah, Jeddah. Check each product for its origin, bone-in or boneless description, weights and cutting options.','تسوق فخذ وكتف وريش ولحم غنم مفروم وغيرها من القطع المتاحة من مركز طارق في العزيزية بجدة. راجع وصف كل منتج لمعرفة المنشأ ووجود العظم والأوزان وخيارات التقطيع.'],
  beef:['Order beef for home delivery in Jeddah from our Al Aziziyah shop. Compare boneless beef, beef with bone, beef steaks and mince. Browse the cuts of beef below and check each product for available weights, prices and cutting options.','قارن اللحم البقري بالعظم وبدون عظم والمفروم وقطع الستيك للتوصيل من متجرنا في العزيزية بجدة. تعرض صفحة كل منتج الأوزان والأسعار المتاحة لتختار القطعة المناسبة لوصفتك.'],
