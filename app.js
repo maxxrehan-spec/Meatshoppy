@@ -200,7 +200,7 @@ const discountBadge = (p,w) => {
   const label=percent<1?(lang==='ar'?'خصم أقل من 1٪':'Less than 1% off'):(lang==='ar'?'خصم '+percent+'٪':percent+'% off');
   return '<span class="discount-badge">'+label+'</span>';
 };
-const selectedPrice = (p,s) => (oldPrice(p,s.w) !== null ? '<del>'+money(roundMoney(oldPrice(p,s.w)*s.q))+'</del> ' : '') + money(roundMoney(price(p,s.w)*s.q)) + ' · '+wl(s.w,p)+(s.q > 1 ? ' × '+s.q : '') + discountBadge(p,s.w);
+const selectedPrice = (p,s) => (oldPrice(p,s.w) !== null ? '<del>'+money(roundMoney(oldPrice(p,s.w)*s.q))+'</del> ' : '') + money(roundMoney(price(p,s.w)*s.q)) + ' · '+wl(s.w,p) + discountBadge(p,s.w);
 
 const escapeHtml = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const unitLine = p => p.unit === "pack" ? wl(1,p) : p.prices ? "" : `${oldPrice(p, p.unit === "kg" ? 1000 : 1) !== null ? `<del>${money(p.old_price)}</del> ` : ""}${money(p.price)} / ${p.unit==="kg" ? t("kg") : p.unit==="pc" ? t("pc") : wl(1,p)}`;
@@ -325,7 +325,7 @@ function scheduleCategoryUpdate(){
   });
 }
 function renderTiles(){
-  const photos = {chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-new.webp"};
+  const photos = {fruits:"images/fruit-pomegranate.webp", chicken:"images/whole-chicken.jpg", mutton:"images/mutton-chops-champ.jpg", beef:"images/beef-t-bone-steak.jpg", eggs:"images/desi-egg-crate-30-eggs.jpg", vegetables:"images/vegetables-new.webp"};
   $("#catTiles").innerHTML = CATS.map(c => `<button class="cat" data-cat="${c[0]}">${photos[c[0]] ? `<img src="/${photos[c[0]]}" alt="" ${imageSize(photos[c[0]])} loading="lazy">` : '<span aria-hidden="true" style="display:grid;place-items:center;height:100%;background:#efe5d5;font-size:72px">🍎</span>'}<span class="cat-label">${lang==="ar"?c[3]:c[2]}</span></button>`).join("");
 }
 const mobileCatalog = matchMedia('(max-width: 759px)');

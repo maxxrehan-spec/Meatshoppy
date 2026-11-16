@@ -81,3 +81,11 @@ body .announcement{min-height:0;padding:6px 12px;line-height:1.4;font-size:12px;
  .category-section+.category-section{border-top:1px solid #dfd2c3;padding-top:24px}
 }
 @media(max-width:759px) and (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Keep discounts separate from price and quantity controls. */
+.card{position:relative}
+.card .discount-badge{position:absolute;top:10px;right:10px;left:auto;margin:0;z-index:2}
+.card .tag{left:10px;right:auto;inset-inline-start:auto}
+#menuDrawer .menu-shop summary{padding:14px 12px;min-height:48px;cursor:pointer;font-size:18px;color:#681c2b}
+#menuDrawer .menu-shop a,#menuDrawer .menu-shop button{display:block;width:100%;text-align:start;padding:12px 24px;min-height:44px;border:0;border-radius:8px;background:transparent;color:#681c2b;font:inherit;font-size:16px;cursor:pointer}
+#menuDrawer .menu-shop button:hover{background:#f1e5d9}

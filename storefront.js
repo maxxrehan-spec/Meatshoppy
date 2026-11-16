@@ -57,7 +57,7 @@
  panel.innerHTML='<div class="menu-drawer-head"><h2 id="menuDrawerTitle"></h2><button type="button" class="menu-close"><span aria-hidden="true">×</span></button></div><nav class="menu-drawer-links"></nav><p class="menu-delivery"></p>';
  document.body.append(panel);
  const links=panel.querySelector("nav"),close=panel.querySelector("button");
- let previousOverflow="";
+ let previousOverflow="", afterClose=null;
  function localize(){
   const ar=document.documentElement.lang==="ar";
   panel.dir=ar?"rtl":"ltr";
@@ -65,6 +65,14 @@
   close.setAttribute("aria-label",ar?"إغلاق القائمة":"Close menu");
   links.setAttribute("aria-label",ar?"التنقل الرئيسي":"Main navigation");
   links.replaceChildren(...[...nav.querySelectorAll("a")].map(a=>a.cloneNode(true)));
+  const shop=links.querySelector('a[href="#shop"]');
+  if(shop){
+   const group=document.createElement('details');group.className='menu-shop';
+   const summary=document.createElement('summary');summary.textContent=shop.textContent;
+   group.append(summary);shop.replaceWith(group);
+   shop.textContent=ar?'كل المنتجات':'All products';group.append(shop);
+   for(const c of CATS){const button=document.createElement('button');button.type='button';button.dataset.menuCat=c[0];button.textContent=ar?c[3]:c[2];group.append(button);}
+  }
   panel.querySelector(".menu-delivery").textContent=ar?"وقت التوصيل: من 12 ظهراً إلى 12 منتصف الليل":"Delivery time: 12 PM to 12 AM";
  }
  function dismiss(){if(panel.open)panel.close();}
@@ -77,8 +85,15 @@
  };
  close.onclick=dismiss;
  panel.addEventListener("click",e=>{if(e.target===panel){const r=panel.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dismiss();}});
- links.addEventListener("click",e=>{const a=e.target.closest("a");if(a){dismiss();if(a.getAttribute("href").startsWith("#"))showMain();}});
- panel.addEventListener("close",()=>{document.body.style.overflow=previousOverflow;trigger.setAttribute("aria-expanded","false");trigger.focus();});
+ links.addEventListener('click',e=>{
+  const category=e.target.closest('[data-menu-cat]');
+  if(category){e.preventDefault();afterClose=()=>{showMain();document.querySelector('#chips [data-cat="'+category.dataset.menuCat+'"]').click();};dismiss();return;}
+  const a=e.target.closest('a');if(!a)return;
+  const href=a.getAttribute('href');
+  if(href.startsWith('#')){e.preventDefault();afterClose=()=>{showMain();history.pushState(null,'',href);document.querySelector(href)?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});};}
+  dismiss();
+ });
+ panel.addEventListener("close",()=>{document.body.style.overflow=previousOverflow;trigger.setAttribute("aria-expanded","false");trigger.focus({preventScroll:true});const action=afterClose;afterClose=null;if(action)requestAnimationFrame(action);});
  new MutationObserver(localize).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
  localize();
 })();
