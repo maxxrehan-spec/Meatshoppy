@@ -1,3 +1,4 @@
+import {buildBlog} from './blog.mjs';
 import {translations,homePage,categoryCopy,productDetails} from './seo-content.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -105,11 +106,12 @@ refresh();document.addEventListener('visibilitychange',()=>{if(!document.hidden)
   await write('/ar/',homePage(home,true,dict,categories,base));
   // Crawlable links; ordinary clicks retain the current modal/cart flow. New tabs open static pages.
   let linked=app.replaceAll('href="#product/${p.id}"','href="${lang===\'ar\'?\'/ar\':\'\'}/products/${p.id}/" data-product-link="${p.id}"');
+  linked+=`\nObject.assign(T.ar,{nBlog:"المدونة"});Object.assign(T.en,{nBlog:"Blog",heroS:"Order meat online from our shop in Al Aziziyah, Jeddah. Choose beef, mutton, chicken, eggs and vegetables, with your preferred cuts and weights, for fresh meat delivery to your doorstep."});document.querySelectorAll('[data-i="heroS"]').forEach(el=>el.textContent=t('heroS'));document.querySelectorAll('[data-blog-link]').forEach(a=>{a.href=(lang==='ar'?'/ar':'')+'/blog/';a.textContent=lang==='ar'?'المدونة':'Blog';});\n`;
   linked+=`\ndocument.addEventListener('click',e=>{const a=e.target.closest('a[data-product-link]');if(a&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&e.button===0){e.preventDefault();location.hash='product/'+a.dataset.productLink;}});\n`;
   // Preserve the two existing hero photos and append the supplied butcher photo.
   linked=linked.replace('banners: ["images/optimized/hero.jpg.webp", "images/hero-2.webp", "images/vegetables-new.webp"]','banners: ["images/hero-steak-tray.jpg", "images/vegetables-new.webp", "images/hero-butcher.jpg"]');
   await fs.writeFile(path.join(output,'app.js'),linked);
-  const staticUrls=['/','/ar/'];
+  const staticUrls=['/','/ar/',...await buildBlog(output,base,gtm)];
   for(const page of ['about.html','delivery.html','privacy.html','refunds.html']){
     const file=path.join(output,page);let html=await fs.readFile(file,'utf8');
     if(!/rel=["']canonical/.test(html))html=html.replace('</head>',`<link rel="canonical" href="${base}/${page}"></head>`);
